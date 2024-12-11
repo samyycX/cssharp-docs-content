@@ -26,11 +26,11 @@ public enum VoiceFlags : Byte
 ### VoiceFlags
 
 - `Normal` = 0 - 正常语音状态
-- `Muted` = (1 << 0) - 玩家被禁言
-- `All` = (1 << 1) - 可以对所有人说话
-- `ListenAll` = (1 << 2) - 可以听到所有人的语音
-- `Team` = (1 << 3) - 可以对队伍说话
-- `ListenTeam` = (1 << 4) - 可以听到队伍的语音
+- `Muted` = (1 &lt;&lt; 0) - 玩家被禁言
+- `All` = (1 &lt;&lt; 1) - 可以对所有人说话
+- `ListenAll` = (1 &lt;&lt; 2) - 可以听到所有人的语音
+- `Team` = (1 &lt;&lt; 3) - 可以对队伍说话
+- `ListenTeam` = (1 &lt;&lt; 4) - 可以听到队伍的语音
 
 ### ListenOverride
 
@@ -50,7 +50,7 @@ public class MyPlugin : BasePlugin
 {
     public override void Load(bool hotReload)
     {
-        RegisterEventHandler<EventPlayerConnected>((ev, info) =>
+        RegisterEventHandler&lt;EventPlayerConnected>((ev, info) =>
         {
             var player = ev.Userid;
             
@@ -75,7 +75,7 @@ public class MyPlugin : BasePlugin
         // 使用ListenOverride
         AddCommand("muteplayer", "禁言玩家", (player, info) =>
         {
-            if (info.ArgCount < 2) return;
+            if (info.ArgCount &lt; 2) return;
             
             var targetPlayer = info.GetArg(1);
             if (targetPlayer != null)

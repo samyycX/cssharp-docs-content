@@ -35,16 +35,16 @@ public partial class VirtualFunction
 public static Action Create(IntPtr objectPtr, int offset)
 ```
 
-#### CreateVoid<TArg1>
+#### CreateVoid< TArg1 >
 
 创建带一个参数无返回值的虚函数。
 
 ```csharp
 public static Action<TArg1> CreateVoid<TArg1>(IntPtr objectPtr, int offset)
 ```
-
+```
 #### CreateVoid<TArg1, TArg2>
-
+```
 创建带两个参数无返回值的虚函数。
 
 ```csharp
@@ -52,25 +52,25 @@ public static Action<TArg1, TArg2> CreateVoid<TArg1, TArg2>(IntPtr objectPtr, in
 ```
 
 ### 有返回值方法 (Functions)
-
+```
 #### Create<TResult>
-
+```
 创建无参数有返回值的虚函���。
 
 ```csharp
 public static Func<TResult> Create<TResult>(IntPtr objectPtr, int offset)
 ```
-
+```
 #### Create<TArg1, TResult>
-
+```
 创建带一个参数有返回值的虚函数。
 
 ```csharp
 public static Func<TArg1, TResult> Create<TArg1, TResult>(IntPtr objectPtr, int offset)
 ```
-
+```
 #### Create<TArg1, TArg2, TResult>
-
+```
 创建带两个参数有返回值的虚函数。
 
 ```csharp

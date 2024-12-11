@@ -30,7 +30,7 @@ public static class EnumUtils
 
 ## 方法说明
 
-### ToEnum<T>
+### ToEnum< T >
 
 将整数或字符串值转换为指定枚举类型。
 
@@ -39,7 +39,7 @@ public static T ToEnum<T>(int value) where T : Enum
 public static T ToEnum<T>(string value) where T : Enum
 ```
 
-### GetName<T>
+### GetName< T >
 
 获取枚举值的名称。
 
@@ -47,7 +47,7 @@ public static T ToEnum<T>(string value) where T : Enum
 public static string GetName<T>(T value) where T : Enum
 ```
 
-### GetDescription<T>
+### GetDescription< T >
 
 获取枚举值的描述（如果有 Description 特性）。
 
@@ -55,7 +55,7 @@ public static string GetName<T>(T value) where T : Enum
 public static string GetDescription<T>(T value) where T : Enum
 ```
 
-### IsDefined<T>
+### IsDefined< T >
 
 检查枚举值是否定义。
 
@@ -63,7 +63,7 @@ public static string GetDescription<T>(T value) where T : Enum
 public static bool IsDefined<T>(T value) where T : Enum
 ```
 
-### GetValues<T>
+### GetValues< T >
 
 获取枚举的所有值。
 

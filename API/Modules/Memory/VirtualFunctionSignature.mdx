@@ -18,7 +18,7 @@ namespace CounterStrikeSharp.API.Modules.Memory
 
 ### 有返回值方法 (Functions)
 
-#### Create<TResult>
+#### Create< TResult >
 
 基于签名创建无参数有返回值的虚函数。
 
@@ -27,7 +27,7 @@ public static Func<TResult> Create<TResult>(string signature)
 public static Func<TResult> Create<TResult>(string signature, string binarypath)
 ```
 
-#### Create<TArg1, TResult>
+#### Create< TArg1, TResult >
 
 基于签名创建带一个参数有返回值的虚函数。
 
@@ -47,7 +47,7 @@ public static Action CreateVoid(string signature)
 public static Action CreateVoid(string signature, string binarypath)
 ```
 
-#### CreateVoid<TArg1>
+#### CreateVoid< TArg1 >
 
 基于签名创建带一个参数无返回值的虚函数。
 
