@@ -1,0 +1,47 @@
+---
+title: 核心配置
+description: 关于核心配置文件的摘要
+icons: Cpu
+---
+
+
+## PublicChatTrigger
+
+一个列表，用于公共频道的聊天触发器。
+
+## SilentChatTrigger
+
+一个列表，用于队伍(静默)频道的聊天触发器。
+
+## FollowCS2ServerGuidelines
+
+根据 [CS2 服务器规章](https://blog.counter-strike.net/index.php/server_guidelines/), 
+某些插件功能在Counter-Strike 2游戏服务器上执行时会导致游戏服务器所有者的所有游戏服务器登录令牌[GSLTs](https://help.steampowered.com/zh-cn/faqs/view/07AF-502E-A104-BD4B)被封禁。
+
+启用该选项将阻止插件执行已知的可能会导致您GSLT封禁的功能。
+这个选项仅在CS2中可用
+
+> [!NOTE]
+> 启用该选项导致的被封禁后果自负.
+> 虽然V社不怎么管GSLT封禁，但不代表不会。
+> 该选项如果启用可能会导致修改皮肤一类的插件无法正常运行
+
+## PluginHotReloadEnabled
+
+启用后，插件的.dll文件更新时将自动重新加载。
+
+## PluginAutoLoadEnabled
+
+启用后，在服务器启动时将自动从插件目录加载插件。
+
+## ServerLanguage
+
+配置服务器命令和信息使用的默认语言。基于 RFC 4646 的文化名称格式为 “languagecode2-country`/`regioncode2`”，其中 “languagecode2`”为双字母语言代码，“country/regioncode2`”为双字母亚文化代码。例如，“ja-JP ”表示日语（日本），“en-US ”表示英语（美国）。默认为 “en”。
+
+## UnlockConCommands
+
+启用后，将从所有控制台命令中移除FCVAR_HIDDEN、FCVAR_DEVELOPMENTONLY、FCVAR_MISSING0、FCVAR_MISSING1、FCVAR_MISSING2、FCVAR_MISSING3标志。
+
+## UnlockConVars
+
+启用后，将从所有控制台变量中移除FCVAR_HIDDEN、FCVAR_DEVELOPMENTONLY、FCVAR_MISSING0、FCVAR_MISSING1、FCVAR_MISSING2、FCVAR_MISSING3标志。
