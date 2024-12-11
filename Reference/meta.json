@@ -1,0 +1,9 @@
+{
+    "title": "Files",
+    "description": "The configration file",
+    "icon": "File",
+    "root": true,
+    "pages": [
+      "Core-Configuration"
+    ]
+  }
