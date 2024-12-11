@@ -1,0 +1,72 @@
+---
+title: 游戏事件
+description: 本指南将介绍如何在 CounterStrikeSharp 中监听和处理 Source 引擎的游戏事件。
+icon: Cctv
+---
+
+
+## 添加事件监听器
+
+### 自动注册
+
+CounterStrikeSharp 会自动注册在 `BasePlugin` 类中使用 `GameEventHandler` 属性标记的事件监听器。这些监听器会在热重载时自动注册和注销。
+
+#### 示例：自动注册事件监听器
+
+```csharp
+[GameEventHandler]
+public HookResult OnPlayerConnect(EventPlayerConnect @event, GameEventInfo info)
+{
+    // Userid 将为您提供对 CCSPlayerController 类的引用。
+    // 在访问其字段之前，必须首先检查 Userid 句柄是否有效，
+    // 否则可能会导致运行时异常。有关详细信息，请参阅“引用玩家”文档部分。
+    if (@event.Userid.IsValid) {
+        Logger.LogInformation("Player {Name} has connected!", @event.Userid.PlayerName);
+    }
+
+    return HookResult.Continue;
+}
+```
+
+### 在加载时注册
+
+也可以在 `OnLoad` 方法中（或在您可以访问插件实例的任何位置）绑定事件监听器。
+
+#### 示例：在 OnLoad 装载时注册事件监听器
+
+```csharp
+public override void Load(bool hotReload)
+{
+    RegisterEventHandler<EventRoundStart>((@event, info) =>
+    {
+        Logger.LogInformation("Round has started with time limit of {Timelimit}", @event.Timelimit);
+
+        return HookResult.Continue;
+    });
+}
+```
+
+## 访问事件参数
+
+具体的 `GameEvent` 子类将提供事件定义中的强类型参数。例如，`event.Timelimit` 将是一个 `long` 值，`event.UserId` 将是一个 `CCSPlayerController`。
+
+这些事件属性是可变的，您可以像普通值一样更新它们，并在事件实例中进行更新。
+
+<Callout title="警告" type="error">
+
+`GameEvent` 实例及其属性在事件监听函数调用后将不复存在，这意味着在定时器和 `Server.NextFrame()` 方法中访问属性时会遇到错误。您应在调用 `Server.NextFrame()` 等函数之前将属性值存储在变量中，以便安全地读取数据。
+
+</Callout>
+
+## 阻止事件广播
+
+可以通过修改 `info.DontBroadcast` 属性为 `true` 来阻止事件广播到客户端。例如：
+
+```csharp
+info.DontBroadcast = true;
+```
+
+## 取消事件
+
+在预事件钩子中，您可以通过返回 `HookResult.Handled` 或 `HookResult.Stop` 来阻止事件继续到其他插件。
+

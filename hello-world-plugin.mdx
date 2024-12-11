@@ -1,0 +1,122 @@
+---
+title: 创建简单插件
+description: 编写您的第一个 CounterStrikeSharp 插件
+icon: Component
+---
+
+
+### 1. 创建新项目
+
+首先，确保您的机器上已安装适用于您平台的 .NET 8.0 SDK。您可以在 [Microsoft 官方下载页面](https://dotnet.microsoft.com/download) 中找到最新版本的下载链接。
+
+### 2. 创建类库
+
+所有 CounterStrikeSharp 插件都是以 .dll 类库的形式安装在服务器上的。使用内置的 .NET SDK 工具创建一个新的类库：
+
+```bash
+dotnet new classlib --name HelloWorldPlugin
+```
+
+接下来，使用您的 IDE（如 Visual Studio 或 Rider）添加对 `CounterStrikeSharp.Api.dll` 的引用。如果您使用的是 VSCode 或其他文本编辑器，您可以直接编辑 `.csproj` 文件，添加以下内容：
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup> // [!code highlight]
+    <Reference Include="CounterStrikeSharp.API"> // [!code highlight]
+      <HintPath>[CS安装路径]/addons/counterstrikesharp/api/CounterStrikeSharp.API.dll</HintPath> // [!code highlight]
+    </Reference> // [!code highlight]
+  </ItemGroup>  // [!code highlight]
+</Project>
+```
+
+<Callout title="提示" type="warn">
+  您也可以使用以下命令直接安装 NuGet 包来获取引用，而不需要手动添加：
+  ```bash
+  dotnet add package CounterStrikeSharp.API
+  ```
+</Callout>
+
+
+
+
+### 3. 创建插件文件
+
+将项目默认的类文件（通常为 `Class1.cs`）重命名为更准确的名称，比如 `HelloWorldPlugin.cs`。然后在此文件中插入以下代码，作为 hello world 插件的示例。确保类名和命名空间与项目名称一致。
+
+```csharp
+using CounterStrikeSharp.API.Core;
+
+namespace HelloWorldPlugin;
+
+public class HelloWorldPlugin : BasePlugin
+{
+    public override string ModuleName => "Hello World Plugin";
+    
+    public override string ModuleVersion => "0.0.1";
+
+    public override void Load(bool hotReload)
+    {
+        Console.WriteLine("Hello World!");
+    }
+}
+```
+
+现在使用 IDE 或命令行构建项目：
+
+```bash
+dotnet build
+```
+
+成功构建后，您应该能在以下路径找到生成的二进制文件：
+```
+bin/Debug/net8.0
+```
+
+### 4. 安装插件
+
+找到您的 CS2 专用服务器的插件目录：
+```
+/game/csgo/addons/counterstrikesharp/plugins
+```
+
+在该目录中创建一个与输出的 .dll 文件名称完全相同的新文件夹。例如，如果您的输出文件名为 `HelloWorldPlugin.dll`，则创建一个名为 `HelloWorldPlugin` 的新文件夹。在此文件夹中，复制并粘贴以下文件：
+- `HelloWorldPlugin.deps.json`
+- `HelloWorldPlugin.dll`
+- `HelloWorldPlugin.pdb`
+
+完成后，文件夹结构应如下所示：
+
+```
+HelloWorldPlugin
+├── HelloWorldPlugin.deps.json
+├── HelloWorldPlugin.dll
+└── HelloWorldPlugin.pdb
+```
+<Callout title="警告" type="warn">
+    如果您为插件安装了外部 NuGet 包，则可能需要手动将它们的 .dll 文件包含在 `HelloWorldPlugin` 目录中。例如，如果使用 `Stateless` 库，请确保将 `stateless.dll` 文件放入该目录内。
+</Callout>
+
+<Callout title="备注" >
+    某些依赖项可能会因使用的 CounterStrikeSharp 版本而有所不同。
+</Callout>
+
+
+
+### 5. 启动服务器
+
+现在启动您的 CS2 专用服务器。在控制台中，您应该先看到 `CounterStrikeSharp.API Loaded Successfully.` 消息，随后是 `Hello World!`，这是从加载函数中输出的内容。太棒了！
+
+
+<Callout title="备注" >
+    默认情况下，如果您替换插件文件夹中的 .dll 文件，CounterStrikeSharp 将自动热重载您的插件。在热重载过程中，它将依次调用 `Unload` 和 `Load` 方法，并将 `hotReload` 标志设置为 `true`。
+</Callout>
+
+
+框架会自动注销任何事件处理程序或监听器，因此您可以安全地在加载时重新注册它们，而无需检查该标志。不过，如果您希望在热重载时执行特定操作，可以根据需要在调用 `Load()` 方法时检查该标志。

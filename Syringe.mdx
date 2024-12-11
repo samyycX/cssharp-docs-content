@@ -1,0 +1,76 @@
+---
+title: 依赖注入
+description: 使用依赖注入在 CounterStrikeSharp 中
+icon: Syringe
+---
+
+CounterStrikeSharp 允许在插件中使用标准的 `IServiceCollection` 实现依赖注入。它提供了一些预定义的标准服务（例如用于日志记录的 `ILogger`），未来还会有更多服务可用。
+
+## 添加自定义服务
+
+要将您自己的作用域和单例服务添加到服务容器中，您需要创建一个实现 `IPluginServiceCollection<T>` 接口的新类。以下是示例代码：
+
+```csharp
+public class TestPlugin : BasePlugin
+{
+    // 插件代码...
+}
+
+public class TestPluginServiceCollection : IPluginServiceCollection<TestPlugin>
+{
+    public void ConfigureServices(IServiceCollection serviceCollection)
+    {
+        // 添加服务到容器
+        serviceCollection.AddScoped<ExampleInjectedClass>();
+        serviceCollection.AddLogging(builder => ...);
+    }
+}
+```
+
+在程序集中，CounterStrikeSharp 会搜索所有实现 `IPlugin` 接口的类，然后查找对应的 `IPluginServiceCollection<T>` 实现。接下来，它将配置服务提供商，并在继续加载步骤之前请求您的插件的单例实例。这样，在插件类构造函数中列出的任何依赖项都会在实例化时自动注入。
+
+## 示例代码
+
+以下是一个具体的示例，展示如何实现依赖注入：
+
+```csharp
+public class TestInjectedClass
+{
+    private readonly ILogger<TestInjectedClass> _logger;
+
+    public TestInjectedClass(ILogger<TestInjectedClass> logger)
+    {
+        _logger = logger;
+    }
+
+    public void Hello()
+    {
+        _logger.LogInformation("Hello World from Test Injected Class");
+    }
+}
+
+public class TestPluginServiceCollection : IPluginServiceCollection<SamplePlugin>
+{
+    public void ConfigureServices(IServiceCollection serviceCollection)
+    {
+        // 注册 TestInjectedClass 服务
+        serviceCollection.AddScoped<TestInjectedClass>();
+    }
+}
+
+public class SamplePlugin : BasePlugin
+{
+    private readonly TestInjectedClass _testInjectedClass;
+
+    public SamplePlugin(TestInjectedClass testInjectedClass)
+    {
+        _testInjectedClass = testInjectedClass;
+    }
+
+    public override void Load(bool hotReload)
+    {
+        _testInjectedClass.Hello();
+    }
+}
+```
+
