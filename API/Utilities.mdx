@@ -34,7 +34,7 @@ public const uint InvalidEHandleIndex = 0xFFFFFFFF;
 ### FlagsToList&lt;T&gt;
 
 ```csharp
-public static IEnumerable<T> FlagsToList<T>(this T flags) where T : Enum
+public static IEnumerable  FlagsToList (this T flags) where T : Enum
 ```
 
 将枚举标志转换为列表。
@@ -44,7 +44,7 @@ public static IEnumerable<T> FlagsToList<T>(this T flags) where T : Enum
 ### GetEntityFromIndex&lt;T&gt;
 
 ```csharp
-public static T? GetEntityFromIndex<T>(int index) where T : CEntityInstance
+public static T? GetEntityFromIndex (int index) where T : CEntityInstance
 ```
 
 通过索引获取实体。
@@ -52,7 +52,7 @@ public static T? GetEntityFromIndex<T>(int index) where T : CEntityInstance
 ### CreateEntityByName&lt;T&gt;
 
 ```csharp
-public static T? CreateEntityByName<T>(string name) where T : CBaseEntity
+public static T? CreateEntityByName (string name) where T : CBaseEntity
 ```
 
 通过名称创建实体。
@@ -101,7 +101,7 @@ public static bool RemoveItemByDesignerName(this CCSPlayerController player, str
 ### FindAllEntitiesByDesignerName&lt;T&gt;
 
 ```csharp
-public static IEnumerable<T> FindAllEntitiesByDesignerName<T>(string designerName) where T : CEntityInstance
+public static IEnumerable  FindAllEntitiesByDesignerName (string designerName) where T : CEntityInstance
 ```
 
 通过设计器名称查找所有实体。

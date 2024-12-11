@@ -41,9 +41,9 @@ public void DispatchSpawn()
 - 描述: 生成实体。
 - 异常: 如果实体无效,会抛出 `InvalidOperationException`。
 
-### GetVData<T>
+### GetVData 
 ```csharp
-public T? GetVData<T>() where T : CEntitySubclassVDataBase
+public T? GetVData () where T : CEntitySubclassVDataBase
 ```
 - 描述: 获取实体的 VData。
 - 类型参数: `T` - 必须继承自 `CEntitySubclassVDataBase`

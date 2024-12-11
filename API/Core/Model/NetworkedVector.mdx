@@ -4,9 +4,9 @@ sidebar_position: 17
 tags: [网络, 集合]
 ---
 
-# NetworkedVector<T>
+# NetworkedVector 
 
-`NetworkedVector<T>` 是一个泛型类，用于表示网络同步的向量集合。它实现了 `IReadOnlyCollection<T>` 接口。
+`NetworkedVector ` 是一个泛型类，用于表示网络同步的向量集合。它实现了 `IReadOnlyCollection ` 接口。
 
 ## 属性
 
@@ -21,8 +21,8 @@ tags: [网络, 集合]
 ### this[int index]
 - 类型: `T`
 - 描述: 获取指定索引处的元素。
-- 限制: 当前仅支持 `CHandle<T>` 类型的元素。
-- 异常: 如果 T 不是 `CHandle<T>` 类型，会抛出 `NotSupportedException`。
+- 限制: 当前仅支持 `CHandle ` 类型的元素。
+- 异常: 如果 T 不是 `CHandle ` 类型，会抛出 `NotSupportedException`。
 
 ## 方法
 
@@ -34,10 +34,10 @@ public void RemoveAll()
 
 ### GetEnumerator()
 ```csharp
-public IEnumerator<T> GetEnumerator()
+public IEnumerator  GetEnumerator()
 ```
 - 描述: 返回一个遍历集合的枚举器。
 
 ## 备注
 
-这个类主要用于处理需要在网络中同步的向量数据集合。目前仅支持 `CHandle<T>` 类型的元素。 
+这个类主要用于处理需要在网络中同步的向量数据集合。目前仅支持 `CHandle ` 类型的元素。 

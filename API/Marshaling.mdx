@@ -35,7 +35,7 @@ public static ColorMarshaler ColorMarshaler { get; }
 ### ICustomMarshal&lt;T&gt;
 
 ```csharp
-public interface ICustomMarshal<T>
+public interface ICustomMarshal 
 {
     T NativeToManaged(IntPtr pointer);
     void ManagedToNative(IntPtr pointer, T managedObj);
