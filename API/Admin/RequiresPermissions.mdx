@@ -1,0 +1,139 @@
+---
+title: RequiresPermissions 特性
+description: CounterStrikeSharp 中用于权限控制的特性，用于限制命令的执行权限
+icon: Lock
+---
+
+# RequiresPermissions 特性
+
+`RequiresPermissions` 是一个用于方法的特性，用于控制命令的执行权限。它可以要求执行者同时拥有多个指定的权限。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Admin
+```
+
+## 特性定义
+
+```csharp
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+public class RequiresPermissions : BaseRequiresPermissions
+```
+
+## 相关特性
+
+### RequiresPermissionsOr
+
+要求执行者拥有指定权限中的任意一个。
+
+```csharp
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+public class RequiresPermissionsOr : BaseRequiresPermissions
+```
+
+## 构造函数
+
+### RequiresPermissions
+
+创建一个新的权限要求特性。
+
+```csharp
+public RequiresPermissions(params string[] permissions)
+```
+
+#### 参数
+
+- `permissions`: `string[]` - 需要的权限列表
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    // 需要同时拥有所有指定权限
+    [RequiresPermissions("@css/generic", "@css/kick")]
+    [CommandHelper(whoCanExecute: CommandUsage.CLIENT_ONLY)]
+    public void HandleKickCommand(CCSPlayerController? player, CommandInfo command)
+    {
+        if (player == null) return;
+        // 执行踢人命令...
+    }
+    
+    // 需要拥有任意一个指定权限
+    [RequiresPermissionsOr("@css/admin", "@css/vip")]
+    [CommandHelper(whoCanExecute: CommandUsage.CLIENT_ONLY)]
+    public void HandleVipCommand(CCSPlayerController? player, CommandInfo command)
+    {
+        if (player == null) return;
+        // 执行VIP命令...
+    }
+    
+    // 组合使用多个权限要求
+    [RequiresPermissions("@css/generic")]
+    [RequiresPermissions("@css/ban")]
+    [CommandHelper(whoCanExecute: CommandUsage.CLIENT_ONLY)]
+    public void HandleBanCommand(CCSPlayerController? player, CommandInfo command)
+    {
+        if (player == null) return;
+        // 执行封禁命令...
+    }
+}
+```
+
+## 权限格式
+
+### 用户权限
+
+以 `@` 开头的权限标志表示用户权限。
+
+```
+@css/generic      - 通用管理员权限
+@css/kick        - 踢人权限
+@css/ban         - 封禁权限
+@css/rcon        - RCON权限
+@vip/reserved    - VIP预留权限
+```
+
+### 组权限
+
+以 `#` 开头的标志表示组权限。
+
+```
+#admin           - 管理员组
+#vip             - VIP组
+#moderator       - 版主组
+```
+
+## 权限检查流程
+
+1. 检查命令覆盖
+   - 如果玩家有命令覆盖设置，直接返回覆盖结果
+
+2. 检查基本条件
+   - 验证玩家是否有效
+   - 验证玩家是否已连接
+
+3. 检查用户权限
+   - 验证玩家是否拥有所有指定的用户权限
+
+4. 检查组权限
+   - 验证玩家是否属于所有指定的组
+
+## 说明
+
+- 支持多个权限的组合要求
+- 可以同时使用用户权限和组权限
+- 支持权限的继承
+- 可以通过命令覆盖系统修改权限
+- 支持多个特性的叠加使用
+
+## 最佳实践
+
+- 使用清晰的权限命名规范
+- 合理组织权限层级
+- 避免过于复杂的权限组合
+- 考虑使用组权限进行批量管理
+- 正确处理权限检查失败的情况
+- 提供适当的权限检查失败提示
+- 记录重要的权限检查操作 

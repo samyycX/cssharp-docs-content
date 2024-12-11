@@ -1,31 +1,126 @@
 ---
-title: GameEventHandlerAttribute 类
-description: 用于标记游戏事件处理方法的特性
-icon: GameController
+title: GameEventHandlerAttribute 特性
+description: CounterStrikeSharp 事件系统中用于通过特性注册游戏事件处理器的特性
+icon: Bell
 ---
 
-# GameEventHandlerAttribute 类
+# GameEventHandlerAttribute 特性
+
+`GameEventHandlerAttribute` 是一个用于标记方法的特性，用于将方法注册为游戏事件处理器。此特性允许你指定事件处理的时机（前置或后置）。
 
 ## 命名空间
-`CounterStrikeSharp.API.Core.Attributes.Registration`
 
-## 说明
-用于标记游戏事件处理方法。
+```csharp
+namespace CounterStrikeSharp.API.Core.Attributes.Registration
+```
 
-## 构造函数
+## 特性定义
 
-### GameEventHandlerAttribute(HookMode mode = HookMode.Post)
-创建一个新的GameEventHandlerAttribute实例。
-
-**参数**:
-- `mode`: `HookMode` - 钩子模式,默认为Post
+```csharp
+[AttributeUsage(AttributeTargets.Method)]
+public class GameEventHandlerAttribute : Attribute
+```
 
 ## 属性
 
 ### Mode
-获取或设置钩子模式。
 
-**类型**: `HookMode`
+获取或设置事件处理的模式（前置或后置）。
 
-## 使用位置
-- 方法 
+```csharp
+public HookMode Mode { get; set; }
+```
+
+## 构造函数
+
+### GameEventHandlerAttribute
+
+创建一个新的游戏事件处理器特性实例。
+
+```csharp
+public GameEventHandlerAttribute(HookMode mode = HookMode.Post)
+```
+
+#### 参数
+
+- `mode`: `HookMode` - 事件处理的模式，默认为 `HookMode.Post`
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    // 基本事件处理器
+    [GameEventHandler]
+    public HookResult OnPlayerDeath(EventPlayerDeath @event, GameEventInfo info)
+    {
+        Console.WriteLine($"玩家 {@event.Userid.PlayerName} 死亡");
+        return HookResult.Continue;
+    }
+
+    // 前置事件处理器
+    [GameEventHandler(HookMode.Pre)]
+    public HookResult OnPlayerSpawnPre(EventPlayerSpawn @event, GameEventInfo info)
+    {
+        // 在玩家重生前执行
+        if (@event.Userid.TeamNum <= 1)
+        {
+            // 阻止观察者重生
+            return HookResult.Handled;
+        }
+        return HookResult.Continue;
+    }
+
+    // 后置事件处理器
+    [GameEventHandler(HookMode.Post)]
+    public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
+    {
+        // 在回合开始后执行
+        Server.PrintToChatAll("新回合开始！");
+        return HookResult.Continue;
+    }
+
+    // 带有条件检查的事件处理器
+    [GameEventHandler]
+    public HookResult OnPlayerHurt(EventPlayerHurt @event, GameEventInfo info)
+    {
+        if (@event.Attacker == null || !@event.Attacker.IsValid)
+            return HookResult.Continue;
+
+        if (@event.DmgHealth > 50)
+        {
+            @event.Attacker.PrintToChat($"你对 {@event.Userid.PlayerName} 造成了高额伤害！");
+        }
+
+        return HookResult.Continue;
+    }
+
+    public override void Load(bool hotReload)
+    {
+        // 特性会自动注册事件处理器，无需手动注册
+        RegisterAllAttributes(this);
+    }
+}
+```
+
+## 说明
+
+- 此特性用于快速注册游戏事件处理器
+- 事件处理方法必须符合以下签名：
+  - 返回值为 `HookResult`
+  - 第一个参数为具体的事件类型
+  - 第二个参数为 `GameEventInfo`
+- 支持前置（Pre）和后置（Post）事件处理
+- 事件处理器会在相应的游戏事件发生时自动调用
+- 可以通过返回不同的 `HookResult` 值来控制事件处理流程
+
+## 最佳实践
+
+- 根据需要选择合适的事件处理时机
+- 在前置处理器中进行验证和控制
+- 在后置处理器中进行记录和后续处理
+- 始终检查事件参数的有效性
+- 合理使用 `HookResult` 返回值
+- 避免在事件处理器中执行耗时操作
+- 处理所有可能的异常情况
+- 使用有意义的方法名称来表示处理的事件

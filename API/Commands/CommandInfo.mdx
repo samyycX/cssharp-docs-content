@@ -1,0 +1,188 @@
+---
+title: CommandInfo 类
+description: CounterStrikeSharp 命令系统中的命令信息类，提供命令执行时的上下文信息
+icon: Terminal
+---
+
+# CommandInfo 类
+
+`CommandInfo` 类提供了命令执行时的上下文信息，包括命令参数、调用者信息等。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Commands
+```
+
+## 类定义
+
+```csharp
+public class CommandInfo
+```
+
+## 委托定义
+
+### CommandCallback
+
+命令回调函数的委托定义。
+
+```csharp
+public delegate void CommandCallback(CCSPlayerController? player, CommandInfo commandInfo)
+```
+
+### CommandListenerCallback
+
+命令监听器回调函数的委托定义。
+
+```csharp
+public delegate HookResult CommandListenerCallback(CCSPlayerController? player, CommandInfo commandInfo)
+```
+
+**说明**: 返回 `HookResult.Handled` 或更高级别的值将阻止命令执行。
+
+## 属性
+
+### CallingPlayer
+
+获取调用命令的玩家。
+
+```csharp
+public CCSPlayerController? CallingPlayer { get; }
+```
+
+### Handle
+
+获取命令的原生句柄。
+
+```csharp
+public IntPtr Handle { get; }
+```
+
+### ArgCount
+
+��取命令参数的数量。
+
+```csharp
+public int ArgCount { get; }
+```
+
+### ArgString
+
+获取完整的参数字符串。
+
+```csharp
+public string ArgString { get; }
+```
+
+### GetCommandString
+
+获取完整的命令字符串。
+
+```csharp
+public string GetCommandString { get; }
+```
+
+## 方法
+
+### GetArg
+
+获取指定索引的参数。
+
+```csharp
+public string GetArg(int index)
+```
+
+### ArgByIndex
+
+获取指定索引的参数（与GetArg相同）。
+
+```csharp
+public string ArgByIndex(int index)
+```
+
+### ReplyToCommand
+
+回复命令执行者。
+
+```csharp
+public void ReplyToCommand(string message)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 注册一个基本命令
+        AddCommand("hello", "打招呼命令", (player, info) =>
+        {
+            // 获取命令信息
+            Console.WriteLine($"命令名称: {info.GetArg(0)}");
+            Console.WriteLine($"参数数量: {info.ArgCount}");
+            Console.WriteLine($"完整命令: {info.GetCommandString}");
+            
+            // 检查参数
+            if (info.ArgCount > 1)
+            {
+                var target = info.GetArg(1);
+                info.ReplyToCommand($"你好，{target}！");
+            }
+            else
+            {
+                info.ReplyToCommand("用法: !hello <名字>");
+            }
+        });
+        
+        // 注册一个带监听器的命令
+        RegisterListener<Listeners.OnClientCommand>((player, command) =>
+        {
+            if (command.GetArg(0).Equals("status", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine($"玩家 {player?.PlayerName} 执行了status命令");
+                return HookResult.Continue;
+            }
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 命令参数示例
+
+假设执行以下命令：
+```
+!give "Player Name" weapon_ak47 100
+```
+
+参数解析如下：
+```csharp
+ArgCount = 4
+GetArg(0) = "give"
+GetArg(1) = "Player Name"
+GetArg(2) = "weapon_ak47"
+GetArg(3) = "100"
+ArgString = "\"Player Name\" weapon_ak47 100"
+GetCommandString = "give \"Player Name\" weapon_ak47 100"
+```
+
+## 说明
+
+- 第一个参数（索引0）始终是命令名称
+- 支持带引号的参数，可以包含空格
+- 参数索引从0开始
+- 命令名称不区分大小写
+- 可以获取完整的命令字符串
+- 提供了方便的回复功能
+
+## 最佳实践
+
+- 始终检查参数数量
+- 使用适当的参数分隔符
+- 处理无效参数的情况
+- 提供有用的错误消息
+- 使用引号处���包含空格的参数
+- 考虑命令的权限要求
+- 提供命令使用说明
+``` 

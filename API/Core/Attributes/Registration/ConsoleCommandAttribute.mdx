@@ -1,31 +1,138 @@
-# ConsoleCommandAttribute 类
+---
+title: ConsoleCommandAttribute 特性
+description: CounterStrikeSharp 命令系统中用于通过特性注册控制台命令的特性
+icon: Terminal
+---
+
+# ConsoleCommandAttribute 特性
+
+`ConsoleCommandAttribute` 是一个用于标记方法的特性，用于将方法注册为控制台命令。此特性可以多次应用于同一个方法，允许一个方法处理多个命令。
 
 ## 命名空间
-`CounterStrikeSharp.API.Core.Attributes.Registration`
 
-## 说明
-用于标记控制台命令处理方法。
+```csharp
+namespace CounterStrikeSharp.API.Core.Attributes.Registration
+```
 
-## 构造函数
+## 特性定义
 
-### ConsoleCommandAttribute(string command, string description = null)
-创建一个新的ConsoleCommandAttribute实例。
-
-**参数**:
-- `command`: `string` - 命令名称
-- `description`: `string` - 命令描述(可选)
+```csharp
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+public class ConsoleCommandAttribute : Attribute
+```
 
 ## 属性
 
 ### Command
+
 获取命令名称。
 
-**类型**: `string`
+```csharp
+public string Command { get; }
+```
 
 ### Description
+
 获取命令描述。
 
-**类型**: `string`
+```csharp
+public string Description { get; }
+```
 
-## 使用位置
-- 方法(可多次使用) 
+## 构造函数
+
+### ConsoleCommandAttribute
+
+创建一个新的控制台命令特性实例。
+
+```csharp
+public ConsoleCommandAttribute(string command, string description = null)
+```
+
+#### 参数
+
+- `command`: `string` - 命令名称
+- `description`: `string` - 命令描述（可选）
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    // 基本命令示例
+    [ConsoleCommand("hello", "向玩家打招呼")]
+    public void HandleHelloCommand(CCSPlayerController? player, CommandInfo command)
+    {
+        if (player != null)
+        {
+            player.PrintToChat("你好！");
+        }
+    }
+
+    // 一个方法处理多个命令
+    [ConsoleCommand("hp", "设置生命值")]
+    [ConsoleCommand("health", "设置生命值")]
+    public void HandleHealthCommand(CCSPlayerController? player, CommandInfo command)
+    {
+        if (player == null || !player.IsValid)
+            return;
+
+        if (command.ArgCount < 2)
+        {
+            player.PrintToChat("用法: !hp <数值>");
+            return;
+        }
+
+        if (int.TryParse(command.ArgByIndex(1), out int health))
+        {
+            player.PlayerPawn.Value.Health = health;
+            player.PrintToChat($"你的生命值已设置为 {health}");
+        }
+    }
+
+    // 带参数验证的命令
+    [ConsoleCommand("give", "给予物品")]
+    [RequiresPermissions("admin.give")]
+    public void HandleGiveCommand(CCSPlayerController? player, CommandInfo command)
+    {
+        if (player == null || !player.IsValid)
+            return;
+
+        if (command.ArgCount < 2)
+        {
+            player.PrintToChat("用法: !give <物品名称>");
+            return;
+        }
+
+        string item = command.ArgByIndex(1);
+        // 实现给予物品的逻辑
+    }
+
+    public override void Load(bool hotReload)
+    {
+        // 特性会自动注册命令，无需手动注册
+        RegisterAllAttributes(this);
+    }
+}
+```
+
+## 说明
+
+- 此特性用于快速注册控制台命令
+- 可以应用于任何符合命令处理方法签名的方法
+- 一个方法可以处理多个不同的命令
+- 命令处理方法必须符合以下签名：
+  - 返回值为 `void`
+  - 第一个参数为 `CCSPlayerController?`
+  - 第二个参数为 `CommandInfo`
+- 支持与其他特性组合使用，如权限特性
+
+## 最佳实践
+
+- 为每个命令提供清晰的描述
+- 在命令处理方法中进行适当的参数验证
+- 使用有意义的命令名称
+- 为复杂命令提供使用说明
+- 考虑添加权限控制
+- 处理无效玩家和参数的情况
+- 提供有用的错误消息和反馈

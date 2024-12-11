@@ -1,0 +1,150 @@
+---
+title: CCSGameRules 类
+description: CounterStrikeSharp 中管理游戏规则和状态的类，提供了控制游戏流程的功能
+icon: Gavel
+---
+
+# CCSGameRules 类
+
+`CCSGameRules` 是管理CS2游戏规则和状态的核心类，提供了控制回合、查找实体等游戏流程相关的功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## 类定义
+
+```csharp
+public partial class CCSGameRules
+```
+
+## 方法
+
+### TerminateRound
+
+终止当前回合，可指定延迟时间和结束原因。
+
+```csharp
+public void TerminateRound(float delay, RoundEndReason roundEndReason)
+```
+
+#### 参数
+
+- `delay`: `float` - 终止回合的延迟时间（秒）
+- `roundEndReason`: `RoundEndReason` - 回合结束的原因
+
+### FindPickerEntity&lt;T&gt;
+
+查找玩家瞄准的实体。
+
+```csharp
+public T? FindPickerEntity<T>(CBasePlayerController player) where T : CBaseEntity
+```
+
+#### 参数
+
+- `player`: `CBasePlayerController` - 要检查的玩家
+- `T`: 要查找的实体类型
+
+#### 返回值
+
+- `T?` - 找到的实体，如果未找到则返回 `null`
+
+### GetClientAimTarget
+
+获取玩家瞄准的其他玩家。
+
+```csharp
+public CCSPlayerController? GetClientAimTarget(CCSPlayerController player)
+```
+
+#### 参数
+
+- `player`: `CCSPlayerController` - 要检查的玩家
+
+#### 返回值
+
+- `CCSPlayerController?` - 被瞄准的玩家，如果未瞄准玩家则返回 `null`
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 注册命令来结束回合
+        RegisterListener<Listeners.OnClientCommand>((player, command) =>
+        {
+            if (command == "endround")
+            {
+                // 3秒后以CT胜利结束回合
+                Server.GameRules.TerminateRound(3.0f, RoundEndReason.CTWin);
+            }
+        });
+
+        // 注册命令来检查玩家瞄准目标
+        AddCommand("checktarget", "检查瞄准目标", (player, info) =>
+        {
+            if (player == null) return;
+
+            // 获取玩家瞄准的其他玩家
+            var target = Server.GameRules.GetClientAimTarget(player);
+            if (target != null)
+            {
+                player.PrintToChat($"你正在瞄准 {target.PlayerName}");
+            }
+            else
+            {
+                player.PrintToChat("你没有瞄准任何玩家");
+            }
+        });
+
+        // 使用FindPickerEntity查找特定类型的实体
+        AddCommand("checkentity", "检查瞄准的实体", (player, info) =>
+        {
+            if (player == null) return;
+
+            // 查找玩家瞄准的武器实体
+            var weapon = Server.GameRules.FindPickerEntity<CBasePlayerWeapon>(player);
+            if (weapon != null)
+            {
+                player.PrintToChat($"你正在瞄准一个武器");
+            }
+            else
+            {
+                player.PrintToChat("你没有瞄准任何武器");
+            }
+        });
+    }
+}
+```
+
+## 说明
+
+- `CCSGameRules` 是管理游戏规则的核心类
+- 提供了控制回合进程的功能
+- 可以查找玩家瞄准的实体和其他玩家
+- 通常通过 `Server.GameRules` 访问
+- 支持泛型实体查找功能
+
+## 常用回合结束原因
+
+- `RoundEndReason.CTWin` - CT胜利
+- `RoundEndReason.TerroristWin` - T胜利
+- `RoundEndReason.Draw` - 平局
+- `RoundEndReason.BombDefused` - 炸弹被拆除
+- `RoundEndReason.TargetBombed` - 炸弹爆炸
+- `RoundEndReason.HostagesRescued` - 人质获救
+- 等等
+
+## 最佳实践
+
+- 合理使用回合结束延迟时间
+- 选择适当的回合结束原因
+- 在使用实体查找功能时进行空值检查
+- 考虑实体查找的性能影响
+- 注意回合结束可能触发的其他事件
+- 在修改游戏规则时考虑对游戏平衡的影响

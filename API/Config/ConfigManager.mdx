@@ -1,0 +1,161 @@
+---
+title: ConfigManager 类
+description: CounterStrikeSharp 配置管理器，用于加载和管理插件配置
+icon: Settings
+---
+
+# ConfigManager 类
+
+`ConfigManager` 是一个静态类，用于管理CounterStrikeSharp插件的配置文件。它提供了配置文件的加载、自动生成和示例配置文件处理等功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Config
+```
+
+## 类定义
+
+```csharp
+public static class ConfigManager
+```
+
+## 静态方法
+
+### Load&lt;T&gt;
+
+加载指定插件的配置文件。
+
+```csharp
+public static T Load<T>(string pluginName) where T : IBasePluginConfig, new()
+```
+
+#### 类型参数
+
+- `T`: 必须实现 `IBasePluginConfig` 接口并提供无参构造函数的配置类型
+
+#### 参数
+
+- `pluginName`: `string` - 插件名称
+
+#### 返回值
+
+- `T` - 配置实例
+
+## 配置文件位置
+
+配置文件默认保存在以下位置：
+```
+{游戏目录}/csgo/addons/counterstrikesharp/configs/plugins/{插件名称}/{插件名称}.json
+```
+
+示例配置文件位置：
+```
+{游戏目录}/csgo/addons/counterstrikesharp/configs/plugins/{插件名��}/{插件名称}.example.json
+```
+
+## 使用示例
+
+```csharp
+// 定义配置类
+public class MyPluginConfig : BasePluginConfig
+{
+    [JsonPropertyName("WelcomeMessage")]
+    public string WelcomeMessage { get; set; } = "欢迎来到服务器！";
+    
+    [JsonPropertyName("EnableFeature")]
+    public bool EnableFeature { get; set; } = true;
+    
+    [JsonPropertyName("MaxPlayers")]
+    public int MaxPlayers { get; set; } = 32;
+}
+
+// 在插件中使用配置管理器
+public class MyPlugin : BasePlugin, IPluginConfig<MyPluginConfig>
+{
+    public MyPluginConfig Config { get; set; }
+    
+    public override void Load(bool hotReload)
+    {
+        // 加载配置
+        Config = ConfigManager.Load<MyPluginConfig>(ModuleName);
+        
+        // 使用配置
+        if (Config.EnableFeature)
+        {
+            Server.PrintToConsole($"欢迎消息: {Config.WelcomeMessage}");
+            Server.PrintToConsole($"最大玩家数: {Config.MaxPlayers}");
+        }
+    }
+    
+    public void OnConfigParsed(MyPluginConfig config)
+    {
+        // 配置加载完成后的处理
+        Logger.LogInformation($"配置已加载: {config.WelcomeMessage}");
+    }
+}
+```
+
+## 配置文件示例
+
+### 基本配置文件 (plugin.json)
+
+```json
+{
+    "ConfigVersion": 1,
+    "WelcomeMessage": "欢迎来到我的服务器！",
+    "EnableFeature": true,
+    "MaxPlayers": 32
+}
+```
+
+### 示例配置文件 (plugin.example.json)
+
+```json
+{
+    // 这是一个示例配置文件
+    "ConfigVersion": 1,
+    "WelcomeMessage": "这是示例欢迎消息",
+    "EnableFeature": true,
+    "MaxPlayers": 24
+}
+```
+
+## 配置加载流程
+
+1. 检查配置文件是否存在
+   - 检查 `{插件名}.json`
+   - 检查 `{插件名}.example.json`
+
+2. 如果两个文件都不存在
+   - 创建插件配置目录
+   - 生成默认配置文件
+   - 返回默认配置实例
+
+3. 如果只有示例配置文件存在
+   - 复制示例配置文件作为正式配置
+   - 加载配置内容
+
+4. 如果配置文件存在
+   - 直接加载配置内容
+   - 解析JSON（支持注释）
+
+## 说明
+
+- 支持自动生成配置文件
+- 支持示例配置文件
+- 支持JSON注释
+- 自动创建配置目录
+- 提供类型安全的配置加载
+- 支持配置版本管理
+- 处理配置文件加载错误
+
+## 最佳实践
+
+- 使用适当的JSON属性名称
+- 为配置属性提供默认值
+- 使用版本号管理配置变更
+- 提供示例配置文件
+- 处理配置加载失败的情况
+- 验证加载的配置值
+- 记录配置相关的错误 

@@ -1,0 +1,162 @@
+---
+title: CommandHelper 特性
+description: CounterStrikeSharp 命令系统中的辅助特性，用于简化命令的参数验证和执行控制
+icon: Terminal
+---
+
+# CommandHelper 特性
+
+`CommandHelper` 是一个用于方法的特性，用于简化命令的参数验证和执行控制。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Commands
+```
+
+## 枚举定义
+
+### CommandUsage
+
+定义命令的执行权限。
+
+```csharp
+public enum CommandUsage
+{
+    CLIENT_AND_SERVER = 0,  // 客户端和服务器都可以执行
+    CLIENT_ONLY,           // 仅客户端可以执行
+    SERVER_ONLY           // 仅服务器可以执行
+}
+```
+
+## 特性定义
+
+```csharp
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+public class CommandHelperAttribute : Attribute
+```
+
+## 属性
+
+### MinArgs
+
+获取命令所需的最小参数数量。
+
+```csharp
+public int MinArgs { get; }
+```
+
+### Usage
+
+获取命令的使用说明。
+
+```csharp
+public string Usage { get; }
+```
+
+### WhoCanExcecute
+
+获取命令的执行权限。
+
+```csharp
+public CommandUsage WhoCanExcecute { get; }
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    // 基本命令示例
+    [ConsoleCommand("hello", "打招呼命令")]
+    [CommandHelper(minArgs: 1, usage: "<玩家名称>", whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
+    public void OnHelloCommand(CCSPlayerController? player, CommandInfo command)
+    {
+        var targetName = command.GetArg(1);
+        command.ReplyToCommand($"你好，{targetName}！");
+    }
+    
+    // 仅客户端命令示例
+    [ConsoleCommand("suicide", "自杀命令")]
+    [CommandHelper(minArgs: 0, usage: "", whoCanExecute: CommandUsage.CLIENT_ONLY)]
+    public void OnSuicideCommand(CCSPlayerController? player, CommandInfo command)
+    {
+        if (player == null) return;
+        player.CommitSuicide(true, true);
+    }
+    
+    // 仅服务器命令示例
+    [ConsoleCommand("map", "更换地图")]
+    [CommandHelper(minArgs: 1, usage: "<地图名称>", whoCanExecute: CommandUsage.SERVER_ONLY)]
+    public void OnMapCommand(CCSPlayerController? player, CommandInfo command)
+    {
+        var mapName = command.GetArg(1);
+        Server.ExecuteCommand($"changelevel {mapName}");
+    }
+    
+    // 组合使用权限和命令帮助
+    [ConsoleCommand("kick", "踢出玩家")]
+    [CommandHelper(minArgs: 1, usage: "<玩家> [原因]", whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
+    [RequiresPermissions("@css/kick")]
+    public void OnKickCommand(CCSPlayerController? player, CommandInfo command)
+    {
+        var target = command.GetArg(1);
+        var reason = command.ArgCount > 2 ? command.GetArg(2) : "未指定原因";
+        
+        // 踢出玩家的逻辑...
+    }
+}
+```
+
+## 参数验证示例
+
+```csharp
+[ConsoleCommand("give", "给予物品")]
+[CommandHelper(minArgs: 2, usage: "<玩家> <物品> [数量]", whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
+public void OnGiveCommand(CCSPlayerController? player, CommandInfo command)
+{
+    // 命令将自动验证参数数量
+    // 如果参数不足，将自动显示使用说明
+    
+    var target = command.GetArg(1);
+    var item = command.GetArg(2);
+    var amount = command.ArgCount > 3 ? int.Parse(command.GetArg(3)) : 1;
+    
+    // 给予物品的逻辑...
+}
+```
+
+## 错误处理示例
+
+当参数验证失败时，系统会自动显示错误消息：
+
+```
+[CSS] Expected usage: "!give <玩家> <物品> [数量]".
+```
+
+当执行权限不匹配时，系统会显示相应的错误消息：
+
+```
+[CSS] This command can only be executed by clients.
+[CSS] This command can only be executed by the server.
+```
+
+## 说明
+
+- 特性可以简化命令的参数验证
+- 自动处理参数数量检查
+- 自动处理执行权限检查
+- 提供清晰的使用说明
+- 可以与权限系统结合使用
+- 支持多语言错误消息
+
+## 最佳实践
+
+- 为所有命令提供使用说明
+- 正确设置最小参数数量
+- 合理设置执行权限
+- 提供清晰的错误消息
+- 考虑命令的安全性
+- 处理参数解析错误
+- 提供有意义的命令描述
+</rewritten_file> 
