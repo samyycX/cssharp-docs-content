@@ -10,10 +10,12 @@
 
 ## 文件夹结构
 
-- **根目录下的 .mdx 文件**：入门教学部分
+- **Guides**：入门教学部分
+  - **Example 文件夹**：简单 CounterStrikeSharp 教学示例插件制作文档
+  - **Features 文件夹**：对应官方的功能特点文件夹，将被改写为常用功能模块介绍
+  
 - **API 文件夹**：CounterStrikeSharp API 文档
-- **Example 文件夹**：简单 CounterStrikeSharp 教学示例插件制作文档
-- **Features 文件夹**：对应官方的功能特点文件夹，将被改写为常用功能模块介绍
+
 
 ## 如何贡献
 
