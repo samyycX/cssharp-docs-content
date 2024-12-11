@@ -1,9 +1,6 @@
 {
-    "title": "Files",
-    "description": "The configration file",
+    "title": "ReferencePage",
+    "description": "The docs of Reference",
     "icon": "File",
-    "root": true,
-    "pages": [
-      "Core-Configuration"
-    ]
+    "root": true
 }
