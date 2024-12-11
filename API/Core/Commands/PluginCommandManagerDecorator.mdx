@@ -1,0 +1,71 @@
+---
+title: PluginCommandManagerDecorator 类
+description: 用于跟踪和管理插件命令的装饰器类
+icon: Command
+---
+
+# PluginCommandManagerDecorator
+
+这个类是 `ICommandManager` 的装饰器,用于跟踪已注册的命令并在插件卸载时移除它们。
+
+## 接口     
+
+实现了以下接口:
+- `ICommandManager`
+- `IDisposable`
+
+## 构造函数
+
+### PluginCommandManagerDecorator(ICommandManager inner, IPluginContext pluginContext, ILogger<PluginCommandManagerDecorator> logger)
+创建一个新的命令管理器装饰器实例。
+
+**参数**:
+- `inner`: `ICommandManager` - 内部命令管理器
+- `pluginContext`: `IPluginContext` - 插件上下文
+- `logger`: `ILogger<PluginCommandManagerDecorator>` - 日志记录器
+
+## 公共方法
+
+### RegisterCommand
+
+注册一个新的命令。
+
+```csharp
+public void RegisterCommand(CommandDefinition definition)
+```
+
+参数:
+- `definition` - 要注册的命令定义
+
+### RemoveCommand 
+
+移除一个已注册的命令。
+
+```csharp
+public void RemoveCommand(CommandDefinition definition)
+```
+
+参数:
+- `definition` - 要移除的命令定义
+
+### Dispose
+
+释放资源并移除所有已注册的命令。
+
+```csharp
+public void Dispose()
+```
+## 使用示例
+
+```csharp
+// 创建装饰器实例
+var decorator = new PluginCommandManagerDecorator(commandManager, pluginContext, logger);
+// 注册命令
+var command = new CommandDefinition("test", "测试命令", callback);
+decorator.RegisterCommand(command);
+// 插件卸载时会自动移除所有命令
+decorator.Dispose();
+```
+
+ 
+

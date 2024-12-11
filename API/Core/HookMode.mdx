@@ -1,0 +1,69 @@
+---
+title: HookMode 枚举
+description: 定义钩子函数的执行时机
+icon: GitBranch
+---
+
+# HookMode 枚举
+
+`HookMode` 枚举用于指定钩子函数的执行时机，是在原始方法执行之前还是之后。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## 枚举定义
+
+```csharp
+public enum HookMode
+```
+
+## 枚举值
+
+### Pre
+
+钩子函数在原始方法之前执行。
+
+```csharp
+Pre = 0
+```
+
+### Post
+
+钩子函数在原始方法之后执行。
+
+```csharp
+Post = 1
+```
+
+## 使用示例
+
+```csharp
+// 在命令执行前注册监听器
+AddCommandListener("say", (player, info) => 
+{
+    // 在命令执行前处理
+    return HookResult.Continue;
+}, HookMode.Pre);
+
+// 在事件发生后注册处理器
+RegisterEventHandler<EventPlayerDeath>((ev, info) => 
+{
+    // 在玩家死亡后处理
+    return HookResult.Continue;
+}, HookMode.Post);
+```
+
+## 说明
+
+- `Pre` 模式通常用于：
+  - 在操作发生前进行验证
+  - 修改或阻止即将发生的操作
+  - 实现前置条件检查
+
+- `Post` 模式通常用于：
+  - 记录操作的结果
+  - 在操作完���后执行额外的逻辑
+  - 实现后续处理 

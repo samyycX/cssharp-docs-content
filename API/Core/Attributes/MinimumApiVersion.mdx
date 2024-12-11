@@ -1,0 +1,96 @@
+---
+title: MinimumApiVersion 特性
+description: CounterStrikeSharp 插件系统中用于指定插件所需最低API版本的特性
+icon: Shield
+---
+
+# MinimumApiVersion 特性
+
+`MinimumApiVersion` 是一个用于标记插件类的特性，用于指定插件正常运行所需的最低 CounterStrikeSharp API 版本。此特性只能应用于类。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Attributes
+```
+
+## 特性定义
+
+```csharp
+[AttributeUsage(AttributeTargets.Class)]
+public class MinimumApiVersion : Attribute
+```
+
+## 属性
+
+### Version
+
+获取所需的最低API版本号。
+
+```csharp
+public int Version { get; }
+```
+
+## 构造函数
+
+### MinimumApiVersion
+
+创建一个新的最低API版本特性实例。
+
+```csharp
+public MinimumApiVersion(int version)
+```
+
+#### 参数
+
+- `version`: `int` - 插件所需的最低API版本号
+
+## 使用示例
+
+```csharp
+// 指定插件需要API版本1或更高
+[MinimumApiVersion(1)]
+public class MyPlugin : BasePlugin
+{
+    public override string ModuleName => "示例插件";
+    public override string ModuleVersion => "1.0.0";
+
+    public override void Load(bool hotReload)
+    {
+        // 插件代码
+    }
+}
+
+// 指定插件需要API版本2或更高（使用新特性）
+[MinimumApiVersion(2)]
+public class AdvancedPlugin : BasePlugin
+{
+    public override string ModuleName => "高级插件";
+    public override string ModuleVersion => "1.0.0";
+
+    public override void Load(bool hotReload)
+    {
+        // 使用API版本2中的新特性
+    }
+}
+```
+
+## 说明
+
+- 此特性用于确保插件在兼容的API环境中运行
+- 如果当前API版本低于指定版本，插件将无法加载
+- 版本号应该根据插件使用的API特性来指定
+- 建议始终在插件类上标注此特性
+- 版本号遵循以下规则：
+  - 主版本号增加表示不兼容的API更改
+  - 次版本号增加表示向后兼容的功能添加
+  - 修订号增加表示向后兼容的问题修复
+
+## 最佳实践
+
+- 始终指定插件所需的最低API版本
+- 根据插件使用的功能选择适当的版本号
+- 在插件文档中说明所需的API版本
+- 在发布更新时检查是否需要提高最低API版本要求
+- 考虑提供降级兼容性的替代方案
+- 在插件说明中列出主要功能所需的API版本 

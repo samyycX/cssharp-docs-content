@@ -1,0 +1,98 @@
+---
+title: BasePluginConfig 类
+description: CounterStrikeSharp 插件配置的基类，提供基本的配置版本管理功能
+icon: Settings
+---
+
+# BasePluginConfig 类
+
+`BasePluginConfig` 类是插件配置的基类，实现了 `IBasePluginConfig` 接口，提供了基本的配置版本管理功能。所有插件配置类都应该继承自这个类。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## 接口定义
+
+```csharp
+public interface IBasePluginConfig
+{
+    [JsonPropertyName("ConfigVersion")]
+    int Version { get; set; }
+}
+```
+
+## 类定义
+
+```csharp
+public class BasePluginConfig : IBasePluginConfig
+```
+
+## 属性
+
+### Version
+
+获取或设置配置文件的版本号。
+
+```csharp
+[JsonPropertyName("ConfigVersion")]
+public virtual int Version { get; set; } = 1;
+```
+
+#### 说明
+
+- 默认版本号为 1
+- 使用 `JsonPropertyName` 特性将属性映射到 JSON 中的 "ConfigVersion" 字段
+- 可以在派生类中重写此属性以提供不同的默认版本号
+
+## 使用示例
+
+```csharp
+// 定义插件配置类
+public class MyPluginConfig : BasePluginConfig
+{
+    public override int Version { get; set; } = 2; // 设置配置版本为2
+    
+    [JsonPropertyName("WelcomeMessage")]
+    public string WelcomeMessage { get; set; } = "欢迎来到服务器！";
+    
+    [JsonPropertyName("EnableFeature")]
+    public bool EnableFeature { get; set; } = true;
+}
+
+// 在插件中使用配置
+public class MyPlugin : BasePlugin
+{
+    public MyPluginConfig Config { get; set; }
+    
+    public override void Load(bool hotReload)
+    {
+        // 配置会自动加载并反序列化到 Config 属性
+        if (Config.EnableFeature)
+        {
+            // 使用配置中的功能
+        }
+    }
+}
+```
+
+## 配置文件示例
+
+```json
+{
+    "ConfigVersion": 2,
+    "WelcomeMessage": "欢迎来到我的服务器！",
+    "EnableFeature": true
+}
+```
+
+## 说明
+
+- 配置文件通常保存在插件目录的 `configs` 文件夹中
+- 配置文件使用 JSON 格式
+- 版本号可用于在配置格式变更时进行迁移
+- 继承自 `BasePluginConfig` 的类会自动获得版本管理功能
+- 使用 `JsonPropertyName` 特性可以自定义 JSON 中的属性名称
+ 

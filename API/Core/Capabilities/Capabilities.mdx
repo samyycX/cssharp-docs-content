@@ -1,0 +1,69 @@
+---
+title: Capabilities 类
+description: CounterStrikeSharp API 能力系统的核心类
+icon: Settings
+---
+
+# Capabilities 类
+
+`Capabilities` 类是 CounterStrikeSharp API 中用于管理插件和玩家能力的静态类。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Capabilities
+```
+
+## 类定义
+
+```csharp
+public static class Capabilities
+```
+
+## 方法
+
+### RegisterPluginCapability&lt;T&gt;
+
+注册一个插件能力。
+
+```csharp
+public static void RegisterPluginCapability<T>(PluginCapability<T> capability, Func<T> supplier)
+```
+
+#### 参数
+
+- `capability`: `PluginCapability<T>` - 要注册的插件能力
+- `supplier`: `Func<T>` - 提供能力值的函数
+
+#### 说明
+
+此方法用于注册一个新的插件能力。如果具有相同名称的能力提供者不存在，它将创建一个新的提供者列表。
+
+### RegisterPlayerCapability&lt;T&gt;
+
+注册一个玩家能力。
+
+```csharp
+public static void RegisterPlayerCapability<T>(PlayerCapability<T> capability, Func<CCSPlayerController, T> supplier)
+```
+
+#### 参数
+
+- `capability`: `PlayerCapability<T>` - 要注册的玩家能力
+- `supplier`: `Func<CCSPlayerController, T>` - 提供玩家能力值的函数
+
+#### 说明
+
+此方法用于注册一个新的玩家能力。如果具有相同名称的能力提供者不存在，它将创建一个新的提供者列表。该函数接收一个玩家控制器参数，用于获取特定玩家的能力值。
+
+## 使用示例
+
+```csharp
+// 注册插件能力示例
+var pluginCapability = new PluginCapability<bool>("canDoSomething");
+Capabilities.RegisterPluginCapability(pluginCapability, () => true);
+
+// 注册玩家能力示例
+var playerCapability = new PlayerCapability<int>("playerScore");
+Capabilities.RegisterPlayerCapability(playerCapability, (player) => 100);
+``` 

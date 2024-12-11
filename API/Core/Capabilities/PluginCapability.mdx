@@ -1,0 +1,86 @@
+---
+title: PluginCapability<T> 类
+description: 插件能力系统的核心类，用于管理和获取插件级别的能力
+icon: Plugin
+---
+
+# PluginCapability<T> 类
+
+`PluginCapability<T>` 类是一个密封类，用于定义和管理插件级别的能力。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Capabilities
+```
+
+## 类定义
+
+```csharp
+public sealed class PluginCapability<T>
+```
+
+## 属性
+
+### Name
+
+获取能力的名称。
+
+```csharp
+public string Name { get; }
+```
+
+## 内部字段
+
+### Providers
+
+存储能力提供者的静态字典。
+
+```csharp
+internal static readonly Dictionary<string, List<Func<T>>> Providers
+```
+
+## 构造函数
+
+### PluginCapability
+
+创建一个新的插件能力实例。
+
+```csharp
+public PluginCapability(string name)
+```
+
+#### 参数
+
+- `name`: `string` - 能力的名称
+
+## 方法
+
+### Get
+
+获取插件能力的值。
+
+```csharp
+public T? Get()
+```
+
+#### 返回值
+
+- `T?` - 插件能力值，如果没有提供者则返回默认值
+
+#### 说明
+
+此方法遍历所有注册的能力提供者，并返回第一个提供者返回的值。如果没有提供者，则返回类型T的默认值。
+
+## 使用示例
+
+```csharp
+// 创建一个新的插件能力实例
+var featureCapability = new PluginCapability<bool>("hasFeatureX");
+
+// 注册能力提供者
+Capabilities.RegisterPluginCapability(featureCapability, () => true);
+
+// 获取插件能力值
+bool? hasFeature = featureCapability.Get();
+```
