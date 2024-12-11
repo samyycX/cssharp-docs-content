@@ -1,133 +1,138 @@
 ---
-title: ConsoleCommandAttribute
-sidebar_position: 1
-tags: [core, attributes, commands]
+title: ConsoleCommandAttribute 特性
+description: CounterStrikeSharp 命令系统中用于通过特性注册控制台命令的特性
+icon: Terminal
 ---
 
-# ConsoleCommandAttribute 类
+# ConsoleCommandAttribute 特性
 
-`ConsoleCommandAttribute` 是一个特性类，用于将方法标记为控制台命令处理器。它允许通过特性声明的方式注册命令。
+`ConsoleCommandAttribute` 是一个用于标记方法的特性，用于将方法注册为控制台命令。此特性可以多次应用于同一个方法，允许一个方法处理多个命令。
 
-## 特性用法
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Attributes.Registration
+```
+
+## 特性定义
 
 ```csharp
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+public class ConsoleCommandAttribute : Attribute
 ```
-
-- 只能应用于方法
-- 允许在同一个方法上多次使用此特性
-
-## 构造函数
-
-### ConsoleCommandAttribute
-```csharp
-public ConsoleCommandAttribute(string command, string description = null)
-```
-
-创建一个新的控制台命令特性实例。
-
-#### 参数
-- `command`: 命令名称
-- `description`: 命令描述（可选）
 
 ## 属性
 
 ### Command
+
+获取命令名称。
+
 ```csharp
 public string Command { get; }
 ```
 
-获取命令名称。
-
 ### Description
+
+获取命令描述。
+
 ```csharp
 public string Description { get; }
 ```
 
-获取命令描述。
+## 构造函数
+
+### ConsoleCommandAttribute
+
+创建一个新的控制台命令特性实例。
+
+```csharp
+public ConsoleCommandAttribute(string command, string description = null)
+```
+
+#### 参数
+
+- `command`: `string` - 命令名称
+- `description`: `string` - 命令描述（可选）
 
 ## 使用示例
 
 ```csharp
 public class MyPlugin : BasePlugin
 {
-    // 基本命令
-    [ConsoleCommand("hello", "一个简单的问候命令")]
-    public HookResult OnHelloCommand(CCSPlayerController? player, CommandInfo info)
+    // 基本命令示例
+    [ConsoleCommand("hello", "向玩家打招呼")]
+    public void HandleHelloCommand(CCSPlayerController? player, CommandInfo command)
     {
-        info.ReplyToCommand("你好！");
-        return HookResult.Continue;
+        if (player != null)
+        {
+            player.PrintToChat("你好！");
+        }
     }
 
-    // 带参数的命令
-    [ConsoleCommand("say_to", "向指定玩家发送消息")]
-    public HookResult OnSayToCommand(CCSPlayerController? player, CommandInfo info)
+    // 一个方法处理多个命令
+    [ConsoleCommand("hp", "设置生命值")]
+    [ConsoleCommand("health", "设置生命值")]
+    public void HandleHealthCommand(CCSPlayerController? player, CommandInfo command)
     {
-        if (info.ArgCount < 3)
+        if (player == null || !player.IsValid)
+            return;
+
+        if (command.ArgCount < 2)
         {
-            info.ReplyToCommand("用法: !say_to <玩家名> <消息>");
-            return HookResult.Continue;
+            player.PrintToChat("用法: !hp <数值>");
+            return;
         }
 
-        var targetName = info.GetArg(1);
-        var message = info.GetArg(2);
-        
-        var target = Utilities.GetPlayerFromName(targetName);
-        if (target == null)
+        if (int.TryParse(command.ArgByIndex(1), out int health))
         {
-            info.ReplyToCommand($"找不到玩家: {targetName}");
-            return HookResult.Continue;
+            player.PlayerPawn.Value.Health = health;
+            player.PrintToChat($"你的生命值已设置为 {health}");
         }
-
-        target.PrintToChat($"消息来自 {player?.PlayerName ?? "控制台"}: {message}");
-        return HookResult.Continue;
     }
 
-    // 多个命令共用一个处理器
-    [ConsoleCommand("stats", "显示统计信息")]
-    [ConsoleCommand("score", "显示得分")]
-    public HookResult OnStatsCommand(CCSPlayerController? player, CommandInfo info)
+    // 带参数验证的命令
+    [ConsoleCommand("give", "给予物品")]
+    [RequiresPermissions("admin.give")]
+    public void HandleGiveCommand(CCSPlayerController? player, CommandInfo command)
     {
-        if (player == null)
+        if (player == null || !player.IsValid)
+            return;
+
+        if (command.ArgCount < 2)
         {
-            info.ReplyToCommand("此命令只能由玩家使用！");
-            return HookResult.Continue;
+            player.PrintToChat("用法: !give <物品名称>");
+            return;
         }
 
-        var command = info.GetArg(0).ToLower();
-        switch (command)
-        {
-            case "stats":
-                ShowPlayerStats(player);
-                break;
-            case "score":
-                ShowPlayerScore(player);
-                break;
-        }
-
-        return HookResult.Continue;
+        string item = command.ArgByIndex(1);
+        // 实现给予物品的逻辑
     }
 
-    private void ShowPlayerStats(CCSPlayerController player)
+    public override void Load(bool hotReload)
     {
-        // 显示玩家统计信息
-    }
-
-    private void ShowPlayerScore(CCSPlayerController player)
-    {
-        // 显示玩家得分
+        // 特性会自动注册命令，无需手动注册
+        RegisterAllAttributes(this);
     }
 }
 ```
 
-## 注意事项
+## 说明
 
-- 命令名称应该是唯一的
-- 命令处理方法必须有正确的参数类型
-- 可以在一个方法上注册多个命令
-- 建议提供清晰的命令描述
-- 命令处理方法应该返回 `HookResult`
-- 注意处理 `player` 参数可能为 `null` 的情况
-- 使用 `CommandInfo` 参数获取命令信息
-- 命令会自动注册和卸载
-- 支持热重载
+- 此特性用于快速注册控制台命令
+- 可以应用于任何符合命令处理方法签名的方法
+- 一个方法可以处理多个不同的命令
+- 命令处理方法必须符合以下签名：
+  - 返回值为 `void`
+  - 第一个参数为 `CCSPlayerController?`
+  - 第二个参数为 `CommandInfo`
+- 支持与其他特性组合使用，如权限特性
+
+## 最佳实践
+
+- 为每个命令提供清晰的描述
+- 在命令处理方法中进行适当的参数验证
+- 使用有意义的命令名称
+- 为复杂命令提供使用说明
+- 考虑添加权限控制
+- 处理无效玩家和参数的情况
+- 提供有用的错误消息和反馈
