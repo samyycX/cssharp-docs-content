@@ -1,0 +1,53 @@
+---
+title: GameEventInfo
+sidebar_position: 5
+tags: [core, events]
+---
+
+# GameEventInfo 类
+
+`GameEventInfo` 类提供了对游戏事件额外信息的访问，继承自 `NativeObject`。这个类主要用于控制事件的广播行为。
+
+## 属性
+
+### DontBroadcast
+```csharp
+public unsafe ref bool DontBroadcast { get; }
+```
+
+控制事件是否广播给客户端。设置为 `true` 可以阻止事件广播。
+
+## 构造函数
+
+### GameEventInfo
+```csharp
+public GameEventInfo(IntPtr pointer) : base(pointer)
+```
+
+使用本机指针创建 `GameEventInfo` 实例。
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventPlayerDeath>((ev, info) => {
+            // 阻止死亡事件广播给客户端
+            info.DontBroadcast = true;
+            
+            // 处理事件...
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 注意事项
+
+- 该类是对本机内存的包装器
+- `DontBroadcast` 属性使用不安全代码直接访问内存
+- 修改广播行为可能影响游戏体验
+- 通常在���件处理器中使用
+- 需要谨慎使用，避免影响游戏的正常功能 

@@ -1,0 +1,50 @@
+---
+title: BaseMemoryFunction
+sidebar_position: 1
+tags: [内存, 函数, 基类]
+---
+
+# BaseMemoryFunction
+
+`BaseMemoryFunction` 是一个抽象基类,为动态内存函数提供基础功能。
+
+## 描述
+
+这个类继承自 `NativeObject`,为动态内存函数提供了基础的创建、钩子和调用功能。它主要用于创建和管理与游戏内存交互的函数。
+
+## 构造函数
+
+### BaseMemoryFunction(string signature, DataType returnType, DataType[] parameters)
+创建一个新的内存函数。
+
+- `signature`: 函数签名
+- `returnType`: 返回值类型
+- `parameters`: 参数类型数组
+
+### BaseMemoryFunction(string signature, string binarypath, DataType returnType, DataType[] parameters)
+创建一个新的内存函数,指定二进制文件路径。
+
+- `signature`: 函数签名
+- `binarypath`: 二进制文件路径
+- `returnType`: 返回值类型
+- `parameters`: 参数类型数组
+
+## 方法
+
+### Hook(Func<DynamicHook, HookResult> handler, HookMode mode)
+为函数添加钩子。
+
+- `handler`: 钩子处理函数
+- `mode`: 钩子模式(Pre/Post)
+
+### Unhook(Func<DynamicHook, HookResult> handler, HookMode mode)
+移除函数钩子。
+
+- `handler`: 要移除的钩子处理函数
+- `mode`: 钩子模式(Pre/Post)
+
+### protected T InvokeInternal (params object[] args)
+内部方法,用于调用返回值的函数。
+
+### protected void InvokeInternalVoid(params object[] args)
+内部方法,用于调用无返回值的函数。 

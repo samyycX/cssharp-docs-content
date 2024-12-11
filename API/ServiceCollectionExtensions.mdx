@@ -1,0 +1,121 @@
+---
+title: ServiceCollectionExtensions 类
+description: CounterStrikeSharp 中的服务集合扩展类
+icon: Extension
+---
+
+# ServiceCollectionExtensions 类
+
+`ServiceCollectionExtensions` 是一个静态类，为 `IServiceCollection` 提供扩展方法，主要用于依赖注入容器的配置。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 类定义
+
+```csharp
+public static class ServiceCollectionExtensions
+```
+
+## 扩展方法
+
+### DecorateSingleton&lt;TService, TDecoratedService&gt;
+
+```csharp
+public static IServiceCollection DecorateSingleton<TService, TDecoratedService>(
+    this IServiceCollection services) 
+    where TService : class
+    where TDecoratedService : class, TService
+```
+
+使用装饰器类装饰给定的接口，并保持单例访问的本地副本。
+
+类型参数：
+- `TService`: 要装饰的服务接口
+- `TDecoratedService`: 装饰器服务类型
+
+参数：
+- `services`: 服务集合
+
+返回值：
+- 配置后的服务集合
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        var services = new ServiceCollection();
+        
+        // 注册基础服务
+        services.AddSingleton<IMyService, MyService>();
+        
+        // 使用装饰器模式装饰服务
+        services.DecorateSingleton<IMyService, MyServiceDecorator>();
+        
+        // 构建服务提供者
+        var serviceProvider = services.BuildServiceProvider();
+        
+        // 获取装饰后的服务
+        var decoratedService = serviceProvider.GetRequiredService<IMyService>();
+    }
+}
+
+// 服务接口
+public interface IMyService
+{
+    void DoSomething();
+}
+
+// 基础服务实现
+public class MyService : IMyService
+{
+    public void DoSomething()
+    {
+        Console.WriteLine("基础服务执行");
+    }
+}
+
+// 装饰器服务
+public class MyServiceDecorator : IMyService
+{
+    private readonly IMyService _inner;
+    
+    public MyServiceDecorator(IMyService inner)
+    {
+        _inner = inner;
+    }
+    
+    public void DoSomething()
+    {
+        Console.WriteLine("装饰器前置处理");
+        _inner.DoSomething();
+        Console.WriteLine("装饰器后置处理");
+    }
+}
+```
+
+## 说明
+
+- 提供依赖注入扩展
+- 支持装饰器模式
+- 维护单例实例
+- 简化服务配置
+- 支持服务装饰链
+
+## 最佳实践
+
+- 合理使用装饰器模式
+- 注意服务生命周期
+- 避免循环依赖
+- 正确处理服务注册顺序
+- 适当使用服务装饰
+- 注意内存管理
+```
+
+ 

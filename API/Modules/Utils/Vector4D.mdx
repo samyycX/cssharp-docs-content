@@ -1,0 +1,52 @@
+---
+title: Vector4D
+sidebar_position: 1
+tags: [utils, vectors, math]
+---
+
+# Vector4D 类
+
+`Vector4D` 类是一个四维向量类，继承自 `NativeObject`。它用于表示具有四个分量（X、Y、Z、W）的向量。
+
+## 属性
+
+| 属性 | 类型 | 描述 |
+|------|------|------|
+| `X` | `float` | 向量的 X 分量 |
+| `Y` | `float` | 向量的 Y 分量 |
+| `Z` | `float` | 向量的 Z 分量 |
+| `W` | `float` | 向量的 W 分量 |
+
+## 构造函数
+
+### Vector4D(IntPtr pointer)
+```csharp
+public Vector4D(IntPtr pointer) : base(pointer)
+```
+使用指定的本机指针创建 `Vector4D` 实例。
+
+## 使用示例
+
+```csharp
+// 假设我们有一个本机指针
+IntPtr nativePtr = /* 从某处获取本机指针 */;
+var vector = new Vector4D(nativePtr);
+
+// 读取分量
+float x = vector.X;
+float y = vector.Y;
+float z = vector.Z;
+float w = vector.W;
+
+// 修改分量
+vector.X = 1.0f;
+vector.Y = 2.0f;
+vector.Z = 3.0f;
+vector.W = 4.0f;
+```
+
+## 注意事项
+
+- 这个类是对本机内存的包装器，直接操作底层内存
+- 所有属性都是通过不安全代码实现的引用访问
+- 使用时需要确保本机指针的有效性

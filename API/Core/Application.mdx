@@ -1,0 +1,121 @@
+---
+title: Application
+sidebar_position: 2
+tags: [core, application]
+---
+
+# Application 类
+
+`Application` 类是 CounterStrikeSharp 的核心应用程序类，负责管理插件生命周期、配置加载和命令注册等功能。
+
+## 属性
+
+### Instance
+```csharp
+public static Application Instance { get; }
+```
+获取应用程序的全局单例实例。
+
+### RootDirectory
+```csharp
+public static string RootDirectory { get; }
+```
+获取应用程序的根目录路径。
+
+### Logger
+```csharp
+public ILogger Logger { get; }
+```
+获取应用程序的日志记录器。
+
+## 构造函数
+
+```csharp
+public Application(
+    ILoggerFactory loggerFactory,
+    IScriptHostConfiguration scriptHostConfiguration,
+    GameDataProvider gameDataProvider,
+    CoreConfig coreConfig,
+    IPluginManager pluginManager,
+    IPluginContextQueryHandler pluginContextQueryHandler,
+    IPlayerLanguageManager playerLanguageManager,
+    ICommandManager commandManager)
+```
+
+创建应用程序实例。
+
+### 参数
+- `loggerFactory`: 日志工厂
+- `scriptHostConfiguration`: 脚本主机配置
+- `gameDataProvider`: 游戏数据提供者
+- `coreConfig`: 核心配置
+- `pluginManager`: 插件管理器
+- `pluginContextQueryHandler`: 插件上下文查询处理器
+- `playerLanguageManager`: 玩家语言管理器
+- `commandManager`: 命令管理器
+
+## 方法
+
+### Start
+```csharp
+public void Start()
+```
+启动应用程序，包括以下步骤：
+1. 加载核心配置
+2. 加载游戏数据
+3. 加载管理员数据
+4. 加载管理员组
+5. 加载命令覆盖
+6. 注册插件命令
+7. 加载插件
+8. 注册菜单按键处理器
+
+## 内置命令
+
+### css
+显示 CounterStrikeSharp 的版本和信息。
+需要权限: `@css/generic`
+
+### css_plugins
+管理插件的命令。需要权限: `@css/generic`
+
+#### 子命令
+- `list`: 列出所有已加载的插件
+- `start/load [插件路径]`: 加载插件
+- `stop/unload [插件名称|#插件ID]`: 卸载插件
+- `restart/reload [插件名称|#插件ID]`: 重新加载插件
+
+## 使用示例
+
+```csharp
+// 获取应用程序实例
+var app = Application.Instance;
+
+// 获取根目录
+string rootPath = Application.RootDirectory;
+
+// 记录日志
+app.Logger.LogInformation("这是一条信息日志");
+
+// 构建服务集合
+var services = new ServiceCollection()
+    .AddLogging()
+    .AddSingleton<IScriptHostConfiguration>(new ScriptHostConfiguration())
+    .AddSingleton<GameDataProvider>()
+    .AddSingleton<CoreConfig>()
+    .AddSingleton<IPluginManager, PluginManager>()
+    // ... 添加其他服务
+    .BuildServiceProvider();
+
+// 创建并启动应用程序
+var application = ActivatorUtilities.CreateInstance<Application>(services);
+application.Start();
+```
+
+## 注意事项
+
+- `Application` 类使用单例模式，通过 `Instance` 属性访问
+- 启动顺序很重要，确保所有依赖项都正确加载
+- 插件管理命令需要适当的权限
+- 配置文件路径是相对于根目录的
+- 插件路径可以是相对路径或绝对路径 

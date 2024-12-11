@@ -1,0 +1,68 @@
+---
+title: TargetType
+sidebar_position: 3
+tags: [commands, targeting, enums]
+---
+
+# TargetType 枚举
+
+`TargetType` 枚举定义了所有可用的目标选择类型。这些类型用于确定如何解析和处理目标选择器字符串。
+
+## 枚举值
+
+### 团队目标类型
+| 值 | 选择器 | 描述 |
+|---|---|---|
+| `TeamCt` | `@ct` | 选择所有反恐精英阵营的玩家 |
+| `TeamT` | `@t` | 选择所有恐怖分子阵营的玩家 |
+| `TeamSpec` | `@spec` | 选择所有观察者 |
+
+### 群组目标类型
+| 值 | 选择器 | 描述 |
+|---|---|---|
+| `GroupAll` | `@all` | 选择所有玩家（除HLTV） |
+| `GroupBots` | `@bots` | 选择所有机器人 |
+| `GroupHumans` | `@human` | 选择所有真人玩家 |
+| `GroupAlive` | `@alive` | 选择所有存活的玩家 |
+| `GroupDead` | `@dead` | 选择所有已死亡的玩家 |
+| `GroupNotMe` | `@!me` | 选择除自己以外的所有玩家 |
+
+### 单个玩家目标类型
+| 值 | 选择器 | 描述 |
+|---|---|---|
+| `PlayerMe` | `@me` | 选择自己 |
+| `PlayerAim` | `@aim` | 选择准星指向的玩家 |
+
+### ID目标类型
+| 值 | 选择器示例 | 描述 |
+|---|---|---|
+| `IdUserid` | `#4` | 通过用户ID选择玩家 |
+| `IdSteamEscaped` | `#STEAM_0:1:8614` | 通过Steam ID选择玩家 |
+| `IdSteam64` | `#76561198116940237` | 通过Steam 64位ID选择玩家 |
+
+### 名称目标类型
+| 值 | 选择器示例 | 描述 |
+|---|---|---|
+| `ExplicitName` | `#name` | 通过精确的玩家名称选择 |
+| `ImplicitName` | `name` | 通过玩家名称模糊匹配选择 |
+| `Invalid` | - | 无效的目标类型 |
+
+## 使用示例
+
+```csharp
+// 在Target类中使用TargetType
+public class Target
+{
+    private TargetType Type { get; }
+    
+    public Target(string target)
+    {
+        // 根据输入字符串确定目标类型
+        if (target == "@all")
+            Type = TargetType.GroupAll;
+        else if (target.StartsWith("#"))
+            Type = TargetType.ExplicitName;
+        // ...
+    }
+}
+``` 

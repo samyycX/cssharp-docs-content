@@ -1,0 +1,144 @@
+---
+title: AdminPermissions 类
+description: 管理员权限系统的核心类
+icon: Lock
+---
+
+# AdminPermissions 类
+
+`AdminPermissions` 相关类用于管理管理员权限系统。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Admin
+```
+
+## AdminData 类
+
+### 属性
+
+| 属性名 | 类型 | 描述 |
+|--------|------|------|
+| `Identity` | `string` | 管理员的唯一标识符 |
+| `_flags` | `HashSet<string>` | 从文件加载的权限标志集合 |
+| `Immunity` | `uint` | 管理员的免疫等级 |
+| `CommandOverrides` | `Dictionary<string, bool>` | 命令覆盖配置 |
+| `Flags` | `Dictionary<string, HashSet<string>>` | 按域分组的权限标志 |
+
+### 方法
+
+#### InitalizeFlags
+
+初始化权限标志。
+
+```csharp
+public void InitalizeFlags()
+```
+
+#### DomainHasRootFlag
+
+检查域是否有根权限标志。
+
+```csharp
+public bool DomainHasRootFlag(string domain)
+```
+
+#### GetFlagDomains
+
+获取所有权限域。
+
+```csharp
+public string[] GetFlagDomains()
+```
+
+#### GetAllFlags
+
+获取所有权限标志。
+
+```csharp
+public HashSet<string> GetAllFlags()
+```
+
+#### AddFlags
+
+添加权限标志。
+
+```csharp
+public void AddFlags(HashSet<string> flags)
+```
+
+#### RemoveFlags
+
+移除权限标志。
+
+```csharp
+public void RemoveFlags(HashSet<string> flags)
+```
+
+#### DomainHasFlags
+
+检查域是否有指定权限标志。
+
+```csharp
+public bool DomainHasFlags(string domain, string[] flags, bool ignoreRoot = false)
+```
+
+## AdminManager 类权限管理方法
+
+### LoadAdminData
+
+加载管理员数据。
+
+```csharp
+public static void LoadAdminData(string adminDataPath)
+```
+
+### GetPlayerAdminData
+
+获取玩家的管理员数据。
+
+```csharp
+public static AdminData? GetPlayerAdminData(CCSPlayerController? player)
+public static AdminData? GetPlayerAdminData(SteamID? steamId)
+```
+
+### RemovePlayerAdminData
+
+移除玩家的管理员数据。
+
+```csharp
+public static void RemovePlayerAdminData(CCSPlayerController? player)
+public static void RemovePlayerAdminData(SteamID? steamId)
+```
+
+### PlayerHasPermissions
+
+检查玩家是否有指定权限。
+
+```csharp
+public static bool PlayerHasPermissions(CCSPlayerController? player, params string[] flags)
+public static bool PlayerHasPermissions(SteamID? steamId, params string[] flags)
+```
+
+## 使用示例
+
+```csharp
+// 获取玩家管理员数据
+var adminData = AdminManager.GetPlayerAdminData(player);
+
+// 检查玩家权限
+bool hasPermission = AdminManager.PlayerHasPermissions(player, "@css/kick", "@css/ban");
+
+// 添加权限标志
+adminData?.AddFlags(new HashSet<string> { "@css/kick", "@css/ban" });
+
+// 移除权限标志
+adminData?.RemoveFlags(new HashSet<string> { "@css/kick" });
+
+// 检查域权限
+bool hasDomainFlags = adminData?.DomainHasFlags("css", new[] { "@css/kick", "@css/ban" });
+
+// 移除玩家管理员数据
+AdminManager.RemovePlayerAdminData(player);
+``` 

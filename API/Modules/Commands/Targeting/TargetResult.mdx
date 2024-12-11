@@ -1,0 +1,52 @@
+---
+title: TargetResult
+sidebar_position: 2
+tags: [commands, targeting]
+---
+
+# TargetResult 类
+
+`TargetResult` 类是目标选择系统的结果容器，实现了 `IEnumerable<CCSPlayerController>` 接口，使其可以直接用于foreach循环。
+
+## 属性
+
+### Players
+```csharp
+public List<CCSPlayerController> Players { get; set; }
+```
+包含所有匹配目标条件的玩家列表。
+
+## 实现的接口
+
+- `IEnumerable<CCSPlayerController>`
+- `IEnumerable`
+
+## 使用示例
+
+```csharp
+// 获取目标选择结果
+var target = new Target("@all");
+var result = target.GetTarget(caller);
+
+// 方法1：直接访问Players列表
+foreach (var player in result.Players)
+{
+    // 处理每个玩家
+}
+
+// 方法2：使用foreach直接遍历TargetResult
+foreach (var player in result)
+{
+    // 处理每个玩家
+}
+
+// 方法3：使用LINQ方法
+var alivePlayers = result.Players.Where(p => p.PlayerPawn?.IsValid == true && p.PlayerPawn.Value.LifeState == 0);
+```
+
+## 注意事项
+
+- `TargetResult` 对象总是包含一个新的玩家列表，即使没有找到匹配的玩家
+- 在使用结果之前，建议检查 `Players` 列表是否为空
+- 可以直接对 `Players` 列表进行修改，但通常不建议这样做
+``` 

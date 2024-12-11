@@ -32,32 +32,32 @@ public static JsonSerializerOptions JsonSerializerOptions { get; }
 
 ## 扩展方法
 ```
-### GetConfigPath<T>
+### GetConfigPath 
 ```
 获取配置文件的路径。
 
 ```csharp
-public static string GetConfigPath<T>(this T _) where T : BasePluginConfig, new()
+public static string GetConfigPath (this T _) where T : BasePluginConfig, new()
 ```
 
 #### 返回值
 
 返回配置文件的完整路径。
 ```
-### Update<T>
+### Update 
 ```
 更新配置文件。
 
 ```csharp
-public static void Update<T>(this T config) where T : BasePluginConfig, new()
+public static void Update (this T config) where T : BasePluginConfig, new()
 ```
 ```
-### Reload<T>
+### Reload 
 ```
 重新加载配置文件并更新当前配置实例。
 
 ```csharp
-public static void Reload<T>(this T config) where T : BasePluginConfig, new()
+public static void Reload (this T config) where T : BasePluginConfig, new()
 ```
 
 ## 使用示例

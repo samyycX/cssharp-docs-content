@@ -1,0 +1,51 @@
+---
+title: CBaseEntity
+sidebar_position: 1
+tags: [实体, 基类]
+---
+
+# CBaseEntity
+
+`CBaseEntity` 是所有实体的基类。它提供了一些基本的实体操作方法。
+
+## 属性
+
+### AbsOrigin
+- 类型: `Vector?`
+- 描述: 获取实体的绝对位置。这是访问实体的 `CBodyComponent?.SceneNode?.AbsOrigin` 的快捷方式。
+
+### AbsRotation
+- 类型: `QAngle?`
+- 描述: 获取实体的绝对旋转角度。这是访问实体的 `CBodyComponent?.SceneNode?.AbsRotation` 的快捷方式。
+- 异常: 如果实体无效,会抛出 `InvalidOperationException`。
+
+## 方法
+
+### Teleport
+```csharp
+public void Teleport(Vector? position = null, QAngle? angles = null, Vector? velocity = null)
+```
+- 描述: 传送实体到指定位置。
+- 参数:
+  - `position`: 目标位置向量(可选)
+  - `angles`: 目标角度(可选)
+  - `velocity`: 目标速度向量(可选)
+- 异常:
+  - `InvalidOperationException`: 实体无效时抛出
+  - `ArgumentNullException`: 所有参数都为 null 时抛出
+
+### DispatchSpawn
+```csharp
+public void DispatchSpawn()
+```
+- 描述: 生成实体。
+- 异常: 如果实体无效,会抛出 `InvalidOperationException`。
+
+### GetVData 
+```csharp
+public T? GetVData () where T : CEntitySubclassVDataBase
+```
+- 描述: 获取实体的 VData。
+- 类型参数: `T` - 必须继承自 `CEntitySubclassVDataBase`
+- 返回: 指定类型的 VData 实例
+- 异常: 如果实体无效,会抛出 `InvalidOperationException`。 

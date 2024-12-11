@@ -1,0 +1,72 @@
+---
+title: Target
+sidebar_position: 1
+tags: [commands, targeting]
+---
+
+# Target 类
+
+`Target` 类提供了一个强大的目标选择系统，用于在游戏中选择和过滤玩家。它支持多种目标选择方式，包括特殊标识符、Steam ID、用户ID和名称匹配等。
+
+## 目标类型
+
+支持以下目标选择器：
+
+### 特殊目标
+| 选择器 | 描述 |
+|---|---|
+| `@all` | 选择所有玩家（除HLTV） |
+| `@bots` | 选择所有机器人 |
+| `@human` | 选择所有真人玩家 |
+| `@alive` | 选择所有存活的玩家 |
+| `@dead` | 选择所有已死亡的玩家 |
+| `@!me` | 选择除自己以外的所有玩家 |
+| `@me` | 选择自己 |
+| `@aim` | 选择准星指向的玩家 |
+
+### 阵营目标
+| 选择器 | 描述 |
+|---|---|
+| `@ct` | 选择所有反恐精英阵营的玩家 |
+| `@t` | 选择所有恐怖分子阵营的玩家 |
+| `@spec` | 选择所有观察者 |
+
+### ID目标
+- `#<userid>` - 通过用户ID选择玩家
+- `#STEAM_X:Y:Z` - 通过Steam ID选择玩家
+- `#<steam64id>` - 通过Steam 64位ID选择玩家
+- `#<name>` - 通过玩家名称选择玩家
+
+## 使用示例
+
+```csharp
+// 创建目标选择器
+var target = new Target("@all");
+var result = target.GetTarget(callerPlayer);
+
+// 处理选中的玩家
+foreach (var player in result.Players)
+{
+    // 对选中的玩家执行操作
+}
+
+// 使用不同的选择器
+var botTarget = new Target("@bots");
+var ctTarget = new Target("@ct");
+var nameTarget = new Target("#John"); // 选择名字包含"John"的玩家
+```
+
+## 方法
+
+### GetTarget
+```csharp
+public TargetResult GetTarget(CCSPlayerController? caller)
+```
+
+根据目标选择器和调用者返回匹配的玩家列表。
+
+#### 参数
+- `caller`: 执行命令的玩家（可选）
+
+#### 返回值
+返回 `TargetResult` 对象，包含匹配的玩家列表。

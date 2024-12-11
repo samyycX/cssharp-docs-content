@@ -1,0 +1,177 @@
+---
+title: NativeAPI
+sidebar_position: 1
+tags: [core, native, api]
+---
+
+# NativeAPI 类
+
+`NativeAPI` 类提供了与游戏引擎底层交互的核心功能。这个类包含了许多静态方法，用于处理事件监听、命令管理、ConVar操作等。
+
+## 事件监听
+
+### AddListener
+```csharp
+public static bool AddListener(string name, InputArgument callback)
+```
+添加一个事件监听器。
+
+### RemoveListener
+```csharp
+public static bool RemoveListener(string name, InputArgument callback)
+```
+移除一个事件监听器。
+
+## 命令管理
+
+### AddCommand
+```csharp
+public static void AddCommand(string name, string description, bool serveronly, int flags, InputArgument callback)
+```
+添加一个新的控制台命令。
+
+### RemoveCommand
+```csharp
+public static void RemoveCommand(string name, InputArgument callback)
+```
+移除一个控制台命令。
+
+### AddCommandListener
+```csharp
+public static void AddCommandListener(string cmd, InputArgument callback, bool post)
+```
+添加一个命令监听器。
+
+### RemoveCommandListener
+```csharp
+public static void RemoveCommandListener(string cmd, InputArgument callback, bool post)
+```
+移除一个命令监听器。
+
+## 命令参数处理
+
+### CommandGetArgCount
+```csharp
+public static int CommandGetArgCount(IntPtr command)
+```
+获取命令的参数数量。
+
+### CommandGetArgString
+```csharp
+public static string CommandGetArgString(IntPtr command)
+```
+获取命令的完整参数字符串。
+
+### CommandGetCommandString
+```csharp
+public static string CommandGetCommandString(IntPtr command)
+```
+获取命令字符串。
+
+### CommandGetArgByIndex
+```csharp
+public static string CommandGetArgByIndex(IntPtr command, int index)
+```
+获取指定索引的命令参数。
+
+### CommandGetCallingContext
+```csharp
+public static CommandCallingContext CommandGetCallingContext(IntPtr command)
+```
+获取命令的调用上下文。
+
+## 客户端命令
+
+### IssueClientCommand
+```csharp
+public static void IssueClientCommand(int slot, string command)
+```
+向客户端发送命令。
+
+### IssueClientCommandFromServer
+```csharp
+public static void IssueClientCommandFromServer(int slot, string command)
+```
+从服务器向客户端发送命令。
+
+## ConVar 操作
+
+### FindConvar
+```csharp
+public static IntPtr FindConvar(string name)
+```
+查找一个ConVar。
+
+### SetConvarStringValue
+```csharp
+public static void SetConvarStringValue(IntPtr convar, string value)
+```
+设置ConVar的字符串值。
+
+### GetClientConvarValue
+```csharp
+public static string GetClientConvarValue(int clientindex, string convarname)
+```
+获取客户端的ConVar值。
+
+### SetFakeClientConvarValue
+```csharp
+public static void SetFakeClientConvarValue(int clientindex, string convarname, string convarvalue)
+```
+设置假客户端的ConVar值。
+
+## 动态钩子
+
+### DynamicHookGetReturn 
+```csharp
+public static T DynamicHookGetReturn (IntPtr hook, int datatype)
+```
+获取动态钩子的返回值。
+
+### DynamicHookSetReturn 
+```csharp
+public static void DynamicHookSetReturn (IntPtr hook, int datatype, T value)
+```
+设置动态钩子的返回值。
+
+### DynamicHookGetParam 
+```csharp
+public static T DynamicHookGetParam (IntPtr hook, int datatype, int paramindex)
+```
+获取动态钩子的参数。
+
+### DynamicHookSetParam 
+```csharp
+public static void DynamicHookSetParam (IntPtr hook, int datatype, int paramindex, T value)
+```
+设置动态钩子的参数。
+
+## 使用示例
+
+```csharp
+// 添加一个命令
+NativeAPI.AddCommand("hello", "Say hello", false, 0, (cmd) => {
+    Console.WriteLine("Hello, World!");
+    return HookResult.Continue;
+});
+
+// 添加事件监听器
+NativeAPI.AddListener("player_death", (hook) => {
+    var victim = hook.GetParam<int>(0);
+    var attacker = hook.GetParam<int>(1);
+    Console.WriteLine($"Player {victim} was killed by {attacker}");
+    return HookResult.Continue;
+});
+
+// 操作ConVar
+var convar = NativeAPI.FindConvar("sv_cheats");
+NativeAPI.SetConvarStringValue(convar, "1");
+```
+
+## 注意事项
+
+- 所有方法都是线程安全的，使用了全局脚本上下文锁
+- 动态钩子操作需要正确的数据类型
+- 命令和监听器的回调函数需要返回适当的 HookResult
+- ConVar操作需要适当的权限
+- 某些操作可能需要管理员权限 

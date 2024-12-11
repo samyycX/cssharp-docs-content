@@ -1,0 +1,34 @@
+---
+title: CommandCallingContext
+sidebar_position: 1
+tags: [commands, enums]
+---
+
+# CommandCallingContext 枚举
+
+`CommandCallingContext` 枚举定义了命令的调用上下文，用于标识命令是从哪个环境被调用的。
+
+## 枚举值
+
+| 值 | 描述 |
+|---|---|
+| `Console` | 命令从控制台调用 |
+| `Chat` | 命令从游戏聊天框调用 |
+
+## 使用示例
+
+```csharp
+public void OnCommandExecuted(CommandCallingContext context)
+{
+    if (context == CommandCallingContext.Console)
+    {
+        // 处理从控制台调用的情况
+    }
+    else if (context == CommandCallingContext.Chat)
+    {
+        // 处理从聊天框调用的情况
+    }
+}
+```
+```
+

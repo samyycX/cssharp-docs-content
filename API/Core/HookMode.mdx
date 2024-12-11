@@ -1,69 +1,57 @@
 ---
-title: HookMode 枚举
-description: 定义钩子函数的执行时机
-icon: GitBranch
+title: HookMode
+sidebar_position: 9
+tags: [core, hooks]
 ---
 
 # HookMode 枚举
 
-`HookMode` 枚举用于指定钩子函数的执行时机，是在原始方法执行之前还是之后。
-
-## 命名空间
-
-```csharp
-namespace CounterStrikeSharp.API.Core
-```
-
-## 枚举定义
-
-```csharp
-public enum HookMode
-```
+`HookMode` 枚举定义了钩子（hook）的执行时机。它用于指定事件处理器、用户消息处理器和实体输出处理器等的执行顺序。
 
 ## 枚举值
 
 ### Pre
-
-钩子函数在原始方法之前执行。
-
 ```csharp
 Pre = 0
 ```
 
+钩子在原始方法之前执行。这允许你在原始功能执行之前进行拦截或修改。
+
 ### Post
-
-钩子函数在原始方法之后执行。
-
 ```csharp
 Post = 1
 ```
 
+钩子在原始方法之后执行。这允许你在原始功能执行之后进行处理或清理。
+
 ## 使用示例
 
 ```csharp
-// 在命令执行前注册监听器
-AddCommandListener("say", (player, info) => 
+// 在事件处理器特性中使用
+[GameEventHandler(HookMode.Pre)]
+public HookResult OnPlayerDeath(EventPlayerDeath @event, GameEventInfo info)
 {
-    // 在命令执行前处理
+    // 在玩家死亡事件发生前执行
     return HookResult.Continue;
-}, HookMode.Pre);
+}
 
-// 在事件发生后注册处理器
-RegisterEventHandler<EventPlayerDeath>((ev, info) => 
+// 在用户消息处理中使用
+public void RegisterUserMessageHook()
 {
-    // 在玩家死亡后处理
-    return HookResult.Continue;
-}, HookMode.Post);
+    HookUserMessage(UserMessageType.SayText2, OnSayText2Message, HookMode.Post);
+}
+
+// 在实体输出处理中使用
+public void RegisterEntityOutputHook()
+{
+    HookEntityOutput("func_button", "OnPressed", OnButtonPressed, HookMode.Pre);
+}
 ```
 
-## 说明
+## 注意事项
 
-- `Pre` 模式通常用于：
-  - 在操作发生前进行验证
-  - 修改或阻止即将发生的操作
-  - 实现前置条件检查
-
-- `Post` 模式通常用于：
-  - 记录操作的结果
-  - 在操作完���后执行额外的逻辑
-  - 实现后续处理 
+- `Pre` 模式允许你在原始功能执行前进行拦截
+- `Post` 模式适合在原始功能执行后进行清理或记录
+- 大多数钩子函数默认使用 `HookMode.Pre`
+- 某些情况下可能需要同时注册 `Pre` 和 `Post` 钩子
+- 在处理敏感操作时，建议使用 `Pre` 模式进行验证 

@@ -1,111 +1,82 @@
 ---
-title: HookResult 枚举
-description: 定义钩子函数的返回结果，用于控制后续处理流程
-icon: GitMerge
+title: HookResult
+sidebar_position: 10
+tags: [core, hooks]
 ---
 
 # HookResult 枚举
 
-`HookResult` 枚举表示钩子函数的执行结果，用于控制后续的处理流程。
-
-## 命名空间
-
-```csharp
-namespace CounterStrikeSharp.API.Core
-```
-
-## 枚举定义
-
-```csharp
-public enum HookResult
-```
+`HookResult` 枚举定义了钩子（hook）函数的返回值，用于控制钩子链的执行流程和原始方法的调用。
 
 ## 枚举值
 
 ### Continue
-
-继续处理钩子，传递给其他监听器。
-
 ```csharp
 Continue = 0
 ```
 
+继续处理钩子链，允许其他监听器和原始方法继续执行。这是最常用的返回值。
+
 ### Changed
-
-钩子结果已被更改（当前未使用）。
-
 ```csharp
 Changed = 1
 ```
 
+表示钩子的结果已被更改。目前此值未被使用。
+
 ### Handled
-
-钩子已被处理。原始方法不会被调用，但其他钩子仍会被调用。
-
 ```csharp
 Handled = 3
 ```
 
+表示钩子已经处理了该事件。原始方法不会被调用，但其他钩子仍会继续执行。
+
 ### Stop
-
-停止处理钩子。原始方法不会被调用，并且此钩子之后的其他钩子也不会继续执行。
-
 ```csharp
 Stop = 4
 ```
 
+停止处理钩子链。原始方法不会被调用，并且在此钩子之后的其他钩子也不会执行。
+
 ## 使用示例
 
 ```csharp
-// 允许命令继续执行
-AddCommandListener("say", (player, info) => 
+// 允许继续执行
+public HookResult OnPlayerSpawn(EventPlayerSpawn @event, GameEventInfo info)
 {
-    Console.WriteLine($"玩家 {player?.PlayerName} 使用了 say 命令");
+    // 记录玩家重生
+    Logger.LogInformation($"Player {event.Userid.PlayerName} spawned");
     return HookResult.Continue;
-});
+}
 
-// 阻止命令执行，但允许其他监听器继续处理
-AddCommandListener("kill", (player, info) => 
+// 阻止执行并处理
+public HookResult OnPlayerChat(EventPlayerChat @event, GameEventInfo info)
 {
-    if (player != null && !player.IsAdmin)
+    if (IsSpamMessage(@event.Message))
     {
-        player.PrintToChat("你没有权限使用此命令！");
+        // 阻止垃圾消息
         return HookResult.Handled;
     }
     return HookResult.Continue;
-});
+}
 
-// 完全阻止事件处理
-RegisterEventHandler<EventPlayerDeath>((ev, info) => 
+// 完全停止处理
+public HookResult OnPlayerDeath(EventPlayerDeath @event, GameEventInfo info)
 {
-    if (ev.Userid.IsInGodMode)
+    if (IsGodModeEnabled(@event.Userid))
     {
+        // 阻止玩家死亡
         return HookResult.Stop;
     }
     return HookResult.Continue;
-});
+}
 ```
 
-## 说明
+## 注意事项
 
-- `Continue` (0)
-  - 最常用的返回值
-  - 允许事件/命令继续正常处理
-  - 其他监听器和原始方法都会被执行
-
-- `Changed` (1)
-  - 当前版本未使用
-  - 保留用于未来扩展
-
-- `Handled` (3)
-  - 表示已经处理了事件/命令
-  - 阻止原始方法执行
-  - 允许其他监听器继续处理
-  - 适用于替换默认行为的场景
-
-- `Stop` (4)
-  - 最强的阻止级别
-  - 完全阻止后续处理
-  - 既不执行原始方法
-  - 也不执行其他监听器
-  - 适用于需要完全控制的场景
+- `Continue` 是最常用的返回值，表示正常处理
+- `Handled` 用于阻止原始方法但允许其他钩子执行
+- `Stop` 用于完全阻止后续处理
+- `Changed` 目前未使用，保留以供将来使用
+- 在处理关键游戏逻辑时要谨慎使用 `Handled` 和 `Stop`
+- 建议在不确定时返回 `Continue`

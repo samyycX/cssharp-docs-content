@@ -1,0 +1,83 @@
+---
+title: Bootstrap 类
+description: CounterStrikeSharp 的引导程序类
+icon: Rocket
+---
+
+# Bootstrap 类
+
+`Bootstrap` 是一个静态类，负责初始化和启动 CounterStrikeSharp 应用程序。它设置依赖注入容器、配置服务和启动应用程序。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 类定义
+
+```csharp
+public static class Bootstrap
+```
+
+## 方法
+
+### Run
+
+```csharp
+[UnmanagedCallersOnly]
+public static int Run()
+```
+
+由 C++ 中的 .NET Host 调用以启动应用程序。
+
+返回值：
+- `1`: 启动成功
+- `0`: 启动失败
+
+## 功能说明
+
+Bootstrap 类主要完成以下工作：
+
+1. 配置应用程序根目录
+2. 设置依赖注入容器
+3. 配置日志系统
+4. 注册核心服务
+5. 启动应用程序
+
+### 注册的核心服务
+
+- `IScriptHostConfiguration`
+- `Application`
+- `IPluginManager`
+- `IPlayerLanguageManager`
+- `IPluginContextQueryHandler`
+- `ICommandManager`
+- 所有实现 `IStartupService` 的类
+
+## 使用示例
+
+```csharp
+// 在 C++ 代码中调用
+extern "C" int Run()
+{
+    // 调用 Bootstrap.Run() 启动应用程序
+    return Bootstrap_Run();
+}
+```
+
+## 说明
+
+- 作为应用程序的入口点
+- 管理依赖注入容器
+- 配置核心服务
+- 处理启动异常
+- 初始化全局服务提供者
+
+## 最佳实践
+
+- 确保正确配置内容根目录
+- 适当处理启动异常
+- 正确配置日志系统
+- 管理服务的生命周期
+- 遵循依赖注入原则 

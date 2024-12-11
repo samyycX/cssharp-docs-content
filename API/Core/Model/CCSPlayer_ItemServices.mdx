@@ -1,0 +1,30 @@
+---
+title: CCSPlayer_ItemServices
+sidebar_position: 7
+tags: [玩家, 物品]
+---
+
+# CCSPlayer_ItemServices
+
+`CCSPlayer_ItemServices` 是用于管理 CS2 玩家物品的服务类。
+
+## 方法
+
+### DropActivePlayerWeapon
+```csharp
+public void DropActivePlayerWeapon(CBasePlayerWeapon activeWeapon)
+```
+- 描述: 将玩家当前激活的武器丢弃在地上。
+- 参数:
+  - `activeWeapon`: 要丢弃的武器实例
+- 异常:
+  - `InvalidOperationException`: 当 ItemServices 指向 null 时抛出
+  - `InvalidOperationException`: 当武器实体无效时抛出
+
+### RemoveWeapons
+```csharp
+public void RemoveWeapons()
+```
+- 描述: 移除玩家的所有武器。
+- 异常:
+  - `InvalidOperationException`: 当 ItemServices 指向 null 时抛出 

@@ -82,7 +82,7 @@ public static List<CCSPlayerController> GetPlayers()
 根据索引获取实体实例。
 
 ```csharp
-public static T? GetEntityFromIndex<T>(int index) where T : CEntityInstance
+public static T? GetEntityFromIndex (int index) where T : CEntityInstance
 ```
 
 #### CreateEntityByName
@@ -90,7 +90,7 @@ public static T? GetEntityFromIndex<T>(int index) where T : CEntityInstance
 根据名称创建新实体。
 
 ```csharp
-public static T? CreateEntityByName<T>(string name) where T : CBaseEntity
+public static T? CreateEntityByName (string name) where T : CBaseEntity
 ```
 
 ### 目标处理方法
@@ -110,7 +110,7 @@ public static TargetResult ProcessTargetString(string pattern, CCSPlayerControll
 将标志枚举转换为列表。
 
 ```csharp
-public static IEnumerable<T> FlagsToList<T>(this T flags) where T : Enum
+public static IEnumerable  FlagsToList (this T flags) where T : Enum
 ```
 
 ### 字符串处理方法

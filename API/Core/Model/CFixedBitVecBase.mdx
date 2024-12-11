@@ -1,0 +1,37 @@
+---
+title: CFixedBitVecBase
+sidebar_position: 11
+tags: [数据结构]
+---
+
+# CFixedBitVecBase
+
+`CFixedBitVecBase` 是一个固定大小的位向量基类。
+
+## 常量
+
+### LOG2_BITS_PER_INT
+- 值: `5`
+- 描述: 每个整数的位数的对数值。
+
+### BITS_PER_INT
+- 值: `32`
+- 描述: 每个整数的位数。
+
+## 方法
+
+### Add(CEntityInstance)
+```csharp
+public void Add(CEntityInstance entityInstance)
+```
+- 描述: 添加一个实体实例的索引到位向量中。
+- 参数:
+  - `entityInstance`: 要添加的实体实例
+
+### Add(int)
+```csharp
+public void Add(int bitNum)
+```
+- 描述: 添加一个位索引到位向量中。
+- 参数:
+  - `bitNum`: 要添加的位索引 

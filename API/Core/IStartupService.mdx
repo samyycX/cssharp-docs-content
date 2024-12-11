@@ -1,0 +1,63 @@
+---
+title: IStartupService 接口
+description: CounterStrikeSharp 启动服务接口
+icon: Rocket
+---
+
+# IStartupService 接口
+
+`IStartupService` 是一个标记接口，用于标识需要在应用程序启动时初始化的服务。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## 接口定义
+
+```csharp
+public interface IStartupService
+{
+}
+```
+
+## 说明
+
+- 用于标识启动时需要初始化的服务
+- 由依赖注入容器自动解析和初始化
+- 服务按照依赖关系顺序初始化
+- 通常用于配置和资源加载服务
+- 集成到应用程序的启动流程中
+
+## 使用示例
+
+```csharp
+public class MyStartupService : IStartupService
+{
+    private readonly ILogger<MyStartupService> _logger;
+    
+    public MyStartupService(ILogger<MyStartupService> logger)
+    {
+        _logger = logger;
+    }
+    
+    // 在服务初始化时执行的代码
+    public void Initialize()
+    {
+        _logger.LogInformation("MyStartupService 正在初始化...");
+        // 执行初始化逻辑
+    }
+}
+
+// 在服务集合中注册
+services.AddSingleton<IStartupService, MyStartupService>();
+```
+
+## 最佳实践
+
+- 保持初始化逻辑简单和快速
+- 正确处理初始化失败的情况
+- 遵循依赖注入的生命周期规则
+- 避免在初始化时执行长时间运行的任务
+- 使用日志记录初始化过程 

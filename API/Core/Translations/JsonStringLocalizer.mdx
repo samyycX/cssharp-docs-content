@@ -1,0 +1,81 @@
+---
+title: JsonStringLocalizer 类
+description: CounterStrikeSharp 中的 JSON 字符串本地化器类
+icon: Languages
+---
+
+# JsonStringLocalizer 类
+
+`JsonStringLocalizer` 类实现了 `IStringLocalizer` 接口，提供基于 JSON 文件的字符串本地化功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Translations
+```
+
+## 类定义
+
+```csharp
+public class JsonStringLocalizer : IStringLocalizer
+```
+
+## 构造函数
+
+### JsonStringLocalizer
+```csharp
+public JsonStringLocalizer(JsonResourceManager resourceManager)
+```
+
+创建一个新的 JSON 字符串本地化器实例。
+
+#### 参数
+- `resourceManager`: JSON 资源管理器实例
+
+## 方法
+
+### GetString
+```csharp
+public string GetString(string key, string language, params object[] args)
+```
+
+获取指定语言的本地化字符串。
+
+#### 参数
+- `key`: 本地化字符串的键
+- `language`: 目标语言代码
+- `args`: 格式化参数
+
+#### 返回值
+本地化后的字符串，如果未找到则返回键名。
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private readonly IStringLocalizer _localizer;
+    
+    public MyPlugin(IStringLocalizer localizer)
+    {
+        _localizer = localizer;
+    }
+    
+    public override void Load(bool hotReload)
+    {
+        // 获取本地化字符串
+        var message = _localizer.GetString("welcome_message", "zh-CN", player.Name);
+        player.PrintToChat(message);
+    }
+}
+```
+
+## 说明
+
+- 使用 JSON 文件存储本地化字符串
+- 支持多语言切换
+- 支持字符串格式化
+- 自动回退到默认语言
+- 与 JsonResourceManager 集成
+- 支持动态重载翻译
+- 线程安全的字符串访问 

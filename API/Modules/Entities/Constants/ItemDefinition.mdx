@@ -1,0 +1,130 @@
+---
+title: ItemDefinition
+sidebar_position: 1
+tags: [entities, constants, items]
+---
+
+# ItemDefinition 枚举
+
+`ItemDefinition` 枚举定义了游戏中所有物品的唯一标识符。这包括武器、装备、纪念品和其他游戏物品。
+
+## 武器
+
+### 手枪
+| 名称 | 值 | 描述 |
+|------|-----|------|
+| `DESERT_EAGLE` | 1 | 沙漠之鹰 |
+| `DUAL_BERETTAS` | 2 | 双持贝瑞塔 |
+| `FIVE_SEVEN` | 3 | FN57 |
+| `GLOCK_18` | 4 | 格洛克18 |
+| `P2000` | 32 | P2000 |
+| `P250` | 36 | P250 |
+| `TEC_9` | 30 | TEC-9 |
+| `USP_S` | 61 | 消音USP |
+| `CZ75_AUTO` | 63 | CZ75 |
+| `R8_REVOLVER` | 64 | R8 左轮手枪 |
+
+### 步枪
+| 名称 | 值 | 描述 |
+|------|-----|------|
+| `AK_47` | 7 | AK-47 |
+| `AUG` | 8 | AUG |
+| `FAMAS` | 10 | FAMAS |
+| `M4A4` | 16 | M4A4 |
+| `M4A1_S` | 60 | 消音M4A1 |
+| `GALIL_AR` | 13 | 加利尔 AR |
+| `SG_553` | 39 | SG553 |
+
+### 狙击步枪
+| 名称 | 值 | 描述 |
+|------|-----|------|
+| `AWP` | 9 | AWP |
+| `G3SG1` | 11 | G3SG1 |
+| `SCAR_20` | 38 | SCAR-20 |
+| `SSG_08` | 40 | SSG 08 |
+
+### 冲锋枪
+| 名称 | 值 | 描述 |
+|------|-----|------|
+| `MAC_10` | 17 | MAC-10 |
+| `MP5_SD` | 23 | MP5-SD |
+| `MP7` | 33 | MP7 |
+| `MP9` | 34 | MP9 |
+| `P90` | 19 | P90 |
+| `UMP_45` | 24 | UMP-45 |
+| `PP_BIZON` | 26 | PP-野牛 |
+
+### 重型武器
+| 名称 | 值 | 描述 |
+|------|-----|------|
+| `M249` | 14 | M249 |
+| `NEGEV` | 28 | 内格夫 |
+| `MAG_7` | 27 | MAG-7 |
+| `NOVA` | 35 | 新星 |
+| `SAWED_OFF` | 29 | 截短霰弹枪 |
+| `XM1014` | 25 | XM1014 |
+
+## 装备
+
+### 护甲和工具
+| 名称 | 值 | 描述 |
+|------|-----|------|
+| `KEVLAR_VEST` | 50 | 防弹衣 |
+| `KEVLAR_AND_HELMET` | 51 | 防弹衣和头盔 |
+| `DEFUSE_KIT` | 55 | 拆弹器 |
+| `RESCUE_KIT` | 56 | 救援包 |
+| `HEAVY_ASSAULT_SUIT` | 52 | 重型装甲 |
+| `TABLET` | 72 | 平板电脑 |
+
+### 手雷
+| 名称 | 值 | 描述 |
+|------|-----|------|
+| `FLASHBANG` | 43 | 闪光弹 |
+| `HIGH_EXPLOSIVE_GRENADE` | 44 | 高爆手雷 |
+| `SMOKE_GRENADE` | 45 | 烟雾弹 |
+| `MOLOTOV` | 46 | 燃烧瓶 |
+| `DECOY_GRENADE` | 47 | 诱饵弹 |
+| `INCENDIARY_GRENADE` | 48 | 燃烧弹 |
+
+## 特殊物品
+
+### 刀具
+| 名称 | 值 | 描述 |
+|------|-----|------|
+| `KNIFE_CT` | 42 | CT刀具 |
+| `KNIFE_T` | 59 | T刀具 |
+| `BAYONET` | 500 | 刺刀 |
+| `KARAMBIT` | 507 | 爪子刀 |
+| `BUTTERFLY_KNIFE` | 515 | 蝴蝶刀 |
+| `SKELETON_KNIFE` | 525 | 骨头刀 |
+
+### 其他
+| 名称 | 值 | 描述 |
+|------|-----|------|
+| `C4_EXPLOSIVE` | 49 | C4炸弹 |
+| `ZEUS_X27` | 31 | 电击枪 |
+| `HEALTHSHOT` | 57 | 生命注射器 |
+| `MUSIC_KIT` | 58 | 音乐盒 |
+
+## 使用示例
+
+```csharp
+// 检查玩家是否持有AWP
+if (player.ActiveWeapon.ItemDefinitionIndex == (short)ItemDefinition.AWP)
+{
+    // 处理AWP相关逻辑
+}
+
+// 给玩家一把AK-47
+GivePlayerWeapon(player, ItemDefinition.AK_47);
+
+// 检查是否是刀具
+bool isKnife = itemDef >= ItemDefinition.BAYONET && itemDef <= ItemDefinition.SKELETON_KNIFE;
+```
+
+## 注意事项
+
+- 某些物品ID可能会随游戏更新而改变
+- 部分物品可能需要特定条件才能使用
+- 纪念品和特殊物品通常有特定的获取条件
+- 使用物品时需要考虑游戏平衡性和服务器规则 

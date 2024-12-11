@@ -1,0 +1,21 @@
+---
+title: CBasePlayerController
+sidebar_position: 3
+tags: [玩家, 控制器]
+---
+
+# CBasePlayerController
+
+`CBasePlayerController` 是玩家控制器的基类。
+
+## 方法
+
+### SetPawn
+```csharp
+public void SetPawn(CBasePlayerPawn? pawn)
+```
+- 描述: 设置玩家控制器控制的 Pawn。
+- 参数:
+  - `pawn`: 要控制的 Pawn 实例,可以为 null
+- 异常: 如果实体无效,会抛出 `InvalidOperationException`。
+- 备注: 如果传入的 pawn 为 null 或无效,该方法会直接返回而不执行任何操作。 

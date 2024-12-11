@@ -1,0 +1,58 @@
+---
+title: 全局 Using 指令
+description: CounterStrikeSharp 中的全局 Using 指令
+icon: Import
+---
+
+# 全局 Using 指令
+
+CounterStrikeSharp 定义了一组全局 Using 指令，这些指令在整个项目中自动可用，无需在每个文件中单独导入。
+
+## 全局导入
+
+```csharp
+global using System;
+global using System.Linq;
+global using System.IO;
+global using System.Collections.Generic;
+global using CounterStrikeSharp.API.Core;
+```
+
+## 说明
+
+全局 Using 指令提供了以下好处：
+
+1. 减少代码重复
+2. 简化文件头部
+3. 统一命名空间导入
+4. 提高代码可维护性
+
+## 包含的命名空间
+
+### System 命名空间
+- 基础类型和异常处理
+- 常用的系统功能
+
+### System.Linq
+- LINQ 查询操作
+- 集合处理方法
+
+### System.IO
+- 文件和目录操作
+- 流处理功能
+
+### System.Collections.Generic
+- 泛型集合类型
+- 列表、字典等数据结构
+
+### CounterStrikeSharp.API.Core
+- CSS API 核心功能
+- 基础插件支持
+
+## 最佳实践
+
+- 避免在单个文件中重复导入这些命名空间
+- 如果需要其他命名空间，在文件级别使用 using 指令
+- 保持全局 using 列表简洁
+- 仅包含广泛使用的命名空间
+- 定期审查和更新全局导入 

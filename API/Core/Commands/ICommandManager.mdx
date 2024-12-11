@@ -1,50 +1,34 @@
 ---
-title: ICommandManager 接口
-description: CounterStrikeSharp 命令系统的管理接口，用于注册和移除服务器命令
-icon: Terminal
+title: ICommandManager
+sidebar_position: 2
+tags: [core, commands]
 ---
 
 # ICommandManager 接口
 
-`ICommandManager` 接口定义了命令管理器的基本功能，用于管理服务器命令的注册和移除。
-
-## 命名空间
-
-```csharp
-namespace CounterStrikeSharp.API.Core.Commands
-```
-
-## 接口定义
-
-```csharp
-public interface ICommandManager
-```
+`ICommandManager` 接口定义了命令管理器的基本功能。它负责注册和移除服务器命令。
 
 ## 方法
 
 ### RegisterCommand
-
-注册一个新的服务器命令。
-
 ```csharp
 void RegisterCommand(CommandDefinition definition)
 ```
 
-#### 参数
+注册一个新的命令。
 
-- `definition`: `CommandDefinition` - 要注册的命令定义
+#### 参数
+- `definition`: 命令定义，包含命令的名称、描述、回调等信息
 
 ### RemoveCommand
-
-移除一个已注册的服务器命令。
-
 ```csharp
 void RemoveCommand(CommandDefinition definition)
 ```
 
-#### 参数
+移除一个已注册的命令。
 
-- `definition`: `CommandDefinition` - 要移除的命令定义
+#### 参数
+- `definition`: 要移除的命令定义
 
 ## 使用示例
 
@@ -53,42 +37,53 @@ public class MyPlugin : BasePlugin
 {
     public override void Load(bool hotReload)
     {
-        // 创建命令定义
-        var command = new CommandDefinition
-        {
-            Name = "hello",
-            Description = "向玩家打招呼",
-            Callback = (player, info) =>
-            {
-                if (player != null)
-                {
-                    player.PrintToChat("你好！");
-                }
+        // 创建并注册一个简单命令
+        var simpleCommand = new CommandDefinition(
+            name: "hello",
+            description: "一个简单的问候命令",
+            callback: (player, info) => {
+                info.ReplyToCommand("你好！");
                 return HookResult.Continue;
-            },
-            ExecutableBy = CommandUsage.CLIENT_ONLY,
-            UsageHint = "!hello"
-        };
+            }
+        );
+        CommandManager.RegisterCommand(simpleCommand);
 
-        // 注册命令
-        CommandManager.RegisterCommand(command);
-
-        // 在需要时移除命令
-        if (someCondition)
+        // 创建并注册一个高级命令
+        var advancedCommand = new CommandDefinition
         {
-            CommandManager.RemoveCommand(command);
-        }
+            Name = "broadcast",
+            Description = "向所有玩家广播消息",
+            ExecutableBy = CommandUsage.SERVER_ONLY,
+            UsageHint = "<message>",
+            MinArgs = 1,
+            Callback = (player, info) => {
+                var message = info.GetCommandString();
+                Server.PrintToChatAll($"[广播] {message}");
+                return HookResult.Continue;
+            }
+        };
+        CommandManager.RegisterCommand(advancedCommand);
+    }
+
+    public override void Unload(bool hotReload)
+    {
+        // 在插件卸载时移除命令
+        // 注意：通常不需要手动移除，插件系统会自动处理
+        CommandManager.RemoveCommand(simpleCommand);
+        CommandManager.RemoveCommand(advancedCommand);
     }
 }
 ```
 
-## 说明
+## 注意事项
 
-- `ICommandManager` 是命令系统的核心接口
-- 通过 `BasePlugin` 类的 `CommandManager` 属性访问
-- 支持动态注册和移除命令
-- 命令注册后立即生效
-- 移除命令后，相应的命令将不再可用
-- 命令定义必须包含必要的信息（名称、描述和回调）
-- 建议在插件卸载时移除注册的命令
+- 命令名称必须是唯一的
+- 注册命令时会自动处理命令冲突
+- 命令通常在插件加载时注册
+- 插件卸载时会自动移除其注册的命令
+- 可以动态注册和移除命令
+- 建议在命令定义中提供完整的命令信息
+- 命令回调应该处理所有可能的错误情况
+- 使用 `ExecutableBy` 属性控制命令的执行权限
+- 使用 `MinArgs` 和 `UsageHint` 提供更好的用户体验
  
