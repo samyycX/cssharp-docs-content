@@ -1,0 +1,84 @@
+---
+title: CHandle 类
+description: CounterStrikeSharp 工具模块中的实体句柄类
+icon: Tool
+---
+
+# CHandle 类
+
+`CHandle` 类提供了一个安全的方式来引用和管理游戏实体。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 类定义
+
+```csharp
+public class CHandle<T> where T : NativeObject
+{
+    public uint Value { get; }  // 句柄值
+}
+```
+
+## 构造函数
+
+```csharp
+public CHandle()  // 创建一个空句柄
+public CHandle(uint value)  // 使用指定的句柄值创建实例
+public CHandle(T entity)  // 从实体创建句柄
+```
+
+## 属性
+
+```csharp
+public bool IsValid { get; }  // 检查句柄是否有效
+public T Value { get; }  // 获取引用的实体对象
+```
+
+## 方法
+
+```csharp
+public T Get()  // 获取引用的实体对象
+public void Set(T entity)  // 设置引用的实体
+public void Reset()  // 重置句柄
+```
+
+## 运算符重载
+
+```csharp
+public static implicit operator T(CHandle<T> handle)  // 从句柄到实体的隐式转换
+public static implicit operator CHandle<T>(T entity)  // 从实体到句柄的隐式转换
+```
+
+## 使用示例
+
+```csharp
+// 创建一个玩家实体的句柄
+CHandle<CCSPlayerController> playerHandle = player;
+
+// 检查句柄是否有效
+if (playerHandle.IsValid)
+{
+    // 获取玩家实体
+    var player = playerHandle.Get();
+    
+    // 使用玩家实体
+    player.PrintToChat("Hello!");
+}
+
+// 重置句柄
+playerHandle.Reset();
+```
+
+## 说明
+
+- 提供了对游戏实体的安全引用
+- 支持泛型，可以用于任何继承自 `NativeObject` 的类型
+- 自动处理实体的有效性检查
+- 提供了便捷的隐式转换
+- 适用于存储和传递实体引用
+- 防止悬空引用和无效实体访问
+- 线程安全的实体引用机制 

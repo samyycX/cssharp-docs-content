@@ -1,0 +1,107 @@
+---
+title: VirtualFunction 类
+description: CounterStrikeSharp 内存模块中的虚函数类，提供对游戏引擎虚函数的访问和调用功能
+icon: Code
+---
+
+# VirtualFunction 类
+
+`VirtualFunction` 类提供了创建和调用游戏引擎虚函数的功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Memory
+```
+
+## 类定义
+
+```csharp
+public partial class VirtualFunction
+{
+    private static Dictionary<string, IntPtr> _createdFunctions = new();
+}
+```
+
+## 方法
+
+### 无返回值方法 (Void Actions)
+
+#### Create
+
+创建无参数无返回值的虚函数。
+
+```csharp
+public static Action Create(IntPtr objectPtr, int offset)
+```
+
+#### CreateVoid<TArg1>
+
+创建带一个参数无返回值的虚函数。
+
+```csharp
+public static Action<TArg1> CreateVoid<TArg1>(IntPtr objectPtr, int offset)
+```
+
+#### CreateVoid<TArg1, TArg2>
+
+创建带两个参数无返回值的虚函数。
+
+```csharp
+public static Action<TArg1, TArg2> CreateVoid<TArg1, TArg2>(IntPtr objectPtr, int offset)
+```
+
+### 有返回值方法 (Functions)
+
+#### Create<TResult>
+
+创建无参数有返回值的虚函���。
+
+```csharp
+public static Func<TResult> Create<TResult>(IntPtr objectPtr, int offset)
+```
+
+#### Create<TArg1, TResult>
+
+创建带一个参数有返回值的虚函数。
+
+```csharp
+public static Func<TArg1, TResult> Create<TArg1, TResult>(IntPtr objectPtr, int offset)
+```
+
+#### Create<TArg1, TArg2, TResult>
+
+创建带两个参数有返回值的虚函数。
+
+```csharp
+public static Func<TArg1, TArg2, TResult> Create<TArg1, TArg2, TResult>(IntPtr objectPtr, int offset)
+```
+
+## 特性
+
+- 支持最多 10 个参数的函数创建
+- 支持有返回值和无返回值的函数
+- 自动类型转换和验证
+- 缓存已创建的函数指针
+- 线程安全的函数调用
+
+## 使用示例
+
+```csharp
+// 创建无参数无返回值的虚函数
+var voidFunc = VirtualFunction.Create(objectPointer, offset);
+voidFunc();
+
+// 创建带参数有返回值的虚函数
+var func = VirtualFunction.Create<int, string>(objectPointer, offset);
+string result = func(42);
+```
+
+## 注意事项
+
+- 参数类型必须是支持的数据类型
+- 函数偏移量必须正确
+- 对象指针必须有效
+- 注意内存安全和类型安全
+- 避免过度使用虚函数调用
+``` 

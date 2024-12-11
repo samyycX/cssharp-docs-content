@@ -1,0 +1,151 @@
+---
+title: FunctionReference 类
+description: CounterStrikeSharp 中的函数引用管理类，用于管理本地代码和托管代码之间的函数调用
+icon: GitMerge
+---
+
+# FunctionReference 类
+
+`FunctionReference` 类用于管理本地代码和托管代码之间的函数调用，提供了一种机制来存储和管理函数引用的生命周期。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## FunctionLifetime 枚举
+
+定义函数引用的生命周期。
+
+```csharp
+public enum FunctionLifetime
+{
+    /// <summary>委托将在第一次调用后被移除</summary>
+    SingleUse,
+
+    /// <summary>委托将在应用程序的整个生命周期内保持在内存中（除非调用 FunctionReference.Remove）</summary>
+    Permanent
+}
+```
+
+## 类定义
+
+```csharp
+public class FunctionReference
+{
+    public unsafe delegate void CallbackDelegate(fxScriptContext* context);
+    
+    public FunctionLifetime Lifetime { get; }
+    public int Identifier { get; private set; }
+    public Task CompletionTask { get; }
+}
+```
+
+## 主要方法
+
+### Create
+
+创建一个新的函数引用。
+
+```csharp
+public static FunctionReference Create(Delegate method, FunctionLifetime lifetime = FunctionLifetime.Permanent)
+```
+
+参数：
+- `method`: 要包装的委托方法
+- `lifetime`: 函数引用的生命周期（默认为永久）
+
+### GetFunctionPointer
+
+获取函数的本地指针。
+
+```csharp
+public IntPtr GetFunctionPointer()
+```
+
+### Remove
+
+移除指定的函数引用。
+
+```csharp
+public static void Remove(int reference)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private FunctionReference _functionRef;
+
+    public override void Load(bool hotReload)
+    {
+        // 创建一个永久的函数引用
+        _functionRef = FunctionReference.Create(OnCallback);
+        
+        // 创建一个一次性的函数引用
+        var singleUseRef = FunctionReference.Create(OnSingleUseCallback, FunctionLifetime.SingleUse);
+        
+        // 获取函数指针用于本地调用
+        var functionPtr = _functionRef.GetFunctionPointer();
+    }
+
+    private void OnCallback(ScriptContext context)
+    {
+        // 处理回调
+    }
+
+    private void OnSingleUseCallback(ScriptContext context)
+    {
+        // 这个回调只会被调用一次
+    }
+
+    public override void Unload(bool hotReload)
+    {
+        // 手动移除函数引用
+        FunctionReference.Remove(_functionRef.Identifier);
+    }
+}
+```
+
+## 高级功能
+
+### 异步等待完成
+
+对于单次使用的函数引用，可以异步等待其完成：
+
+```csharp
+var singleUseRef = FunctionReference.Create(OnCallback, FunctionLifetime.SingleUse);
+await singleUseRef.CompletionTask;
+Console.WriteLine("回调已完成");
+```
+
+### 自动清理
+
+- `SingleUse` 函数引用在调用后会自动清理
+- `Permanent` 函数引用需要手动调用 `Remove` 方法清理
+
+### 线程安全
+
+- 使用 `ConcurrentDictionary` 确保线程安全
+- 引用计数器使用锁保护
+
+## 注意事项
+
+1. 内存管理
+   - 永久函数引用需要手动管理生命周期
+   - 单次使用函数引用会自动清理
+
+2. 性能考虑
+   - 优先使用 `SingleUse` 用于一次性回调
+   - `Permanent` 适用于频繁调用的场景
+
+3. 错误处理
+   - 包含全面的异常处理
+   - 提供详细的日志记录
+
+4. 最佳实践
+   - 在插件卸载时清理永久函数引用
+   - 使用 `CompletionTask` 进行异步协调
+   - 避免创建过多永久函数引用 

@@ -1,0 +1,90 @@
+---
+title: SourceContextEnricher 类
+description: CounterStrikeSharp 日志系统中的源上下文富化器，用于在日志中添加源上下文信息
+icon: FileText
+---
+
+# SourceContextEnricher 类
+
+`SourceContextEnricher` 类是一个日志富化器，用于在日志记录中添加源上下文信息，帮助识别日志的来源。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Logging
+```
+
+## 类定义
+
+```csharp
+public class SourceContextEnricher : ILogEventEnricher
+```
+
+## 构造函数
+
+### SourceContextEnricher
+
+创建一个新的源上下文富化器实例。
+
+```csharp
+public SourceContextEnricher(Type sourceContext)
+```
+
+#### 参数
+
+- `sourceContext`: `Type` - 源上下文类型
+
+## 方法
+
+### Enrich
+
+富化日志事件，添加源上下文信息。
+
+```csharp
+public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private readonly ILogger<MyPlugin> _logger;
+
+    public MyPlugin()
+    {
+        // 创建日志配置
+        var loggerConfiguration = new LoggerConfiguration()
+            .Enrich.With(new SourceContextEnricher(typeof(MyPlugin)))
+            .WriteTo.Console(
+                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}"
+            );
+
+        // 创建日志记录器
+        _logger = loggerConfiguration.CreateLogger().ForContext<MyPlugin>();
+    }
+
+    public override void Load(bool hotReload)
+    {
+        // 记录日志（将自动包含源上下文）
+        _logger.LogInformation("插件已加载");
+    }
+}
+```
+
+## 输出示例
+
+```
+[14:30:45 INF] [MyPlugin] 插件已加载
+[14:30:46 WRN] [MyPlugin.Services.UserService] 用户验证失败
+[14:30:47 ERR] [MyPlugin.Commands.AdminCommand] 命令执行错误
+```
+
+## 说明
+
+- 为日志添加源上下文信息
+- 帮助追踪日志来源
+- 支持嵌套的类型层次结构
+- 与Serilog日志框架集成
+- 可与其他富化器组合使用
+- 便于日志分析和调试 

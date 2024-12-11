@@ -1,0 +1,103 @@
+---
+title: EntityIO 类
+description: CounterStrikeSharp 实体输入输出类，用于处理实体之间的交互
+icon: ArrowsUpDown
+---
+
+# EntityIO 类
+
+`EntityIO` 类提供了处理实体之间输入输出交互的功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Entities
+```
+
+## 类定义
+
+```csharp
+public class EntityIO
+```
+
+## 属性
+
+### Activator
+
+获取触发输入/输出的实体。
+
+```csharp
+public BaseEntity Activator { get; }
+```
+
+### Caller
+
+获取调用输入/输出的实体。
+
+```csharp
+public BaseEntity Caller { get; }
+```
+
+### Output
+
+获取输出名称。
+
+```csharp
+public string Output { get; }
+```
+
+### Value
+
+获取输入/输出的值。
+
+```csharp
+public string Value { get; }
+```
+
+### Delay
+
+获取延迟时间（秒）。
+
+```csharp
+public float Delay { get; }
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 注册实体输出处理器
+        RegisterEntityOutput("func_button", "OnPressed", (output, info) =>
+        {
+            // 获取输出信息
+            var button = output.Caller;
+            var activator = output.Activator;
+            var delay = output.Delay;
+            
+            // 处理按钮按下事件
+            if (activator is CCSPlayerController player)
+            {
+                Server.PrintToChatAll(
+                    $"玩家 {player.PlayerName} 按下了按钮 " +
+                    $"{button.DesignerName}"
+                );
+            }
+            
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 说明
+
+- 处理实体间的输入输出
+- 支持延迟触发
+- 提供完整的上下文信息
+- 可用于实体交互监控
+- 支持多种实体类型
+- 可以获取触发实体信息
+- 提供值传递功能 

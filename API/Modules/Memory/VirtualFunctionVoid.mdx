@@ -1,0 +1,104 @@
+---
+title: VirtualFunctionVoid 类
+description: CounterStrikeSharp 内存模块中的无返回值虚函数包装类，提供类型安全的虚函数调用
+icon: Code
+---
+
+# VirtualFunctionVoid 类
+
+`VirtualFunctionVoid` 类是一个泛型类，用于包装无返回值的虚函数调用。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Memory
+```
+
+## 类定义
+
+```csharp
+public partial class VirtualFunctionVoid
+{
+    private Action Function;
+}
+
+public partial class VirtualFunctionVoid<TArg1>
+{
+    private Action<TArg1> Function;
+}
+
+// ... 更多参数的重载
+```
+
+## 构造函数
+
+### 基于签名的构造
+
+```csharp
+public VirtualFunctionVoid(string signature)
+public VirtualFunctionVoid(string signature, string binarypath)
+```
+
+### 基于对象指针的构造
+
+```csharp
+public VirtualFunctionVoid(IntPtr objectPtr, int offset)
+```
+
+## 方法
+
+### Invoke
+
+调用虚函数。参数数量取决于类的泛型参数。
+
+```csharp
+// 无参数
+public void Invoke()
+
+// 一个参数
+public void Invoke(TArg1 arg1)
+
+// 两个参数
+public void Invoke(TArg1 arg1, TArg2 arg2)
+
+// ... ��多参数的重载
+```
+
+## 支持的泛型重载
+
+- `VirtualFunctionVoid`：无参数
+- `VirtualFunctionVoid<T1>`：1 个参数
+- `VirtualFunctionVoid<T1, T2>`：2 个参数
+- `VirtualFunctionVoid<T1, T2, T3>`：3 个参数
+- `VirtualFunctionVoid<T1, T2, T3, T4>`：4 个参数
+- `VirtualFunctionVoid<T1, T2, T3, T4, T5>`：5 个参数
+- `VirtualFunctionVoid<T1, T2, T3, T4, T5, T6>`：6 个参数
+- `VirtualFunctionVoid<T1, T2, T3, T4, T5, T6, T7>`：7 个参数
+- `VirtualFunctionVoid<T1, T2, T3, T4, T5, T6, T7, T8>`：8 个参数
+- `VirtualFunctionVoid<T1, T2, T3, T4, T5, T6, T7, T8, T9>`：9 个参数
+- `VirtualFunctionVoid<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>`：10 个参数
+
+## 使用示例
+
+```csharp
+// 创建无参数虚函数
+var voidFunc = new VirtualFunctionVoid("48 89 5C 24 ?");
+voidFunc.Invoke();
+
+// 创建带参数的虚函数
+var paramFunc = new VirtualFunctionVoid<int, string>("48 89 5C 24 ?");
+paramFunc.Invoke(42, "test");
+
+// 使用二进制路径创建
+var binaryFunc = new VirtualFunctionVoid<float>("48 89 5C 24 ?", "server.dll");
+binaryFunc.Invoke(3.14f);
+```
+
+## 说明
+
+- 提供类型安全的虚函数调用
+- 支持基于签名或对象指针的创建
+- 自动管理函数指针生命周期
+- 支持最多 10 个参数
+- 适用于无返回值的虚函数调用
+</rewritten_file> 

@@ -1,0 +1,86 @@
+---
+title: IScriptHostConfiguration 接口
+description: CounterStrikeSharp 脚本主机配置接口，定义了脚本主机的基本配置选项
+icon: Settings
+---
+
+# IScriptHostConfiguration 接口
+
+`IScriptHostConfiguration` 接口定义了脚本主机的基本配置选项。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Hosting
+```
+
+## 接口定义
+
+```csharp
+public interface IScriptHostConfiguration
+```
+
+## 属性
+
+### GameDirectory
+
+获取游戏目录路径。
+
+```csharp
+string GameDirectory { get; }
+```
+
+### AddonsDirectory
+
+获取插件目录路径。
+
+```csharp
+string AddonsDirectory { get; }
+```
+
+### ConfigDirectory
+
+获取配置文件目录路径。
+
+```csharp
+string ConfigDirectory { get; }
+```
+
+### LogDirectory
+
+获取日志文件目录路径。
+
+```csharp
+string LogDirectory { get; }
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private readonly IScriptHostConfiguration _config;
+
+    public MyPlugin(IScriptHostConfiguration config)
+    {
+        _config = config;
+    }
+
+    public override void Load(bool hotReload)
+    {
+        // 使用配置信息
+        var configPath = Path.Combine(_config.ConfigDirectory, "myconfig.json");
+        var logPath = Path.Combine(_config.LogDirectory, "mylog.txt");
+        
+        Console.WriteLine($"游戏目录: {_config.GameDirectory}");
+        Console.WriteLine($"插件目录: {_config.AddonsDirectory}");
+    }
+}
+```
+
+## 说明
+
+- 提供了基本的目录配置信息
+- 用于插件定位资源和配置文件
+- 通过依赖注入使用
+- 所有路径都是绝对路径 

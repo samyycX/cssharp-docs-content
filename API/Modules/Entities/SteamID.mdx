@@ -1,0 +1,150 @@
+---
+title: SteamID 类
+description: CounterStrikeSharp Steam ID 类，用于处理和管理 Steam 用户标识
+icon: User
+---
+
+# SteamID 类
+
+`SteamID` 类提供了处理和管理 Steam 用户标识的功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Entities
+```
+
+## 类定义
+
+```csharp
+public class SteamID
+```
+
+## 属性
+
+### SteamId2
+
+获取 Steam ID 2 格式的标识。
+
+```csharp
+public string SteamId2 { get; }
+```
+
+### SteamId3
+
+获取 Steam ID 3 格式的标识。
+
+```csharp
+public string SteamId3 { get; }
+```
+
+### SteamId64
+
+获取 Steam ID 64 格式的标识。
+
+```csharp
+public ulong SteamId64 { get; }
+```
+
+### AccountId
+
+获取 Steam 账号 ID。
+
+```csharp
+public uint AccountId { get; }
+```
+
+## 构造函数
+
+### SteamID(string)
+
+从字符串创建 SteamID 实例。
+
+```csharp
+public SteamID(string steamId)
+```
+
+### SteamID(ulong)
+
+从 64 位整数创建 SteamID 实例。
+
+```csharp
+public SteamID(ulong steamId64)
+```
+
+## 方法
+
+### ToString
+
+返回 Steam ID 的字符串表示。
+
+```csharp
+public override string ToString()
+```
+
+### TryParse
+
+尝试解析 Steam ID 字符串。
+
+```csharp
+public static bool TryParse(string steamId, out SteamID result)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 创建 SteamID 实例
+        var steamId = new SteamID("STEAM_1:0:12345678");
+        
+        // 获取不同格式
+        Console.WriteLine($"Steam ID 2: {steamId.SteamId2}");
+        Console.WriteLine($"Steam ID 3: {steamId.SteamId3}");
+        Console.WriteLine($"Steam ID 64: {steamId.SteamId64}");
+        
+        // 从 Steam ID 64 创建
+        var steamId64 = new SteamID(76561197960265728);
+        Console.WriteLine($"账号 ID: {steamId64.AccountId}");
+        
+        // 解析 Steam ID
+        if (SteamID.TryParse("[U:1:12345678]", out var parsedId))
+        {
+            Console.WriteLine($"解析成功: {parsedId.SteamId2}");
+        }
+    }
+}
+```
+
+## 玩家身份验证示例
+
+```csharp
+public void OnPlayerConnect(CCSPlayerController player)
+{
+    var steamId = player.SteamID;
+    
+    // 检查 Steam ID 格式
+    Console.WriteLine($"玩家 {player.PlayerName} 的 Steam ID:");
+    Console.WriteLine($"Steam ID 2: {steamId.SteamId2}");
+    Console.WriteLine($"Steam ID 3: {steamId.SteamId3}");
+    Console.WriteLine($"Steam ID 64: {steamId.SteamId64}");
+    
+    // 使用 Steam ID 进行权限检查
+    if (IsAdmin(steamId.SteamId64))
+    {
+        Console.WriteLine($"玩家 {player.PlayerName} 是管理员");
+    }
+}
+```
+
+## 说明
+
+- 支持多种 Steam ID 格式
+- 提供格式转换功能
+- 支持字符串解析
+- 提供账号 ID 访问
+- 可用于玩家身份验证
+- 支持错误处理
+- 提供标准化输出 

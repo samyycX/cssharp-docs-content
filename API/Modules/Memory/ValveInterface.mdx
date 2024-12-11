@@ -1,0 +1,95 @@
+---
+title: ValveInterface 类
+description: CounterStrikeSharp 内存模块中的 Valve 接口类，提供对 CS2 引擎关键接口的访问
+icon: Code
+---
+
+# ValveInterface 类
+
+`ValveInterface` 类是一个记录类型，用于提供对 CS2 引擎关键接口的访问。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Memory
+```
+
+## 类定义
+
+```csharp
+public record ValveInterface
+{
+    public string Name { get; }
+    public IntPtr Pointer { get; }
+}
+```
+
+## 静态属性
+
+### Engine
+
+获取 Source2 引擎到服务器的接口。
+
+```csharp
+public static ValveInterface Engine
+```
+
+### CVars
+
+获取引擎控制台变量接口。
+
+```csharp
+public static ValveInterface CVars
+```
+
+### Server
+
+获取 Source2 服务器接口。
+
+```csharp
+public static ValveInterface Server
+```
+
+### ServerGameClients
+
+获取 Source2 游戏客户端接口。
+
+```csharp
+public static ValveInterface ServerGameClients
+```
+
+### NetworkServerService
+
+获取网络服务器服务接口。
+
+```csharp
+public static ValveInterface NetworkServerService
+```
+
+### GameEventSystem
+
+获取游戏事件系���接口。
+
+```csharp
+public static ValveInterface GameEventSystem
+```
+
+## 方法
+
+### ToString
+
+返回接口的字符串表示。
+
+```csharp
+public override string ToString()
+```
+
+返回格式：`[ValveInterface: Name={Name}, Pointer={Pointer:X}]`
+
+## 说明
+
+- 提供对 CS2 引擎核心接口的访问
+- 每个接口都有唯一的名称和指针
+- 支持引擎、服务器和网络服务等关键功能
+- 使用记录类型确保不可变性
+- 通过静态属性提供常用接口访问 

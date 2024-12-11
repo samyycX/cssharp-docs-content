@@ -1,0 +1,74 @@
+---
+title: ResultType 枚举
+description: CounterStrikeSharp 监听器结果类型枚举，定义了监听器处理结果的不同状态
+icon: Flag
+---
+
+# ResultType 枚举
+
+`ResultType` 枚举定义了监听器处理结果的不同状态。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Listeners
+```
+
+## 枚举定义
+
+```csharp
+public enum ResultType
+{
+    Continue,
+    Changed,
+    Handled,
+    Stop
+}
+```
+
+## 枚举值
+
+### Continue
+
+继续处理监听器，允许其他监听器继续执行。
+
+### Changed
+
+表示监听器的结果已被更改。
+
+### Handled
+
+表示监听器已处理完成，但允许其他监听器继续执行。
+
+### Stop
+
+停止处理监听器，不允许其他监听器继续执行。
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        AddListener("event_name", (data) =>
+        {
+            // 处理事件...
+            
+            // 继续执行其他监听器
+            return ResultType.Continue;
+            
+            // 或者停止执行其他监听器
+            // return ResultType.Stop;
+        });
+    }
+}
+```
+
+## 说明
+
+- 用于控制监听器的执行流程
+- 提供灵活的事件处理控制
+- 支持链式监听器处理
+- 允许中断监听器链
+- 类似于事件处理中的传播控制 

@@ -1,0 +1,41 @@
+---
+title: NetworkedString 类
+description: CounterStrikeSharp 工具模块中的网络字符串类
+icon: Tool
+---
+
+# NetworkedString 类
+
+`NetworkedString` 类提供了一个用于网络传输的字符串封装。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 类定义
+
+```csharp
+public class NetworkedString
+{
+    public string Value { get; set; }  // 字符串值
+}
+```
+
+## 构造函数
+
+```csharp
+public NetworkedString()  // 创建一个空的网络字符串
+public NetworkedString(string value)  // 使用指定的字符串值创建实例
+```
+
+## 说明
+
+- 用于在网络中传输字符串数据
+- 提供了字符串的序列化和反序列化支持
+- 适用于网络同步和通信场景
+- 自动处理字符串的编码和解码
+- 支持空值处理
+- 线程安全的字符串传输机制
+``` 

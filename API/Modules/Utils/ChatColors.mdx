@@ -1,0 +1,69 @@
+---
+title: ChatColors 类
+description: CounterStrikeSharp 工具模块中的聊天颜色常量类
+icon: Tool
+---
+
+# ChatColors 类
+
+`ChatColors` 类提供了在游戏聊天消息中使用的颜色代码常量。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 常量定义
+
+```csharp
+public static class ChatColors
+{
+    public const string Default = "\x01";     // 默认颜色
+    public const string White = "\x01";       // 白色
+    public const string Darkred = "\x02";     // 深红色
+    public const string Green = "\x04";       // 绿色
+    public const string LightYellow = "\x03"; // 浅黄色
+    public const string LightBlue = "\x03";   // 浅蓝色
+    public const string Olive = "\x05";       // 橄榄色
+    public const string Lime = "\x06";        // 青柠色
+    public const string Red = "\x07";         // 红色
+    public const string Purple = "\x03";      // 紫色
+    public const string Grey = "\x08";        // 灰色
+    public const string Yellow = "\x09";      // 黄色
+    public const string Gold = "\x10";        // 金色
+    public const string Blue = "\x0B";        // 蓝色
+    public const string DarkBlue = "\x0C";    // 深蓝色
+    public const string BlueGrey = "\x0D";    // 蓝灰色
+    public const string Magenta = "\x0E";     // 品红色
+    public const string LightRed = "\x0F";    // 浅红色
+}
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 使用颜色代码发送消息
+        Server.PrintToChatAll($"{ChatColors.Green}这是绿色文本");
+        
+        // 组合多种颜色
+        Server.PrintToChatAll($"{ChatColors.Red}红色{ChatColors.White}白色{ChatColors.Blue}蓝色");
+        
+        // 在插件中使用
+        player.PrintToChat($"{ChatColors.Gold}恭喜获得{ChatColors.Yellow}100{ChatColors.Gold}金币！");
+    }
+}
+```
+
+## 说明
+
+- 提供了游戏中常用的聊天颜色代码
+- 颜色代码使用转义字符表示
+- 可以在聊天消息中组合使用多种颜色
+- 适用于所有聊天相关的消息发送
+- 颜色显示效果可能因游戏客户端设置而略有不同
+- 建议在测试环境中验证颜色效果 

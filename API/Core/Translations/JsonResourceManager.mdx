@@ -1,0 +1,138 @@
+---
+title: JsonResourceManager 类
+description: CounterStrikeSharp 的JSON资源管理器，用于管理多语言翻译资源
+icon: FileJson
+---
+
+# JsonResourceManager 类
+
+`JsonResourceManager` 类负责管理基于JSON格式的多语言翻译资源。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Translations
+```
+
+## 类定义
+
+```csharp
+public class JsonResourceManager
+```
+
+## 属性
+
+### Resources
+
+获取所有已加载的翻译资源。
+
+```csharp
+public Dictionary<string, Dictionary<string, string>> Resources { get; }
+```
+
+### DefaultCulture
+
+获取默认的文化信息。
+
+```csharp
+public string DefaultCulture { get; }
+```
+
+## 构造函数
+
+### JsonResourceManager
+
+创建一个新的JSON资源管理器实例。
+
+```csharp
+public JsonResourceManager(string basePath, string defaultCulture = "en")
+```
+
+#### 参数
+
+- `basePath`: `string` - 翻译文件的基础路径
+- `defaultCulture`: `string` - 默认文化（可选，默认为"en"）
+
+## 方法
+
+### LoadResources
+
+加载指定路径下的翻译资源。
+
+```csharp
+public void LoadResources(string path)
+```
+
+### GetString
+
+获取指定键的翻译字符串。
+
+```csharp
+public string GetString(string key, string culture)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private readonly JsonResourceManager _resourceManager;
+    private readonly IPlayerLanguageManager _languageManager;
+
+    public MyPlugin(IPlayerLanguageManager languageManager)
+    {
+        // 创建资源管理器
+        _resourceManager = new JsonResourceManager(
+            Path.Combine(ModuleDirectory, "translations"),
+            "en"
+        );
+        _languageManager = languageManager;
+
+        // 加载翻译资源
+        _resourceManager.LoadResources("messages.json");
+    }
+
+    public override void Load(bool hotReload)
+    {
+        AddCommand("welcome", "欢迎消息", (player, info) =>
+        {
+            if (player == null) return;
+
+            // 获取玩家语言
+            var culture = _languageManager.GetLanguage(player);
+            
+            // 获取翻译后的消息
+            var message = _resourceManager.GetString("welcome_message", culture);
+            player.PrintToChat(message);
+        });
+    }
+}
+```
+
+## 翻译文件示例
+
+### messages.json (英文)
+```json
+{
+    "welcome_message": "Welcome to the server!",
+    "goodbye_message": "Goodbye, see you next time!"
+}
+```
+
+### messages.zh-CN.json (中文)
+```json
+{
+    "welcome_message": "欢迎来到服务器！",
+    "goodbye_message": "再见，下次见！"
+}
+```
+
+## 说明
+
+- 支持基于JSON的翻译资源
+- 自动加载多语言文件
+- 支持默认语言回退
+- 动态加载翻译资源
+- 支持文化特定的翻译
+- 便于管理和维护翻译
+- 支持热重载翻译文件 

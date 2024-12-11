@@ -1,0 +1,159 @@
+---
+title: RoundEndReason 枚举
+description: CounterStrikeSharp 回合结束原因枚举，定义了游戏回合结束的各种原因
+icon: Clock
+---
+
+# RoundEndReason 枚举
+
+`RoundEndReason` 枚举定义了游戏回合结束的各种可能原因。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Entities.Constants
+```
+
+## 枚举定义
+
+```csharp
+public enum RoundEndReason
+```
+
+## 枚举值
+
+### TargetBombed
+炸弹爆炸，恐怖分子胜利。
+```csharp
+TargetBombed = 1
+```
+
+### VIPEscaped
+VIP 成功逃脱。
+```csharp
+VIPEscaped = 2
+```
+
+### VIPKilled
+VIP 被击杀。
+```csharp
+VIPKilled = 3
+```
+
+### TerroristsEscaped
+恐怖分子成功逃脱。
+```csharp
+TerroristsEscaped = 4
+```
+
+### CTStoppedEscape
+反恐精英阻止了恐怖分子逃脱。
+```csharp
+CTStoppedEscape = 5
+```
+
+### TerroristsStopped
+恐怖分子被阻止。
+```csharp
+TerroristsStopped = 6
+```
+
+### BombDefused
+炸弹被拆除，反恐精英胜利。
+```csharp
+BombDefused = 7
+```
+
+### CTWin
+反恐精英胜利。
+```csharp
+CTWin = 8
+```
+
+### TerroristWin
+恐怖分子胜利。
+```csharp
+TerroristWin = 9
+```
+
+### Draw
+回合平局。
+```csharp
+Draw = 10
+```
+
+### HostagesRescued
+人质获救。
+```csharp
+HostagesRescued = 11
+```
+
+### TargetSaved
+目标保护成功。
+```csharp
+TargetSaved = 12
+```
+
+### HostagesNotRescued
+人质未获救。
+```csharp
+HostagesNotRescued = 13
+```
+
+### GameStart
+游戏开始。
+```csharp
+GameStart = 15
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 注册回合结束事件处理器
+        RegisterEventHandler<EventRoundEnd>((ev, info) =>
+        {
+            var reason = (RoundEndReason)ev.Reason;
+            
+            // 根据不同的结束原因处理
+            switch (reason)
+            {
+                case RoundEndReason.TargetBombed:
+                    Server.PrintToChatAll("炸弹爆炸！恐怖分子胜利！");
+                    break;
+                    
+                case RoundEndReason.BombDefused:
+                    Server.PrintToChatAll("炸弹已拆除！反恐精英胜利！");
+                    break;
+                    
+                case RoundEndReason.CTWin:
+                    Server.PrintToChatAll("反恐精英消灭了所有恐怖分子！");
+                    break;
+                    
+                case RoundEndReason.TerroristWin:
+                    Server.PrintToChatAll("恐怖分子消灭了所有反恐精英！");
+                    break;
+                    
+                case RoundEndReason.Draw:
+                    Server.PrintToChatAll("回合平局！");
+                    break;
+            }
+            
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 说明
+
+- 定义回合结束的原因
+- 用于回合结束事件处理
+- 支持多种胜利条件
+- 包含特殊游戏模式
+- 用于游戏流程控制
+- 支持回合状态判断
+- 便于回合结果处理 

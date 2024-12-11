@@ -1,0 +1,120 @@
+---
+title: SteamAccountInstance 枚举
+description: CounterStrikeSharp Steam 账号实例枚举，定义了 Steam 账号的不同实例类型
+icon: Copy
+---
+
+# SteamAccountInstance 枚举
+
+`SteamAccountInstance` 枚举定义了 Steam 账号的不同实例类型。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Entities.Constants
+```
+
+## 枚举定义
+
+```csharp
+public enum SteamAccountInstance
+```
+
+## 枚举值
+
+### All
+所有实例。
+```csharp
+All = 0
+```
+
+### Desktop
+桌面实例。
+```csharp
+Desktop = 1
+```
+
+### Console
+控制台实例。
+```csharp
+Console = 2
+```
+
+### Web
+网页实例。
+```csharp
+Web = 4
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 注册玩家连接事件处理器
+        RegisterEventHandler<EventPlayerConnected>((ev, info) =>
+        {
+            var player = ev.Userid;
+            var steamId = player.SteamID;
+            
+            // 检查账号实例类型
+            var instance = GetAccountInstance(steamId);
+            switch (instance)
+            {
+                case SteamAccountInstance.Desktop:
+                    Console.WriteLine($"玩家 {player.PlayerName} 使用桌面客户端");
+                    break;
+                    
+                case SteamAccountInstance.Web:
+                    Console.WriteLine($"玩家 {player.PlayerName} 使用网页客户端");
+                    break;
+                    
+                case SteamAccountInstance.Console:
+                    Console.WriteLine($"玩家 {player.PlayerName} 使用控制台客户端");
+                    break;
+            }
+            
+            return HookResult.Continue;
+        });
+    }
+    
+    private SteamAccountInstance GetAccountInstance(SteamID steamId)
+    {
+        // 这里是示例，实际实现可能不同
+        return SteamAccountInstance.Desktop;
+    }
+}
+```
+
+## 客户端验证示例
+
+```csharp
+public void ValidateClientInstance(CCSPlayerController player)
+{
+    var steamId = player.SteamID;
+    var instance = GetAccountInstance(steamId);
+    
+    // 只允许桌面客户端
+    if (instance != SteamAccountInstance.Desktop)
+    {
+        player.Kick("请使用 Steam 客户端登录");
+        return;
+    }
+    
+    // 记录客户端类型
+    Console.WriteLine($"玩家 {player.PlayerName} " +
+                     $"使用 {instance} 类型客户���登录");
+}
+```
+
+## 说明
+
+- 定义 Steam 账号实例类型
+- 用于客户端类型识别
+- 支持多种客户端类型
+- 用于访问控制
+- 支持实例类型判断
+- 便于客户端管理
+- 提供类型验证功能 

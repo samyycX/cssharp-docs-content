@@ -1,0 +1,105 @@
+---
+title: FakeConVar 类
+description: CounterStrikeSharp 的假控制台变量类，用于模拟和管理客户端的控制台变量
+icon: Terminal
+---
+
+# FakeConVar 类
+
+`FakeConVar` 类用于模拟和管理客户端的控制台变量，主要用于机器人和测试场景。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Cvars
+```
+
+## 类定义
+
+```csharp
+public class FakeConVar
+```
+
+## 属性
+
+### Name
+
+获取假控制台变量的名称。
+
+```csharp
+public string Name { get; }
+```
+
+### Value
+
+获取或设置假控制台变量的值。
+
+```csharp
+public string Value { get; set; }
+```
+
+### DefaultValue
+
+获取假控制台变量的默认值。
+
+```csharp
+public string DefaultValue { get; }
+```
+
+### Description
+
+获取假控制台变量的描述。
+
+```csharp
+public string Description { get; }
+```
+
+## 构造函数
+
+### FakeConVar
+
+创建一个新的假控制台变量。
+
+```csharp
+public FakeConVar(string name, string defaultValue, string description = "")
+```
+
+#### 参数
+
+- `name`: `string` - 变量名称
+- `defaultValue`: `string` - 默认值
+- `description`: `string` - 变量描述（可选）
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private FakeConVar _botSkill;
+    
+    public override void Load(bool hotReload)
+    {
+        // 创建假ConVar用于机器人
+        _botSkill = new FakeConVar("bot_skill", "2", "机器人技能等级 (0-4)");
+        
+        // 为所有机器人设置技能等级
+        foreach (var player in Utilities.GetPlayers().Where(p => p.IsBot))
+        {
+            player.SetFakeClientConVar("bot_skill", _botSkill.Value);
+        }
+        
+        // 修改假ConVar值
+        _botSkill.Value = "3";
+    }
+}
+```
+
+## 说明
+
+- 用于模拟客户端控制台变量
+- 主要用于机器人配置
+- 不影响真实玩家
+- 支持默认值和描述
+- 用于测试和开发
+- 可动态修改值
+- 不支持标志和回调

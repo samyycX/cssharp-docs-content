@@ -1,0 +1,102 @@
+---
+title: VirtualFunctionWithReturn 类
+description: CounterStrikeSharp 内存模块中的有返回值虚函数包装类，提供类型安全的虚函数调用
+icon: Code
+---
+
+# VirtualFunctionWithReturn 类
+
+`VirtualFunctionWithReturn` 类是一个泛型类，用于包装有返回值的虚函数调用。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Memory
+```
+
+## 类定义
+
+```csharp
+public partial class VirtualFunctionWithReturn<TResult>
+{
+    private Func<TResult> Function;
+}
+
+public partial class VirtualFunctionWithReturn<TArg1, TResult>
+{
+    private Func<TArg1, TResult> Function;
+}
+```
+
+## 构造函数
+
+### 基于签名的构造
+
+```csharp
+public VirtualFunctionWithReturn(string signature)
+public VirtualFunctionWithReturn(string signature, string binarypath)
+```
+
+### 基于对象指针的构造
+
+```csharp
+public VirtualFunctionWithReturn(IntPtr objectPtr, int offset)
+```
+
+## 方法
+
+### Invoke
+
+调用虚函数并返回结果。参数数量取决于类的泛型参数。
+
+```csharp
+// 无参数
+public TResult Invoke()
+
+// 一个参数
+public TResult Invoke(TArg1 arg1)
+
+// 两个参数
+public TResult Invoke(TArg1 arg1, TArg2 arg2)
+```
+
+## 支持的泛型重载
+
+- `VirtualFunctionWithReturn<TResult>`：无参数
+- `VirtualFunctionWithReturn<T1, TResult>`：1 个参数
+- `VirtualFunctionWithReturn<T1, T2, TResult>`：2 个参数
+- `VirtualFunctionWithReturn<T1, T2, T3, TResult>`：3 个参数
+- `VirtualFunctionWithReturn<T1, T2, T3, T4, TResult>`：4 个参数
+- `VirtualFunctionWithReturn<T1, T2, T3, T4, T5, TResult>`：5 个参数
+- `VirtualFunctionWithReturn<T1, T2, T3, T4, T5, T6, TResult>`：6 个参数
+- `VirtualFunctionWithReturn<T1, T2, T3, T4, T5, T6, T7, TResult>`：7 个参数
+- `VirtualFunctionWithReturn<T1, T2, T3, T4, T5, T6, T7, T8, TResult>`：8 个参数
+- `VirtualFunctionWithReturn<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>`：9 个参数
+- `VirtualFunctionWithReturn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>`：10 个参数
+
+## 使用示例
+
+```csharp
+// 创建无参数有返回值的虚函数
+var func = new VirtualFunctionWithReturn<int>("48 89 5C 24 ?");
+int result = func.Invoke();
+
+// 创建带参数有返回值的虚函数
+var paramFunc = new VirtualFunctionWithReturn<string, bool>("48 89 5C 24 ?");
+bool result = paramFunc.Invoke("test");
+
+// 使用二进制路径创建
+var binaryFunc = new VirtualFunctionWithReturn<float, int>("48 89 5C 24 ?", "server.dll");
+int result = binaryFunc.Invoke(3.14f);
+```
+
+## 说明
+
+- 提供类型安全的虚函数调用
+- 支持基于签名或对象指针的创建
+- 自动管理函数指针生命周期
+- 支持最多 10 个参数
+- 适用于有返回值的虚函数调用
+- 支持泛型返回值类型
+- 支持复杂类型的参数和返回值
+``` 

@@ -1,0 +1,92 @@
+---
+title: Vector2D 类
+description: CounterStrikeSharp 工具模块中的二维向量类
+icon: Tool
+---
+
+# Vector2D 类
+
+`Vector2D` 类表示2D平面中的向量。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 类定义
+
+```csharp
+public class Vector2D
+{
+    public float x { get; set; }  // x坐标
+    public float y { get; set; }  // y坐标
+}
+```
+
+## 构造函数
+
+```csharp
+public Vector2D()  // 创建一个零向量
+public Vector2D(float x, float y)  // 使用指定的坐标创建向量
+public Vector2D(Vector2D v)  // 从现有向量创建副本
+```
+
+## 属性
+
+```csharp
+public float Length { get; }  // 向量长度
+public float LengthSquared { get; }  // 向量长度的平方
+```
+
+## 主要方法
+
+```csharp
+public void Normalize()  // 标准化向量
+public Vector2D Normalized()  // 返回标准化后的新向量
+public float Dot(Vector2D other)  // 点积
+public float DistTo(Vector2D other)  // 到另一个向量的距离
+public float DistToSquared(Vector2D other)  // 到另一个向量的距离的平方
+public void Scale(float scale)  // 缩放向量
+```
+
+## 运算符重载
+
+```csharp
+public static Vector2D operator +(Vector2D a, Vector2D b)  // 向量加法
+public static Vector2D operator -(Vector2D a, Vector2D b)  // 向量减法
+public static Vector2D operator *(Vector2D a, float b)  // 向量乘以标量
+public static Vector2D operator /(Vector2D a, float b)  // 向量除以标量
+public static Vector2D operator -(Vector2D a)  // 向量取反
+```
+
+## 使用示例
+
+```csharp
+// 创建向量
+var position = new Vector2D(100, 200);
+
+// 标准化向量
+position.Normalize();
+
+// 计算两点距离
+var distance = position.DistTo(targetPosition);
+
+// 向量运算
+var direction = targetPosition - position;
+var scaledDirection = direction * 2.0f;
+
+// 点积
+var dotProduct = position.Dot(direction);
+```
+
+## 说明
+
+- 用于表示2D平面中的位置和方向
+- 提供了完整的向量运算支持
+- 支持标准化和距离计算
+- 实现了基本的数学运算符
+- 适用于2D位置、速度、方向等计算
+- 支持点积运算
+- 常用于UI和2D物理计算
+- 比3D向量更轻量和高效

@@ -1,0 +1,155 @@
+---
+title: ChatMenu 类
+description: CounterStrikeSharp 菜单模块中的聊天菜单类，提供在游戏聊天窗口中显示的菜单功能
+icon: Chat
+---
+
+# ChatMenu 类
+
+`ChatMenu` 类继承自 `BaseMenu`，提供了在游戏聊天窗口中显示的菜单功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Menu
+```
+
+## 类定义
+
+```csharp
+public class ChatMenu : BaseMenu
+{
+    public char TitleColor { get; set; } = ChatColors.Yellow;
+    public char EnabledColor { get; set; } = ChatColors.Green;
+    public char DisabledColor { get; set; } = ChatColors.Grey;
+    public char PrevPageColor { get; set; } = ChatColors.Yellow;
+    public char NextPageColor { get; set; } = ChatColors.Yellow;
+    public char CloseColor { get; set; } = ChatColors.Yellow;
+}
+```
+
+## 构造函数
+
+```csharp
+public ChatMenu(string title) : base(title)
+{
+}
+```
+
+## 属性
+
+### TitleColor
+
+菜单标题的颜色。
+
+```csharp
+public char TitleColor { get; set; }
+```
+
+默认值：`ChatColors.Yellow`
+
+### EnabledColor
+
+启用选项的颜色。
+
+```csharp
+public char EnabledColor { get; set; }
+```
+
+默认值：`ChatColors.Green`
+
+### DisabledColor
+
+禁用选项的颜色。
+
+```csharp
+public char DisabledColor { get; set; }
+```
+
+默认值：`ChatColors.Grey`
+
+### PrevPageColor
+
+上一页按钮的颜色。
+
+```csharp
+public char PrevPageColor { get; set; }
+```
+
+默认值：`ChatColors.Yellow`
+
+### NextPageColor
+
+下一页按钮的颜色。
+
+```csharp
+public char NextPageColor { get; set; }
+```
+
+默认值：`ChatColors.Yellow`
+
+### CloseColor
+
+关闭按钮的颜色。
+
+```csharp
+public char CloseColor { get; set; }
+```
+
+默认值：`ChatColors.Yellow`
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 创建聊天菜单
+        var menu = new ChatMenu("我的聊天菜单")
+        {
+            // 自定义颜色
+            TitleColor = ChatColors.Blue,
+            EnabledColor = ChatColors.White,
+            DisabledColor = ChatColors.DarkRed
+        };
+        
+        // 添加选项
+        menu.AddMenuOption("选项 1", (player, option) => {
+            player.PrintToChat("选择了选项 1");
+        });
+        
+        menu.AddMenuOption("禁用选项", (player, option) => {
+            player.PrintToChat("此选项已禁用");
+        }, disabled: true);
+        
+        // 为玩家打开菜单
+        RegisterEventHandler<EventPlayerConnected>((ev, info) => {
+            var player = ev.Userid;
+            MenuManager.OpenChatMenu(player, menu);
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 菜单显示格式
+
+```
+[我的聊天菜单]
+ 1. 选项 1
+ 2. 禁用选项
+ 7. -> Prev
+ 8. -> Next
+ 9. -> Close
+```
+
+## 说明
+
+- 在聊天窗口中显示菜单
+- 支持自定义颜色
+- 支持分页显示
+- 支持禁用选项
+- 使用数字键选择选项
+- 支持导航按钮（上一页、下一页、关闭）
+- 自动处理按键事件 

@@ -1,0 +1,129 @@
+---
+title: CollisionGroup 枚举
+description: CounterStrikeSharp 碰撞组枚举，定义了游戏中不同类型的碰撞组
+icon: Box
+---
+
+# CollisionGroup 枚举
+
+`CollisionGroup` 枚举定义了游戏中不同类型的碰撞组。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Entities.Constants
+```
+
+## 枚举定义
+
+```csharp
+public enum CollisionGroup
+```
+
+## 枚举值
+
+### None
+无碰撞组。
+```csharp
+None = 0
+```
+
+### Debris
+碎片碰撞组。
+```csharp
+Debris = 1
+```
+
+### DebrisTrigger
+碎片触发器碰撞组。
+```csharp
+DebrisTrigger = 2
+```
+
+### InteractiveDebris
+可交互碎片碰撞组。
+```csharp
+InteractiveDebris = 3
+```
+
+### Interactive
+可交互物体碰撞组。
+```csharp
+Interactive = 4
+```
+
+### Player
+玩家碰撞组。
+```csharp
+Player = 5
+```
+
+### NpcActor
+NPC 角色碰撞组。
+```csharp
+NpcActor = 6
+```
+
+### InvulnerablePlayer
+无敌玩家碰撞组。
+```csharp
+InvulnerablePlayer = 7
+```
+
+### Weapon
+武器碰撞组。
+```csharp
+Weapon = 8
+```
+
+### PlayerMovement
+玩家移动碰撞组。
+```csharp
+PlayerMovement = 9
+```
+
+### NpcProjectile
+NPC 投射物碰撞组。
+```csharp
+NpcProjectile = 10
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 检查实体的碰撞组
+        var entity = Utilities.GetEntityFromIndex(1);
+        var collisionGroup = entity.GetProperty<CollisionGroup>("m_CollisionGroup");
+        
+        // 根据碰撞组处理逻辑
+        switch (collisionGroup)
+        {
+            case CollisionGroup.Player:
+                Console.WriteLine("这是一个玩家实体");
+                break;
+                
+            case CollisionGroup.Weapon:
+                Console.WriteLine("这是一个武器实体");
+                break;
+                
+            case CollisionGroup.Interactive:
+                Console.WriteLine("这是一个可交互实体");
+                break;
+        }
+    }
+}
+```
+
+## 说明
+
+- 定义实体碰撞行为
+- 用于物理系统计算
+- 影响实体交互方式
+- 控制碰撞检测
+- 用于游戏物理模拟
+- 支持多种碰撞类型
+- 影响实体物理特性 

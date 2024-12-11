@@ -1,0 +1,102 @@
+---
+title: CoreLogging 类
+description: CounterStrikeSharp 核心日志记录类，提供了基本的日志记录功能
+icon: FileText
+---
+
+# CoreLogging 类
+
+`CoreLogging` 类提供了CounterStrikeSharp的核心日志记录功能，用于记录插件和系统的日志信息。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Logging
+```
+
+## 类定义
+
+```csharp
+public static class CoreLogging
+```
+
+## 静态属性
+
+### LoggerFactory
+
+获取或设置日志工厂实例。
+
+```csharp
+public static ILoggerFactory LoggerFactory { get; set; }
+```
+
+### LogPath
+
+获取或设置日志文件路径。
+
+```csharp
+public static string LogPath { get; set; }
+```
+
+## 静态方法
+
+### CreateLogger&lt;T&gt;
+
+创建指定类型的日志记录器。
+
+```csharp
+public static ILogger<T> CreateLogger<T>()
+```
+
+### ConfigureLogging
+
+配置日志系统。
+
+```csharp
+public static void ConfigureLogging(IScriptHostConfiguration configuration)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private readonly ILogger<MyPlugin> _logger;
+
+    public MyPlugin()
+    {
+        // 创���日志记录器
+        _logger = CoreLogging.CreateLogger<MyPlugin>();
+    }
+
+    public override void Load(bool hotReload)
+    {
+        // 记录不同级别的日志
+        _logger.LogInformation("插件已加载");
+        _logger.LogWarning("这是一个警告消息");
+        _logger.LogError("发生错误：{Error}", "示例错误");
+        
+        // 使用结构化日志
+        _logger.LogInformation("玩家 {PlayerName} 加入了服务器", "Player1");
+    }
+}
+```
+
+## 日志级别
+
+- Trace - 最详细的日志信息
+- Debug - 调试信息
+- Information - 一般信息
+- Warning - 警告信息
+- Error - 错误信息
+- Critical - 严重错误信息
+
+## 说明
+
+- 提供了标准的日志记录接口
+- 支持结构化日志记录
+- 自动包含时间戳和日志级别
+- 支持按类型创建日志记录器
+- 可配置日志输出位置
+- 支持日志文件滚动更新
+- 集成了Serilog日志框架 

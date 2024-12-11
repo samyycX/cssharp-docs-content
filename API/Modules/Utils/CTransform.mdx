@@ -1,0 +1,64 @@
+---
+title: CTransform 类
+description: CounterStrikeSharp 工具模块中的变换类
+icon: Tool
+---
+
+# CTransform 类
+
+`CTransform` 类表示游戏中的空间变换，包含位置和旋转信息。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 类定义
+
+```csharp
+public class CTransform
+{
+    public Vector Position { get; set; }  // 位置向量
+    public QAngle Rotation { get; set; }  // 旋转角度
+    public float Scale { get; set; }      // 缩放比例
+}
+```
+
+## 构造函数
+
+```csharp
+public CTransform()  // 创建一个默认的变换
+public CTransform(Vector position, QAngle rotation)  // 使用指定的位置和旋转创建变换
+public CTransform(Vector position, QAngle rotation, float scale)  // 使用指定的位置、旋转和缩放创建变换
+```
+
+## 使用示例
+
+```csharp
+// 创建一个新的变换
+var transform = new CTransform(
+    new Vector(100, 200, 300),
+    new QAngle(0, 90, 0),
+    1.0f
+);
+
+// 修改变换属性
+transform.Position = new Vector(0, 0, 0);
+transform.Rotation = new QAngle(45, 45, 0);
+transform.Scale = 2.0f;
+
+// 在实体上应用变换
+entity.Transform = transform;
+```
+
+## 说明
+
+- 用于表示游戏对象的空间变换
+- 包含位置、旋转和缩放信息
+- 位置使用 `Vector` 类表示
+- 旋转使用 `QAngle` 类表示
+- 缩放使用浮点数表示
+- 适用于实体的空间变换操作
+- 常用于设置和获取实体的位置和朝向
+</rewritten_file> 

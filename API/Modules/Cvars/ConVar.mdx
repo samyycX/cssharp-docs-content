@@ -1,0 +1,152 @@
+---
+title: ConVar 类
+description: CounterStrikeSharp 控制台变量类，用于管理和操作游戏控制台变量
+icon: Terminal
+---
+
+# ConVar 类
+
+`ConVar` 类表示游戏中的控制台变量，提供了对控制台变量的创建、修改和监控功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Cvars
+```
+
+## 类定义
+
+```csharp
+public class ConVar
+```
+
+## 属性
+
+### Name
+
+获取控制台变量的名称。
+
+```csharp
+public string Name { get; }
+```
+
+### Value
+
+获取或设置控制台变量的值。
+
+```csharp
+public string Value { get; set; }
+```
+
+### DefaultValue
+
+获取控制台变量的默认值。
+
+```csharp
+public string DefaultValue { get; }
+```
+
+### Description
+
+获取控制台变量的描述。
+
+```csharp
+public string Description { get; }
+```
+
+### Flags
+
+获取或设置控制台变量的标志。
+
+```csharp
+public ConVarFlags Flags { get; set; }
+```
+
+## 构造函数
+
+### ConVar
+
+创建一个新的控制台变量。
+
+```csharp
+public ConVar(string name, string defaultValue, string description = "", ConVarFlags flags = ConVarFlags.FCVAR_NONE)
+```
+
+#### 参数
+
+- `name`: `string` - 变量名称
+- `defaultValue`: `string` - 默认值
+- `description`: `string` - 变量描述（可选）
+- `flags`: `ConVarFlags` - 变量标志（可选）
+
+## 方法
+
+### GetPrintableValue
+
+获取可打印的变量值。
+
+```csharp
+public string GetPrintableValue()
+```
+
+### AddChangeHook
+
+添加变量值变化时的回调函数。
+
+```csharp
+public void AddChangeHook(Action<ConVar, string, string> hook)
+```
+
+### RemoveChangeHook
+
+移除变量值变化时的回调函数。
+
+```csharp
+public void RemoveChangeHook(Action<ConVar, string, string> hook)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private ConVar _gameMode;
+    
+    public override void Load(bool hotReload)
+    {
+        // 创建新的ConVar
+        _gameMode = new ConVar("game_mode", "0", 
+            "游戏模式 (0:休闲, 1:竞技)", 
+            ConVarFlags.FCVAR_NOTIFY | ConVarFlags.FCVAR_REPLICATED);
+            
+        // 添加值变化回调
+        _gameMode.AddChangeHook((convar, oldValue, newValue) =>
+        {
+            Console.WriteLine($"游戏模式从 {oldValue} 变更为 {newValue}");
+        });
+        
+        // 修改ConVar值
+        _gameMode.Value = "1";
+        
+        // 获取其他ConVar
+        var mpTeamLimit = new ConVar("mp_teamlimit", "0");
+        Console.WriteLine($"队伍人数限制: {mpTeamLimit.Value}");
+    }
+    
+    public override void Unload(bool hotReload)
+    {
+        // 清理ConVar
+        _gameMode = null;
+    }
+}
+```
+
+## 说明
+
+- 用于管理游戏控制台变量
+- 支持变量值变化通知
+- 可设置变量标志和权限
+- 支持默认值和描述
+- 提供值验证机制
+- 支持复制和通知功能
+- 可用于服务器配置

@@ -1,0 +1,187 @@
+---
+title: ScriptContext 类
+description: CounterStrikeSharp 中的脚本上下文类，用于管理本地和托管代码之间的交互
+icon: Code
+---
+
+# ScriptContext 类
+
+`ScriptContext` 类是一个核心组件，用于管理本地代码和托管代码之间的交互，处理参数传递和结果返回。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## 相关类型
+
+### fxScriptContext 结构
+
+用于存储脚本上下文的本地数据。
+
+```csharp
+[StructLayout(LayoutKind.Sequential)]
+[Serializable]
+public unsafe struct fxScriptContext
+{
+    public int numArguments;      // 参数数量
+    public int numResults;        // 结果数量
+    public int hasError;          // 错误标志
+    public ulong nativeIdentifier;// 本地标识符
+    public fixed byte functionData[8 * 32]; // 函数数据
+    public fixed byte result[8];  // 结果数据
+}
+```
+
+### NativeException 类
+
+用于表示本地代码执行过程中的异常。
+
+```csharp
+public class NativeException : Exception
+{
+    public NativeException(string message) : base(message) { }
+}
+```
+
+## 主要属性
+
+```csharp
+// 全局脚本上下文实例
+public static ScriptContext GlobalScriptContext { get; }
+
+// 上下文锁对象
+internal object Lock { get; }
+```
+
+## 主要方法
+
+### 构造函数
+
+```csharp
+// 创建新的脚本上下文
+public unsafe ScriptContext()
+
+// 从现有的本地上下文创建
+public unsafe ScriptContext(fxScriptContext* context)
+```
+
+### 上下文管理
+
+```csharp
+// 重置上下文状态
+public void Reset()
+
+// 执行本地调用
+public void Invoke()
+
+// 检查错误
+public unsafe void CheckErrors()
+```
+
+### 参数操作
+
+```csharp
+// 推送参数到上下文
+public void Push(object arg)
+
+// 设置调用结果
+public unsafe void SetResult(object arg, fxScriptContext* cxt)
+
+// 设置本地标识符
+public unsafe void SetIdentifier(ulong arg)
+```
+
+### 字符串处理
+
+```csharp
+// 推送字符串参数
+internal unsafe void PushString(string str)
+
+// 设置字符串结果
+internal unsafe void SetResultString(fxScriptContext* cxt, string str)
+```
+
+## 使用示例
+
+### 基本使用
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        var context = new ScriptContext();
+        
+        // 推送参数
+        context.Push("Hello World");
+        context.Push(42);
+        
+        // 设置标识符并执行
+        context.SetIdentifier(0x12345678);
+        context.Invoke();
+        
+        // 检查错误
+        context.CheckErrors();
+    }
+}
+```
+
+### 使用全局上下文
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public void ExecuteNativeCall()
+    {
+        lock (ScriptContext.GlobalScriptContext.Lock)
+        {
+            var context = ScriptContext.GlobalScriptContext;
+            context.Reset();
+            
+            // 设置参数
+            context.Push("参数1");
+            context.Push(100);
+            
+            // 执行调用
+            context.SetIdentifier(0xABCDEF);
+            context.Invoke();
+            
+            // 处理错误
+            try
+            {
+                context.CheckErrors();
+            }
+            catch (NativeException ex)
+            {
+                Console.WriteLine($"本地调用失败: {ex.Message}");
+            }
+        }
+    }
+}
+```
+
+## 注意事项
+
+1. 线程安全
+   - 使用 `Lock` 对象进行同步
+   - 全局上下文需要加锁访问
+
+2. 内存管理
+   - 自动管理本地资源
+   - 使用 `GlobalCleanUp` 清理资源
+
+3. 错误处理
+   - 使用 `CheckErrors` 检查调用结果
+   - 捕获 `NativeException` 异常
+
+4. 性能考虑
+   - 避免频繁创建上下文
+   - 合理使用全局上下文
+
+5. 最佳实践
+   - 总是在锁内使用上下文
+   - 调用后检查错误
+   - 正确处理字符串编码
+   - 注意参数类型转换 

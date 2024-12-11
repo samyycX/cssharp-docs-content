@@ -1,0 +1,96 @@
+---
+title: VirtualFunction 签名扩展
+description: CounterStrikeSharp 内存模块中的虚函数签名扩展，提供基于函数签名的虚函数创建功能
+icon: Code
+---
+
+# VirtualFunction 签名扩展
+
+`VirtualFunction` 类的签名扩展部分提供了基于函数签名创建虚函数的功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Memory
+```
+
+## 方法
+
+### 有返回值方法 (Functions)
+
+#### Create<TResult>
+
+基于签名创建无参数有返回值的虚函数。
+
+```csharp
+public static Func<TResult> Create<TResult>(string signature)
+public static Func<TResult> Create<TResult>(string signature, string binarypath)
+```
+
+#### Create<TArg1, TResult>
+
+基于签名创建带一个参数有返回值的虚函数。
+
+```csharp
+public static Func<TArg1, TResult> Create<TArg1, TResult>(string signature)
+public static Func<TArg1, TResult> Create<TArg1, TResult>(string signature, string binarypath)
+```
+
+### 无返回值方法 (Void Actions)
+
+#### CreateVoid
+
+基于签名创建无参数无返回值的虚函数。
+
+```csharp
+public static Action CreateVoid(string signature)
+public static Action CreateVoid(string signature, string binarypath)
+```
+
+#### CreateVoid<TArg1>
+
+基于签名创建带一个参数无返回值的虚函数。
+
+```csharp
+public static Action<TArg1> CreateVoid<TArg1>(string signature)
+public static Action<TArg1> CreateVoid<TArg1>(string signature, string binarypath)
+```
+
+## 参数
+
+### signature
+
+函数的二进制签名。
+
+### binarypath
+
+可选的二进制文件路径。如果提供，将在指定的二进制文件中搜索函数签名。
+
+## 特性
+
+- 支持基于签名的函数查找
+- 支持指定二进制文件路径
+- 缓存已创建的函数指针
+- 自动类型转换和验证
+- 支持最多 10 个参数
+
+## 使用示例
+
+```csharp
+// 基于签名创建无参数函数
+var func = VirtualFunction.Create<int>("48 89 5C 24 ? 48 89 6C 24 ?");
+
+// 基于签名和二进制路径创建函数
+var func2 = VirtualFunction.Create<string, bool>("48 89 5C 24 ? 48 89 74 24 ?", "server.dll");
+
+// 创建无返回值函数
+var action = VirtualFunction.CreateVoid("48 89 5C 24 ? 48 89 6C 24 ?");
+```
+
+## 注意事项
+
+- 签名必须是有效的二进制模式
+- 二进制路径必须存在且可访问
+- 注意内存安全和类型安全
+- 避免重复创建相同签名的函数
+- 确保签名匹配正确的函数 

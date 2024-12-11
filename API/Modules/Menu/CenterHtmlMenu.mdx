@@ -1,0 +1,158 @@
+---
+title: CenterHtmlMenu 类
+description: CounterStrikeSharp 菜单模块中的中心 HTML 菜单类，提供在屏幕中央显示的 HTML 格式菜单
+icon: Layout
+---
+
+# CenterHtmlMenu 类
+
+`CenterHtmlMenu` 类继承自 `BaseMenu`，提供了在屏幕中央显示的 HTML 格式菜单功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Menu
+```
+
+## 类定义
+
+```csharp
+public class CenterHtmlMenu : BaseMenu
+{
+    public string TitleColor { get; set; } = "#ffa500";
+    public string EnabledColor { get; set; } = "#ffffff";
+    public string DisabledColor { get; set; } = "#808080";
+    public string PrevPageColor { get; set; } = "#ffa500";
+    public string NextPageColor { get; set; } = "#ffa500";
+    public string CloseColor { get; set; } = "#ffa500";
+}
+```
+
+## 构造函数
+
+```csharp
+public CenterHtmlMenu(string title) : base(title)
+{
+}
+```
+
+## 属性
+
+### TitleColor
+
+菜单标题的颜色（HTML 颜色代码）。
+
+```csharp
+public string TitleColor { get; set; }
+```
+
+默认值：`"#ffa500"` (橙色)
+
+### EnabledColor
+
+启用选项的颜色（HTML 颜色代码）。
+
+```csharp
+public string EnabledColor { get; set; }
+```
+
+默认值：`"#ffffff"` (白色)
+
+### DisabledColor
+
+禁用选项的颜色（HTML 颜色代码）。
+
+```csharp
+public string DisabledColor { get; set; }
+```
+
+默认值：`"#808080"` (灰色)
+
+### PrevPageColor
+
+上一页按钮的颜色（HTML 颜色代码）。
+
+```csharp
+public string PrevPageColor { get; set; }
+```
+
+默认值：`"#ffa500"` (橙色)
+
+### NextPageColor
+
+下一页按钮的颜色（HTML 颜色代码）。
+
+```csharp
+public string NextPageColor { get; set; }
+```
+
+默认值：`"#ffa500"` (橙色)
+
+### CloseColor
+
+关闭按钮的颜色（HTML 颜色代码）。
+
+```csharp
+public string CloseColor { get; set; }
+```
+
+默认值：`"#ffa500"` (橙色)
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 创建中心 HTML 菜单
+        var menu = new CenterHtmlMenu("我的 HTML 菜单")
+        {
+            // 自定义颜色
+            TitleColor = "#ff0000",     // 红色标题
+            EnabledColor = "#00ff00",    // 绿色选项
+            DisabledColor = "#666666"    // 深灰色禁用选项
+        };
+        
+        // 添加选项
+        menu.AddMenuOption("选项 1", (player, option) => {
+            player.PrintToChat("选择了选项 1");
+        });
+        
+        menu.AddMenuOption("禁用选项", (player, option) => {
+            player.PrintToChat("此选项已禁用");
+        }, disabled: true);
+        
+        // 为玩家打开菜单
+        RegisterEventHandler<EventPlayerConnected>((ev, info) => {
+            var player = ev.Userid;
+            MenuManager.OpenCenterHtmlMenu(this, player, menu);
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## HTML 格式支持
+
+菜单支持以下 HTML 标签和样式：
+
+- `<b>` - 粗体文本
+- `<i>` - 斜体文本
+- `<u>` - 下划线文本
+- `<font>` - 带有颜色和大小属性
+- `<br>` - 换行
+- `color` 属性 - HTML 颜色代码
+
+## 说明
+
+- 在屏幕中央显示菜单
+- 支持 HTML 格式和样式
+- 支持自定义颜色（使用 HTML 颜色代码）
+- 支持分页显示
+- 支持禁用选项
+- 使用数字键选择选项
+- 支持导航按钮（上一页、下一页、关闭）
+- 自动处理按键事件
+- 每页显示 5 个选项（避免选项被截断）
+- 需要提供插件实例来打开菜单 

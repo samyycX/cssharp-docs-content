@@ -1,0 +1,74 @@
+---
+title: Quaternion 类
+description: CounterStrikeSharp 工具模块中的四元数类
+icon: Tool
+---
+
+# Quaternion 类
+
+`Quaternion` 类表示3D空间中的旋转。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 类定义
+
+```csharp
+public class Quaternion
+{
+    public float x { get; set; }  // x分量
+    public float y { get; set; }  // y分量
+    public float z { get; set; }  // z分量
+    public float w { get; set; }  // w分量(实部)
+}
+```
+
+## 构造函数
+
+```csharp
+public Quaternion()  // 创建一个单位四元数
+public Quaternion(float x, float y, float z, float w)  // 使用指定的分量创建四元数
+public Quaternion(Quaternion q)  // 从现有四元数创建副本
+```
+
+## 主要方法
+
+```csharp
+public void Normalize()  // 标准化四元数
+public Quaternion Normalized()  // 返回标准化后的新四元数
+public Vector ToEulerAngles()  // 转换为欧拉角
+public static Quaternion FromEulerAngles(Vector angles)  // 从欧拉角创建四元数
+public static Quaternion Slerp(Quaternion a, Quaternion b, float t)  // 球面线性插值
+```
+
+## 使用���例
+
+```csharp
+// 创建一个四元数
+var rotation = new Quaternion(0, 0, 0, 1);
+
+// 标准化四元数
+rotation.Normalize();
+
+// 转换为欧拉角
+var angles = rotation.ToEulerAngles();
+
+// 从欧拉角创建四元数
+var newRotation = Quaternion.FromEulerAngles(angles);
+
+// 在两个旋转之间插值
+var interpolated = Quaternion.Slerp(rotation, newRotation, 0.5f);
+```
+
+## 说明
+
+- 用于表示3D空间中的旋转
+- 避免了欧拉角的万向节死锁问题
+- 提供了平滑的旋转插值
+- 支持与欧拉角的相互转换
+- 适用于复杂的旋转计算
+- 提供了高精度的旋转表示
+- 常用于动画和相机控制

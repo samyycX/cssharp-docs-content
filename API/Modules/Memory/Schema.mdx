@@ -1,0 +1,126 @@
+---
+title: Schema 类
+description: CounterStrikeSharp 内存模块中的架构类，提供对游戏内存结构的访问和操作功能
+icon: Code
+---
+
+# Schema 类
+
+`Schema` 类提供了对游戏内存结构的访问和操作功能，是 CounterStrikeSharp 中内存操作的核心类。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Memory
+```
+
+## 类定义
+
+```csharp
+public class Schema
+{
+    private static Dictionary<Tuple<string, string>, short> _schemaOffsets = new();
+    private static HashSet<string> _cs2BadList = new HashSet<string>();
+}
+```
+
+## 主要功能
+
+### 内存访问
+
+Schema 类提供了多种方法来访问和操作游戏内存中的数据：
+
+- 获取引用类型数据
+- 获取值类型数据
+- 获取字符串数据
+- 获取指针类型数据
+- 设置各种类型的数据
+
+### 属性访问
+
+通过 Schema 类，你可以访问实体的各种属性：
+
+```csharp
+// 示例：访问实体属性
+public ref float Speed => ref Schema.GetRef<float>(this.Handle, "CBaseEntity", "m_flSpeed");
+public string UniqueHammerID
+{
+    get { return Schema.GetUtf8String(this.Handle, "CBaseEntity", "m_sUniqueHammerID"); }
+    set { Schema.SetString(this.Handle, "CBaseEntity", "m_sUniqueHammerID", value); }
+}
+```
+
+### 安全限制
+
+Schema 类包含一个黑名单机制，用于防止访问某些敏感属性：
+
+```csharp
+private static HashSet<string> _cs2BadList = new HashSet<string>()
+{
+    "m_bIsValveDS",
+    "m_bIsQuestEligible",
+    "m_iEntityLevel",
+    "m_iItemIDHigh",
+    "m_iItemIDLow",
+    "m_iAccountID",
+    "m_iEntityQuality",
+    // ... 其他受限属性
+}
+```
+
+## 使用示例
+
+### 基本属性访问
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventPlayerSpawn>((ev, info) =>
+        {
+            var player = ev.Userid;
+            
+            // 访问玩家速度
+            float speed = player.Speed;
+            
+            // 设置玩家名称
+            player.PlayerName = "新名字";
+            
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+### 实体组件访问
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public void HandleEntity(CBaseEntity entity)
+    {
+        // 访问实体的身体组件
+        var bodyComponent = entity.CBodyComponent;
+        
+        // 访问实体的网络传输组件
+        var networkComponent = entity.NetworkTransmitComponent;
+    }
+}
+```
+
+## 注意事项
+
+- 访问受限属性将被阻止
+- 使用适当的类型转换
+- 注意内存安全
+- 遵循游戏规则
+- 避免过度使用内存操作
+
+## 最佳实践
+
+1. 使用类型安全的访问方法
+2. 检查空引用
+3. 正确处理异常
+4. 遵循内存访问限制
+5. 使用适当的数据类型

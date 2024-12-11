@@ -1,0 +1,65 @@
+---
+title: PlayerFlags 枚举
+description: CounterStrikeSharp 工具模块中的玩家标志枚举
+icon: Tool
+---
+
+# PlayerFlags 枚举
+
+`PlayerFlags` 枚举定义了玩家的各种状态标志。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 枚举定义
+
+```csharp
+[Flags]
+public enum PlayerFlags
+{
+    FL_ONGROUND = (1 << 0),      // 在地面上
+    FL_DUCKING = (1 << 1),       // 正在蹲下
+    FL_WATERJUMP = (1 << 2),     // 水中跳跃
+    FL_ONTRAIN = (1 << 3),       // 在火车上
+    FL_INRAIN = (1 << 4),        // 在雨中
+    FL_FROZEN = (1 << 5),        // 被冻结
+    FL_ATCONTROLS = (1 << 6),    // 在控制中
+    FL_CLIENT = (1 << 7),        // 客户端
+    FL_FAKECLIENT = (1 << 8),    // 假客户端(BOT)
+    FL_INWATER = (1 << 9),       // 在水中
+}
+```
+
+## 使用示例
+
+```csharp
+// 检查玩家是否在地面上
+if ((player.Flags & PlayerFlags.FL_ONGROUND) != 0)
+{
+    // 玩家在地面上的处理逻辑
+}
+
+// 检查玩家是否在水中
+if ((player.Flags & PlayerFlags.FL_INWATER) != 0)
+{
+    // 玩家在水中的处理逻辑
+}
+
+// 检查是否���BOT
+if ((player.Flags & PlayerFlags.FL_FAKECLIENT) != 0)
+{
+    // BOT的处理逻辑
+}
+```
+
+## 说明
+
+- 使用位标志表示玩家的各种状态
+- 可以同时存在多个标志
+- 用于判断玩家的当前状态
+- 支持位运算操作
+- 常用于玩家状态检查和判断
+- 影响玩家的行为和交互

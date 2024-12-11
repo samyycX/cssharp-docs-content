@@ -1,0 +1,50 @@
+---
+title: CsTeam 枚举
+description: CounterStrikeSharp 工具模块中的队伍枚举
+icon: Tool
+---
+
+# CsTeam 枚举
+
+`CsTeam` 枚举定义了 CS2 游戏中的队伍类型。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 枚举定义
+
+```csharp
+public enum CsTeam
+{
+    None = 0,        // 无队伍
+    Spectator = 1,   // 观察者
+    T = 2,           // 恐怖分子
+    CT = 3           // 反恐精英
+}
+```
+
+## 说明
+
+- `None`: 表示玩家不属于任何队伍
+- `Spectator`: 表示玩家处于观察者队伍
+- `T`: 表示玩家属于恐怖分子队伍
+- `CT`: 表示玩家属于反恐精英队伍
+
+## 使用示例
+
+```csharp
+// 检查玩家队伍
+if (player.Team == CsTeam.CT)
+{
+    // 处理 CT 队伍玩家
+}
+
+// 切换玩家到观察者
+player.ChangeTeam(CsTeam.Spectator);
+
+// 统计 T 队伍人数
+var tCount = Server.PlayersCount(CsTeam.T);
+``` 

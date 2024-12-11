@@ -1,0 +1,191 @@
+---
+title: Player 类
+description: CounterStrikeSharp 玩家类，用于管理和操作游戏中的玩家实体
+icon: Person
+---
+
+# Player 类
+
+`Player` 类提供了管理和操作游戏中玩家实体的功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Entities
+```
+
+## 类定义
+
+```csharp
+public class Player : BaseEntity
+```
+
+## 属性
+
+### Index
+
+获取玩家的索引。
+
+```csharp
+public override int Index { get; }
+```
+
+### UserId
+
+获取玩家的用户 ID。
+
+```csharp
+public int UserId { get; }
+```
+
+### SteamID
+
+获取玩家的 Steam ID。
+
+```csharp
+public SteamID SteamID { get; }
+```
+
+### Name
+
+获取玩家的名称。
+
+```csharp
+public string Name { get; }
+```
+
+### Team
+
+获取或设置玩家的队伍。
+
+```csharp
+public CsTeam Team { get; set; }
+```
+
+### IsBot
+
+检查玩家是否是机器人。
+
+```csharp
+public bool IsBot { get; }
+```
+
+### IsAlive
+
+检查玩家是否存活。
+
+```csharp
+public bool IsAlive { get; }
+```
+
+## 方法
+
+### Kick
+
+将玩家踢出服务器。
+
+```csharp
+public void Kick(string reason = "")
+```
+
+### Kill
+
+使玩家死亡。
+
+```csharp
+public void Kill()
+```
+
+### Respawn
+
+使玩家重生。
+
+```csharp
+public void Respawn()
+```
+
+### PrintToChat
+
+向玩家发送聊天消息。
+
+```csharp
+public void PrintToChat(string message)
+```
+
+### PrintToConsole
+
+向玩家发送控制台消息。
+
+```csharp
+public void PrintToConsole(string message)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 获取所有玩家
+        var players = Utilities.GetPlayers();
+        foreach (var player in players)
+        {
+            // 检查玩家状态
+            if (player.IsAlive && !player.IsBot)
+            {
+                // 发送消息
+                player.PrintToChat($"欢迎 {player.Name}!");
+                
+                // 获取玩家信息
+                Console.WriteLine($"玩家: {player.Name}");
+                Console.WriteLine($"Steam ID: {player.SteamID.SteamId2}");
+                Console.WriteLine($"队伍: {player.Team}");
+            }
+        }
+    }
+    
+    public void OnPlayerDeath(CCSPlayerController victim)
+    {
+        // 3秒后重生玩家
+        AddTimer(3.0f, () =>
+        {
+            if (victim.IsValid)
+            {
+                victim.Respawn();
+                victim.PrintToChat("你已重生!");
+            }
+        });
+    }
+}
+```
+
+## 玩家管理示例
+
+```csharp
+public void ManagePlayers()
+{
+    // 切换玩家队伍
+    player.Team = CsTeam.CounterTerrorist;
+    
+    // 踢出玩家
+    if (player.IsBot)
+    {
+        player.Kick("不允许机器人");
+    }
+    
+    // 发送私人消息
+    player.PrintToChat($"你的 Steam ID: {player.SteamID.SteamId2}");
+    player.PrintToConsole("控制台消息测试");
+}
+```
+
+## 说明
+
+- 继承自 BaseEntity 类
+- 提供玩家状态管理
+- 支持玩家操作和控制
+- 提供消息发送功能
+- 支持队伍管理
+- 提供生命周期控制
+- 支持玩家信息访问 

@@ -1,0 +1,148 @@
+---
+title: CsItem 枚举
+description: CounterStrikeSharp 游戏物品枚举，定义了游戏中所有可用的物品类型
+icon: Package
+---
+
+# CsItem 枚举
+
+`CsItem` 枚举定义了游戏中所有可用的物品类型，包括武器、装备和其他物品。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Entities.Constants
+```
+
+## 枚举定义
+
+```csharp
+public enum CsItem
+```
+
+## 主要枚举值
+
+### 手枪
+```csharp
+Glock = 1,        // 格洛克
+Usp = 2,          // USP 手枪
+P250 = 3,         // P250
+Desert = 4,       // 沙漠之鹰
+Elite = 5,        // 双枪
+FiveSeven = 6,    // FN57
+Tec9 = 7,         // Tec-9
+```
+
+### 步枪
+```csharp
+Ak47 = 8,         // AK-47
+M4A4 = 9,         // M4A4
+M4A1 = 10,        // M4A1-S
+Famas = 11,       // Famas
+Galil = 12,       // Galil
+Aug = 13,         // AUG
+Sg553 = 14,       // SG553
+```
+
+### 狙击枪
+```csharp
+Awp = 15,         // AWP
+Scout = 16,       // SSG08
+G3SG1 = 17,       // G3SG1
+Scar20 = 18,      // SCAR-20
+```
+
+### 冲锋枪
+```csharp
+Mac10 = 19,       // MAC-10
+Mp9 = 20,         // MP9
+Mp7 = 21,         // MP7
+Ump45 = 22,       // UMP-45
+P90 = 23,         // P90
+Bizon = 24,       // PP-Bizon
+```
+
+### 重型武器
+```csharp
+Nova = 25,        // Nova 霰弹枪
+Xm1014 = 26,      // XM1014
+Mag7 = 27,        // MAG-7
+M249 = 28,        // M249
+Negev = 29,       // Negev
+```
+
+### 装备
+```csharp
+Vest = 30,        // 防弹衣
+VestHelmet = 31,  // 防弹衣和头盔
+Zeus = 32,        // 电击枪
+Defuser = 33,     // 拆弹器
+Heavysuit = 34,   // 重型装甲
+```
+
+### 手榴弹
+```csharp
+Flashbang = 35,   // 闪光弹
+Hegrenade = 36,   // 高爆手雷
+Smokegrenade = 37,// 烟雾弹
+Molotov = 38,     // 燃烧瓶
+Decoy = 39,       // 诱饵弹
+Incgrenade = 40,  // 燃烧弹
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 给玩家武器
+        RegisterEventHandler<EventPlayerSpawn>((ev, info) =>
+        {
+            var player = ev.Userid;
+            
+            // 给予基础装备
+            GivePlayerItem(player, CsItem.Vest);
+            GivePlayerItem(player, CsItem.VestHelmet);
+            
+            // 根据队伍给予武器
+            if (player.Team == CsTeam.CounterTerrorist)
+            {
+                GivePlayerItem(player, CsItem.M4A4);
+                GivePlayerItem(player, CsItem.Usp);
+            }
+            else
+            {
+                GivePlayerItem(player, CsItem.Ak47);
+                GivePlayerItem(player, CsItem.Glock);
+            }
+            
+            // 给予手榴弹
+            GivePlayerItem(player, CsItem.Flashbang);
+            GivePlayerItem(player, CsItem.Hegrenade);
+            GivePlayerItem(player, CsItem.Smokegrenade);
+            
+            return HookResult.Continue;
+        });
+    }
+    
+    private void GivePlayerItem(CCSPlayerController player, CsItem item)
+    {
+        if (player.IsValid)
+        {
+            player.GiveNamedItem(item.ToString());
+        }
+    }
+}
+```
+
+## 说明
+
+- 定义所有游戏物品类型
+- 用于物品管理和分配
+- 支持所有武器类型
+- 包含装备和手榴弹
+- 用于物品系统
+- 支持物品识别
+- 便于物品操作 

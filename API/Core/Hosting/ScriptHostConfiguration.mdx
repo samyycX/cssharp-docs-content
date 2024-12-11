@@ -1,0 +1,79 @@
+---
+title: ScriptHostConfiguration 类
+description: CounterStrikeSharp 脚本主机配置的具体实现类，提供了脚本主机的配置选项
+icon: Settings
+---
+
+# ScriptHostConfiguration 类
+
+`ScriptHostConfiguration` 类是 `IScriptHostConfiguration` 接口的具体实现，提供了脚本主机的配置选项。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Hosting
+```
+
+## 类定义
+
+```csharp
+public class ScriptHostConfiguration : IScriptHostConfiguration
+```
+
+## 属性
+
+### GameDirectory
+
+获取或设置游戏目录路径。
+
+```csharp
+public string GameDirectory { get; set; }
+```
+
+### AddonsDirectory
+
+获取或设置插件目录路径。
+
+```csharp
+public string AddonsDirectory { get; set; }
+```
+
+### ConfigDirectory
+
+获取或设置配置文件目录路径。
+
+```csharp
+public string ConfigDirectory { get; set; }
+```
+
+### LogDirectory
+
+获取或设置日志文件目录路径。
+
+```csharp
+public string LogDirectory { get; set; }
+```
+
+## 使用示例
+
+```csharp
+// 创建配置实例
+var config = new ScriptHostConfiguration
+{
+    GameDirectory = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive",
+    AddonsDirectory = @"csgo\addons\counterstrikesharp\plugins",
+    ConfigDirectory = @"csgo\addons\counterstrikesharp\configs",
+    LogDirectory = @"csgo\addons\counterstrikesharp\logs"
+};
+
+// 在依赖注入容器中注册
+services.AddSingleton<IScriptHostConfiguration>(config);
+```
+
+## 说明
+
+- 实现了 `IScriptHostConfiguration` 接口
+- 提供了可读写的配置属性
+- 用于初始化脚本主机环境
+- 通常在应用程序启动时配置
+- 支持自定义目录路径 

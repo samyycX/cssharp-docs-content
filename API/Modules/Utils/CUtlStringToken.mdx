@@ -1,0 +1,48 @@
+---
+title: CUtlStringToken 类
+description: CounterStrikeSharp 工具模块中的字符串令牌类
+icon: Tool
+---
+
+# CUtlStringToken 类
+
+`CUtlStringToken` 类提供了一个轻量级的字符串令牌系统。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 类定义
+
+```csharp
+public class CUtlStringToken
+{
+    public uint Value { get; }  // 令牌值
+}
+```
+
+## 构造函数
+
+```csharp
+public CUtlStringToken()  // 创建一个空的字符串令牌
+public CUtlStringToken(uint value)  // 使用指定的令牌值创建实例
+```
+
+## 属性
+
+```csharp
+public bool IsValid { get; }  // 检查令牌是否有效
+```
+
+## 说明
+
+- 用于高效地表示和比较字符串
+- 将字符串转换为整数令牌
+- 适用于频繁的字符串比较场景
+- 提供了快速的相等性比较
+- 节省内存使用
+- 线程安全的令牌系统
+- 常用于游戏内部的字符串标识
+</rewritten_file> 

@@ -1,0 +1,130 @@
+---
+title: EntitySystem 类
+description: CounterStrikeSharp 实体系统类，用于管理和操作游戏中的所有实体
+icon: Network
+---
+
+# EntitySystem 类
+
+`EntitySystem` 类提供了管理和操作游戏中所有实体的功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Entities
+```
+
+## 类定义
+
+```csharp
+public static class EntitySystem
+```
+
+## 方法
+
+### GetEntityFromIndex
+
+根据索引获取实体。
+
+```csharp
+public static BaseEntity GetEntityFromIndex(int index)
+```
+
+### GetEntityFromHandle
+
+根据句柄获取实体。
+
+```csharp
+public static BaseEntity GetEntityFromHandle(IntPtr handle)
+```
+
+### GetBaseEntity
+
+根据实体指针获取基础实体。
+
+```csharp
+public static BaseEntity GetBaseEntity(IntPtr pointer)
+```
+
+### FindAllEntitiesByDesignerName
+
+根据设计器名称查找所有实体。
+
+```csharp
+public static IEnumerable<BaseEntity> FindAllEntitiesByDesignerName(string name)
+```
+
+### FindAllEntitiesByClassName
+
+根据类名查找所有实体。
+
+```csharp
+public static IEnumerable<BaseEntity> FindAllEntitiesByClassName(string className)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 查找所有的门实体
+        var doors = EntitySystem.FindAllEntitiesByClassName("func_door");
+        foreach (var door in doors)
+        {
+            Console.WriteLine($"找到门: {door.DesignerName}");
+        }
+        
+        // 根据索引获取实体
+        var entity = EntitySystem.GetEntityFromIndex(1);
+        if (entity.IsValid)
+        {
+            Console.WriteLine($"实体类名: {entity.ClassName}");
+        }
+        
+        // 查找特定名称的实体
+        var triggers = EntitySystem.FindAllEntitiesByDesignerName("trigger_multiple");
+        foreach (var trigger in triggers)
+        {
+            Console.WriteLine($"找到触发器: {trigger.DesignerName}");
+        }
+    }
+}
+```
+
+## 实体查找示例
+
+### 查找玩家出生点
+
+```csharp
+var ctSpawns = EntitySystem.FindAllEntitiesByClassName("info_player_counterterrorist");
+var tSpawns = EntitySystem.FindAllEntitiesByClassName("info_player_terrorist");
+
+Console.WriteLine($"CT出生点数量: {ctSpawns.Count()}");
+Console.WriteLine($"T出生点数量: {tSpawns.Count()}");
+```
+
+### 查找并操作武器实体
+
+```csharp
+var weapons = EntitySystem.FindAllEntitiesByClassName("weapon_*");
+foreach (var weapon in weapons)
+{
+    var owner = weapon.GetProperty<CCSPlayerController>("m_hOwner");
+    if (owner != null && owner.IsValid)
+    {
+        Console.WriteLine($"玩家 {owner.PlayerName} 持有 {weapon.ClassName}");
+    }
+}
+```
+
+## 说明
+
+- 提供全局实体管理功能
+- 支持多种实体查找方式
+- 提供实体类型转换功能
+- 支持实体遍历和过滤
+- 可用于实体监控和管理
+- 提供实体创建和销毁功能
+- 支持实体属性访问 

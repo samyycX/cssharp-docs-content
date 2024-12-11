@@ -1,0 +1,153 @@
+---
+title: InputArgument 类
+description: CounterStrikeSharp 中的输入参数包装类，用于处理各种类型的输入参数
+icon: ArrowRight
+---
+
+# InputArgument 类
+
+`InputArgument` 类是一个通用的输入参数包装类，用于在本地代码和托管代码之间传递各种类型的参数。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## 类定义
+
+```csharp
+public class InputArgument
+{
+    protected object m_value;
+    internal object Value => m_value;
+}
+```
+
+## 支持的类型转换
+
+该类支持多种类型的隐式转换，包括：
+
+### 基本数值类型
+```csharp
+// 布尔值
+public static implicit operator InputArgument(bool value)
+
+// 整数类型
+public static implicit operator InputArgument(sbyte value)
+public static implicit operator InputArgument(byte value)
+public static implicit operator InputArgument(short value)
+public static implicit operator InputArgument(ushort value)
+public static implicit operator InputArgument(int value)
+public static implicit operator InputArgument(uint value)
+public static implicit operator InputArgument(long value)
+public static implicit operator InputArgument(ulong value)
+
+// 浮点数类型
+public static implicit operator InputArgument(float value)
+public static implicit operator InputArgument(double value) // 转换为float
+```
+
+### 特殊类型
+```csharp
+// 枚举类型
+public static implicit operator InputArgument(Enum value)
+
+// 字符串
+public static implicit operator InputArgument(string value)
+
+// 向量
+public static implicit operator InputArgument(Vector3 value)
+
+// 委托和函数引用
+public static implicit operator InputArgument(Delegate value)
+public static implicit operator InputArgument(FunctionReference value)
+
+// 指针和句柄
+public static implicit operator InputArgument(IntPtr value)
+public static implicit operator InputArgument(NativeObject value)
+public static implicit operator InputArgument(NativeEntity value)
+public static implicit operator InputArgument(void* value)
+```
+
+## 使用示例
+
+### 基本类型转换
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 数值类型
+        InputArgument intArg = 42;
+        InputArgument floatArg = 3.14f;
+        InputArgument boolArg = true;
+        
+        // 字符串
+        InputArgument strArg = "Hello World";
+        
+        // 向量
+        InputArgument vecArg = new Vector3(1, 2, 3);
+    }
+}
+```
+
+### 回调函数转换
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private void OnCallback(ScriptContext context)
+    {
+        // 回调处理逻辑
+    }
+
+    public override void Load(bool hotReload)
+    {
+        // 将回调函数转换为InputArgument
+        InputArgument callbackArg = new Action<ScriptContext>(OnCallback);
+        
+        // 使用FunctionReference
+        var funcRef = FunctionReference.Create(OnCallback);
+        InputArgument funcRefArg = funcRef;
+    }
+}
+```
+
+### 本地对象转换
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 本地对象转换
+        var nativeObj = new NativeObject(IntPtr.Zero);
+        InputArgument nativeArg = nativeObj;
+        
+        // 实体转换
+        var entity = new NativeEntity(IntPtr.Zero);
+        InputArgument entityArg = entity;
+    }
+}
+```
+
+## 注意事项
+
+1. 类型安全
+   - 所有转换都是类型安全的
+   - 使用隐式转换确保类型正确性
+
+2. 内存管理
+   - 对于指针类型参数要特别注意生命周期
+   - 确保本地资源正确释放
+
+3. 性能考虑
+   - 避免不必要的类型转换
+   - 注意值类型和引用类型的区别
+
+4. 最佳实践
+   - 优先使用强类型参数
+   - 正确处理回调函数的生命周期
+   - 注意本地对象的内存管理 
