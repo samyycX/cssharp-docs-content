@@ -1,0 +1,134 @@
+# BasePlugin 类
+
+## 命名空间
+`CounterStrikeSharp.API.Core`
+
+## 说明
+插件的基类,提供了插件的基本功能和生命周期管理。
+
+## 抽象属性
+
+### ModuleName
+获取插件模块名称。
+
+**类型**: `string`
+
+### ModuleVersion
+获取插件模块版本。
+
+**类型**: `string`
+
+## 虚拟属性
+
+### ModuleAuthor
+获取插件作者。
+
+**类型**: `string`
+
+### ModuleDescription
+获取插件描述。
+
+**类型**: `string`
+
+## 属性
+
+### ModulePath
+获取或设置插件模块路径。
+
+**类型**: `string`
+
+### ModuleDirectory
+获取插件模块所在目录。
+
+**类型**: `string`
+
+### Logger
+获取或设置插件日志记录器。
+
+**类型**: `ILogger`
+
+### CommandManager
+获取或设置命令管理器。
+
+**类型**: `ICommandManager`
+
+### Localizer
+获取或设置本地化器。
+
+**类型**: `IStringLocalizer`
+
+## 虚拟方法
+
+### Load(bool hotReload)
+插件加载时调用。
+
+**参数**:
+- `hotReload`: `bool` - 是否为热重载
+
+### Unload(bool hotReload)
+插件卸载时调用。
+
+**参数**:
+- `hotReload`: `bool` - 是否为热重载
+
+### OnAllPluginsLoaded(bool hotReload)
+所有插件加载完成后调用。
+
+**参数**:
+- `hotReload`: `bool` - 是否为热重载
+
+## 公共方法
+
+### RegisterEventHandler<T>(GameEventHandler<T> handler, HookMode hookMode = HookMode.Post)
+注册游戏事件处理器。
+
+**参数**:
+- `handler`: `GameEventHandler<T>` - 事件处理器
+- `hookMode`: `HookMode` - 钩子模式,默认为Post
+
+### AddCommand(string name, string description, CommandInfo.CommandCallback handler)
+添加一个控制台命令。
+
+**参数**:
+- `name`: `string` - 命令名称
+- `description`: `string` - 命令描述
+- `handler`: `CommandInfo.CommandCallback` - 命令处理器
+
+### AddCommandListener(string name, CommandInfo.CommandListenerCallback handler, HookMode mode = HookMode.Pre)
+添加一个命令监听器。
+
+**参数**:
+- `name`: `string` - 命令名称
+- `handler`: `CommandInfo.CommandListenerCallback` - 命令监听器处理器
+- `mode`: `HookMode` - 钩子模式,默认为Pre
+
+### RegisterListener<T>(T handler) where T : Delegate
+注册一个全局监听器。
+
+**参数**:
+- `handler`: `T` - 监听器处理器
+
+### AddTimer(float interval, Action callback, TimerFlags? flags = null)
+添加一个定时器。
+
+**参数**:
+- `interval`: `float` - 时间间隔(秒)
+- `callback`: `Action` - 回调函数
+- `flags`: `TimerFlags?` - 定时器标志
+
+**返回���**: `Timer` - 创建的定时器实例
+
+### HookEntityOutput(string classname, string outputName, EntityIO.EntityOutputHandler handler, HookMode mode = HookMode.Pre)
+钩住实体输出。
+
+**参数**:
+- `classname`: `string` - 实体类名
+- `outputName`: `string` - 输出名称
+- `handler`: `EntityIO.EntityOutputHandler` - 处理器
+- `mode`: `HookMode` - 钩子模式,默认为Pre
+
+### RegisterAllAttributes(object instance)
+注册实例上的所有特性处理器。
+
+**参数**:
+- `instance`: `object` - 要注册特性的实例 

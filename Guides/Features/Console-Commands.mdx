@@ -1,0 +1,128 @@
+---
+title: 控制台命令
+description: 在本指南中，我们将演示如何在 CounterStrikeSharp 中添加和使用控制台命令。您将学会如何自动注册命令、通过插件绑定命令，以及如何处理命令参数。
+icon: Command
+---
+
+## 自动注册控制台命令
+
+通过在 `BasePlugin` 类中使用 `ConsoleCommand` 属性，您可以自动注册控制台命令。注册的命令会在插件热重载时自动注册和注销。
+
+### 示例：自动注册命令
+
+```csharp
+[ConsoleCommand("custom_command", "This is an example command description")]
+public void OnCommand(CCSPlayerController? player, CommandInfo command)
+{
+    if (player == null)
+    {
+        Console.WriteLine("Command has been called by the server.");
+        return;
+    }
+
+    Console.WriteLine("Custom command called.");
+}
+```
+
+在这个示例中，命令 `custom_command` 被注册，当玩家或服务器调用该命令时，控制台会输出不同的消息，具体取决于调用者是玩家还是服务器。
+
+## 在加载时注册命令
+
+除了使用 `ConsoleCommand` 属性进行自动注册外，您还可以在插件加载时通过 `OnLoad` 方法注册命令。这种方法允许您在插件启动时动态绑定命令。
+
+### 示例：在 `OnLoad` 时注册命令
+
+```csharp
+public override void Load(bool hotReload)
+{
+    AddCommand("on_load_command", "A command is registered during OnLoad", (player, info) =>
+    {
+        if (player == null) return;
+        Console.WriteLine("Custom command called.");
+    });
+}
+```
+
+这个示例展示了如何在 `OnLoad` 方法中动态注册命令 `on_load_command`。
+
+## 访问命令参数
+
+`CommandInfo` 类提供了对调用命令时传递的参数的访问。您可以使用 `CommandInfo` 获取命令字符串、参数数量以及每个参数的值。
+
+### 示例：访问命令参数
+
+```csharp
+[ConsoleCommand("custom_command", "This is an example command description")]
+public void OnCommand(CCSPlayerController? player, CommandInfo command)
+{
+    Console.WriteLine($@"
+Arg Count: {command.ArgCount}
+Arg String: {command.ArgString}
+Command String: {command.GetCommandString()}
+First Argument: {command.ArgByIndex(0)}
+Second Argument: {command.ArgByIndex(1)}");
+}
+```
+
+假设我们调用命令：  
+`custom_command "Test Quoted" 5 13`
+
+### 输出：
+
+```
+Arg Count: 4
+Arg String: "Test Quoted" 5 13
+Command String: custom_command "Test Quoted" 5 13
+First Argument: custom_command
+Second Argument: Test Quoted
+```
+
+在这个例子中，我们使用 `CommandInfo` 来访问和打印命令的各种信息，包括命令字符串、所有参数及每个单独的参数。
+
+## 辅助属性
+
+CounterStrikeSharp 提供了 `CommandHelper` 特性，帮助您简化命令的参数验证，并控制命令的执行权限。您可以设置最小参数数量、命令的使用方式以及谁可以执行该命令（客户端、服务器或两者）。
+
+### 示例：使用 `CommandHelper` 属性
+
+```csharp
+[ConsoleCommand("freeze", "Freezes a client.")]
+[CommandHelper(minArgs: 1, usage: "[target]", whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
+public void OnFreezeCommand(CCSPlayerController? caller, CommandInfo command)
+{
+    ...
+}
+```
+
+在这个示例中，`freeze` 命令要求至少有一个参数 `[target]`，并且可以由客户端和服务器执行。
+
+<Callout title="错误消息" type="error">
+- 如果客户端执行命令但没有提供参数，将会显示以下消息：
+  
+  ```
+  [CSS] Expected usage: "!freeze [target]".
+  ```
+
+- 如果命令由不正确的用户执行（例如，客户端尝试执行只能由服务器执行的命令），则会显示以下消息：
+  
+  ```
+  [CSS] This command can only be executed by clients.
+  ```
+</Callout>
+
+
+
+
+### `CommandUsage` 枚举
+
+`CommandUsage` 枚举用于指定谁可以执行该命令。有效的值包括：
+
+```csharp
+public enum CommandUsage
+{
+    CLIENT_AND_SERVER = 0,  // 客户端和服务器都可以执行
+    CLIENT_ONLY,            // 仅客户端可以执行
+    SERVER_ONLY            // 仅服务器可以执行
+}
+```
+

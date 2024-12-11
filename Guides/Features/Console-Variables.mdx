@@ -1,0 +1,54 @@
+---
+title: 控制台变量
+description: 在本指南中，我们将讨论如何查找、读取和写入控制台变量（ConVars）。这些变量在游戏中用于配置和调整设置。
+icon: Variable
+---
+
+## 查找 ConVar
+
+要查找现有的 ConVar（或返回 null），您可以使用 `ConVar.Find` 静态方法：
+
+```csharp
+var cheatsCvar = ConVar.Find("sv_cheats");
+```
+
+## 操作基本值
+
+读取 ConVar 的值取决于变量的类型。对于基本类型的 ConVars（如 float、int、bool），可以使用 `GetPrimitiveValue` 方法获取值的引用。
+
+### 示例：读取和设置基本值
+
+```csharp
+bool currentValue = cheatsCvar.GetPrimitiveValue<bool>(); // false
+cheatsCvar.GetPrimitiveValue<bool>() = true; // 更改值为 true
+
+// 也可以使用简化的帮助方法
+cheatsCvar.SetValue(true);
+```
+
+## 操作字符串
+
+由于在 C# 和服务器之间需要额外的工作来转换字符串，因此访问字符串的方式有所不同。您可以通过 `StringValue` 属性来获取和设置字符串：
+
+### 示例：读取和设置字符串
+
+```csharp
+var stringCvar = ConVar.Find("sv_skyname");
+Console.WriteLine($"sv_skyname = {stringCvar.StringValue}");
+stringCvar.StringValue = "foobar";
+```
+
+## 操作原生对象
+
+原生对象需要不同的处理方式。您可以使用 `GetNativeValue()` 方法来访问这些变量：
+
+### 示例：读取和设置原生对象
+
+```csharp
+var fogCvar = ConVar.Find("fog_color");
+var fogColor = fogCvar.GetNativeValue<Vector>();
+Console.WriteLine($"fog_color = {fogColor}");
+
+// 正常操作矢量
+fogColor.X = 0.12345;
+```

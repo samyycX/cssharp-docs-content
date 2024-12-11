@@ -1,0 +1,66 @@
+# CommandDefinition 类
+
+## 命名空间
+`CounterStrikeSharp.API.Core.Commands`
+
+## 说明
+定义一个命令的配置。
+
+## 构造函数
+
+### CommandDefinition()
+创建一个新的命令定义实例。
+
+### CommandDefinition(string name, string description, CommandInfo.CommandCallback callback)
+使用指定的名称、描述和回调创建一个新的命令定义实例。
+
+**参数**:
+- `name`: `string` - 命令名称
+- `description`: `string` - 命令描述
+- `callback`: `CommandInfo.CommandCallback` - 命令回调
+
+## 属性
+
+### Name
+获取命令名称。
+
+**类型**: `string`
+**访问修饰符**: `public init`
+
+### Description
+获取命令描述。
+
+**类型**: `string`
+**访问修饰符**: `public init`
+
+### Callback
+获取命令回调。
+
+**类型**: `CommandInfo.CommandCallback`
+**访问修饰符**: `public init`
+
+### ExecutableBy
+获取或设置命令的执行权限。
+
+**类型**: `CommandUsage`
+**默认值**: `CommandUsage.CLIENT_AND_SERVER`
+**访问修饰符**: `public init`
+
+### UsageHint
+获取或设置命令的使用提示。
+
+**类型**: `string?`
+**访问修饰符**: `public init`
+
+### MinArgs
+获取或设置命令的最小参数数量。
+
+**类型**: `int?`
+**访问修饰符**: `public init`
+
+## 方法
+
+### ToString()
+返回命令定义的字符串表示。
+
+**返回值**: `string` - 包含命令详细信息的字符串 

@@ -1,0 +1,65 @@
+# CoreConfig 类
+
+## 命名空间
+`CounterStrikeSharp.API.Core`
+
+## 说明
+提供CounterStrikeSharp核心配置功能。
+
+## 静态属性
+
+### PublicChatTrigger
+获取公共聊天触发器列表。
+
+**类型**: `IEnumerable<string>`
+**默认值**: `["!"]`
+
+### SilentChatTrigger
+获取静默聊天触发器列表。
+
+**类型**: `IEnumerable<string>`
+**默认值**: `["/"]`
+
+### FollowCS2ServerGuidelines
+获取是否遵循CS2服务器指南。
+
+**类型**: `bool`
+**默认值**: `true`
+**说明**: 启用此选项将阻止插件使用已知会导致GSLT封禁的功能。
+
+### PluginHotReloadEnabled
+获取是否启用插件热重载。
+
+**类型**: `bool`
+**默认值**: `true`
+
+### PluginAutoLoadEnabled
+获取是否启用插件自动加载。
+
+**类型**: `bool`
+**默认值**: `true`
+
+### ServerLanguage
+获取服务器语言。
+
+**类型**: `string`
+**默认值**: `"en"`
+
+### UnlockConCommands
+获取是否解锁控制台命令。
+
+**类型**: `bool`
+**默认值**: `true`
+
+### UnlockConVars
+获取是否解锁控制台变量。
+
+**类型**: `bool`
+**默认值**: `true`
+
+## 方法
+
+### Load()
+加载���心配置。
+
+**说明**: 从配置文件加载设置,如果配置文件不存在或加载失败则使用默认值。 

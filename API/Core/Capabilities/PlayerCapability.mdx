@@ -1,0 +1,32 @@
+# PlayerCapability<T> 类
+
+## 命名空间
+`CounterStrikeSharp.API.Core.Capabilities`
+
+## 说明
+表示玩家的一个能力。
+
+## 构造函数
+
+### PlayerCapability(string name)
+创建一个新的玩家能力实例。
+
+**参数**:
+- `name`: `string` - 能力的名称
+
+## 属性
+
+### Name
+获取能力的名称。
+
+**类型**: `string`
+
+## 方法
+
+### Get(CCSPlayerController entity)
+获取指定玩家的能力值。
+
+**参数**:
+- `entity`: `CCSPlayerController` - 要获取能力值的玩家
+
+**返回值**: `T?` - 能力值,如果未找到则返回默认值 

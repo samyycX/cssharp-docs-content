@@ -1,0 +1,23 @@
+# Capabilities 静态类
+
+## 命名空间
+`CounterStrikeSharp.API.Core.Capabilities`
+
+## 说明
+提供注册插件和玩家能力的静态方法。
+
+## 公共静态方法
+
+### RegisterPluginCapability<T>
+注册一个插件能力。
+
+**参数**:
+- `capability`: `PluginCapability<T>` - 要注册的能力
+- `supplier`: `Func<T>` - 提供能力值的函数
+
+### RegisterPlayerCapability<T>  
+注册一个玩家能力。
+
+**参数**:
+- `capability`: `PlayerCapability<T>` - 要注册的能力
+- `supplier`: `Func<CCSPlayerController, T>` - 提供玩家能力值的函数 

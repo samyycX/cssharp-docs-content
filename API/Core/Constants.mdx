@@ -1,0 +1,44 @@
+# Constants 静态类
+
+## 命名空间
+`CounterStrikeSharp.API.Core`
+
+## 说明
+提供CS2相关的常量值。
+
+## 静态属性
+
+### ModulePrefix
+获取模块前缀。
+
+**类型**: `string`
+**说明**: 
+- Windows: `""`
+- Linux: `"lib"`
+
+### ModuleSuffix
+获取模块后缀。
+
+**类型**: `string`
+**说明**:
+- Windows: `".dll"`
+- Linux: `".so"`
+
+### RootBinaryPath
+获取根二进制路径。
+
+**类型**: `string`
+**说明**:
+- Windows: `"/bin/win64"`
+- Linux: `"/bin/linuxsteamrt64/"`
+
+### GameBinaryPath
+获取游戏二进制路径。
+
+**类型**: `string`
+**说明**:
+- Windows: `"/csgo/bin/win64/"`
+- Linux: `"/csgo/bin/linuxsteamrt64/"`
+
+## 说明
+此类根据当前操作系统自动设置相应的常量值。如果运行在不支持的平台上,将抛出NotSupportedException异常。 

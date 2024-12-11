@@ -1,0 +1,39 @@
+# PluginCommandManagerDecorator 类
+
+## 命名空间
+`CounterStrikeSharp.API.Core.Commands`
+
+## 说明
+命令管理器的装饰器,用于跟踪插件注册的命令并在插件卸载时移除它们。
+
+## 构造函数
+
+### PluginCommandManagerDecorator(ICommandManager inner, IPluginContext pluginContext, ILogger<PluginCommandManagerDecorator> logger)
+创建一个新的命令管理器装饰器实例。
+
+**参数**:
+- `inner`: `ICommandManager` - 内部命令管理器
+- `pluginContext`: `IPluginContext` - 插件上下文
+- `logger`: `ILogger<PluginCommandManagerDecorator>` - 日志记录器
+
+## 实现的接口
+
+- ICommandManager
+- IDisposable
+
+## 方法
+
+### RegisterCommand(CommandDefinition definition)
+注册一个命令。
+
+**参数**:
+- `definition`: `CommandDefinition` - 要注册的命令定义
+
+### RemoveCommand(CommandDefinition definition)
+移除一个命令。
+
+**参数**:
+- `definition`: `CommandDefinition` - 要移除的命令定义
+
+### Dispose()
+释放资源并移除所有注册的命令。 
