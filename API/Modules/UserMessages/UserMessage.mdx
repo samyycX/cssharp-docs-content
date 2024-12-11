@@ -1,0 +1,210 @@
+---
+title: UserMessage 类
+description: CounterStrikeSharp 用户消息模块中的消息类，提供网络消息的读写和发送功能
+icon: Message
+---
+
+# UserMessage 类
+
+`UserMessage` 类提供了创建、读写和发送游戏网络消息的功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.UserMessages
+```
+
+## 类定义
+
+```csharp
+public class UserMessage : NativeObject, IDisposable
+```
+
+## 委托
+
+```csharp
+public delegate HookResult UserMessageHandler(UserMessage native);
+```
+
+## 静态方法
+
+### FromPartialName
+
+根据网络消息名称部分匹配创建新的用户消息。
+
+```csharp
+public static UserMessage FromPartialName(string name)
+```
+
+### FromId
+
+根据网络消息 ID 创建新的用户消息。
+
+```csharp
+public static UserMessage FromId(int id)
+```
+
+### FindIdByName
+
+根据名称查找网络消息 ID。
+
+```csharp
+public static int FindIdByName(string name)
+```
+
+## 属性
+
+### Name
+
+获取用户消息的网络消息名称。
+
+```csharp
+public string Name { get; }
+```
+
+### Id
+
+获取用户消息的网络消息 ID。
+
+```csharp
+public int Id { get; }
+```
+
+### Type
+
+获取用户消息的 protobuf 消息类型。
+
+```csharp
+public string Type { get; }
+```
+
+### DebugString
+
+获取用户消息的调试字符串。
+
+```csharp
+public string DebugString { get; }
+```
+
+### Recipients
+
+获取或设置消息接收者过滤器。
+
+```csharp
+public RecipientFilter Recipients { get; set; }
+```
+
+## 读取方法
+
+### HasField
+
+检查字段是否存在。
+
+```csharp
+public bool HasField(string fieldName)
+```
+
+### 基本类型读取
+
+```csharp
+public int ReadInt(string fieldName, int? index = null)
+public uint ReadUInt(string fieldName, int? index = null)
+public long ReadInt64(string fieldName, int? index = null)
+public ulong ReadUInt64(string fieldName, int? index = null)
+public float ReadFloat(string fieldName, int? index = null)
+public double ReadDouble(string fieldName, int? index = null)
+public string ReadString(string fieldName, int? index = null)
+public bool ReadBool(string fieldName, int? index = null)
+```
+
+## 写入方法
+
+### 基本类型写入
+
+```csharp
+public void SetInt(string fieldName, int value, int? index = null)
+public void SetUInt(string fieldName, uint value, int? index = null)
+public void SetInt64(string fieldName, long value, int? index = null)
+public void SetUInt64(string fieldName, ulong value, int? index = null)
+public void SetFloat(string fieldName, float value, int? index = null)
+public void SetDouble(string fieldName, double value, int? index = null)
+public void SetString(string fieldName, string value, int? index = null)
+public void SetBool(string fieldName, bool value, int? index = null)
+```
+
+## 重复字段操作
+
+### GetRepeatedFieldCount
+
+获取重复字段的数量。
+
+```csharp
+public int GetRepeatedFieldCount(string fieldName)
+```
+
+### RemoveRepeatedField
+
+移除重复字段中的值。
+
+```csharp
+public void RemoveRepeatedField(string fieldName, int index)
+```
+
+### 添加重复字段值
+
+```csharp
+public void AddInt(string fieldName, int value)
+public void AddUInt(string fieldName, uint value)
+public void AddInt64(string fieldName, long value)
+public void AddUInt64(string fieldName, ulong value)
+public void AddFloat(string fieldName, float value)
+public void AddDouble(string fieldName, double value)
+public void AddString(string fieldName, string value)
+public void AddBool(string fieldName, bool value)
+```
+
+## 发送方法
+
+### Send
+
+发送消息。
+
+```csharp
+public void Send()
+public void Send(RecipientFilter recipientFilter)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 创建一个用户消息
+        using var message = UserMessage.FromPartialName("TextMsg");
+        
+        // 设置消息内容
+        message.SetString("text", "Hello World!");
+        
+        // 创建接收者过滤器
+        var filter = new RecipientFilter();
+        filter.AddAllPlayers();
+        
+        // 发送消息
+        message.Send(filter);
+    }
+}
+```
+
+## 说明
+
+- 继承自 `NativeObject` 类并实现 `IDisposable` 接口
+- 支持 protobuf 消息格式
+- 提供类型安全的读写操作
+- 支持重复字段操作
+- 支持接收者过滤
+- 自动管理资源释放
+- 提供调试信息
+- 支持多种数据类型
+- 线程安全的消息发送 

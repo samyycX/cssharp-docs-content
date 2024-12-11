@@ -1,0 +1,159 @@
+---
+title: IMenu 接口
+description: CounterStrikeSharp 菜单模块中的基础菜单接口，定义了菜单的基本功能和属性
+icon: Menu
+---
+
+# IMenu 接口
+
+`IMenu` 接口定义了菜单系统的基本功能和属性。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Menu
+```
+
+## 接口定义
+
+```csharp
+public interface IMenu
+{
+    string Title { get; set; }
+    List<ChatMenuOption> MenuOptions { get; }
+    PostSelectAction PostSelectAction { get; set; }
+    bool ExitButton { get; set; }
+    
+    ChatMenuOption AddMenuOption(string display, Action<CCSPlayerController, ChatMenuOption> onSelect, bool disabled = false);
+    void Open(CCSPlayerController player);
+    void OpenToAll();
+}
+```
+
+## 属性
+
+### Title
+
+菜单的标题。
+
+```csharp
+string Title { get; set; }
+```
+
+### MenuOptions
+
+菜单选项列表。
+
+```csharp
+List<ChatMenuOption> MenuOptions { get; }
+```
+
+### PostSelectAction
+
+选择选项后的行为。
+
+```csharp
+PostSelectAction PostSelectAction { get; set; }
+```
+
+### ExitButton
+
+是否显示退出按钮。
+
+```csharp
+bool ExitButton { get; set; }
+```
+
+## 方法
+
+### AddMenuOption
+
+添加菜单选项。
+
+```csharp
+ChatMenuOption AddMenuOption(
+    string display,
+    Action<CCSPlayerController, ChatMenuOption> onSelect,
+    bool disabled = false
+)
+```
+
+#### 参数
+
+- `display`: 显示的文本
+- `onSelect`: 选择时的回调函数
+- `disabled`: 是否禁用该选项
+
+### Open
+
+为指定玩家打开菜单。
+
+```csharp
+void Open(CCSPlayerController player)
+```
+
+### OpenToAll
+
+为所有玩家打开菜单。
+
+```csharp
+void OpenToAll()
+```
+
+## IMenuInstance 接口
+
+`IMenuInstance` 接口定义了菜单实例的功能。
+
+```csharp
+public interface IMenuInstance
+{
+    IMenu Menu { get; }
+    CCSPlayerController? Player { get; }
+    bool CloseOnSelect { get; }
+    int Page { get; }
+    int CurrentOffset { get; }
+    int NumPerPage { get; }
+    Stack<int> PrevPageOffsets { get; }
+    
+    void NextPage();
+    void PrevPage();
+    void Reset();
+    void Close();
+    void Display();
+    void OnKeyPress(CCSPlayerController player, int key);
+}
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 创建菜单
+        var menu = new ChatMenu("我的菜单");
+        
+        // 添加选项
+        menu.AddMenuOption("选项 1", (player, option) => {
+            player.PrintToChat("你选择了选项 1");
+        });
+        
+        menu.AddMenuOption("选项 2", (player, option) => {
+            player.PrintToChat("你选择了选项 2");
+        }, disabled: true);
+        
+        // 为所有玩家打开菜单
+        menu.OpenToAll();
+    }
+}
+```
+
+## 说明
+
+- 提供基本的菜单功能
+- 支持分页显示
+- 支持禁用选项
+- 支持选择后的行为控制
+- 支持自定义选项回调
+- 支持单玩家和多玩家显示 

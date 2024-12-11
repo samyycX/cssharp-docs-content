@@ -1,0 +1,36 @@
+---
+title: AcquireResult 枚举
+description: CounterStrikeSharp 工具模块中的获取结果枚举
+icon: Tool
+---
+
+# AcquireResult 枚举
+
+`AcquireResult` 枚举定义了资源获取操作的结果状态。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 枚举定义
+
+```csharp
+public enum AcquireResult
+{
+    None,           // 无结果
+    Found,          // 找到资源
+    Created,        // 创建了新资源
+    NotFound,       // 未找到资源
+    CreateFailed    // 创建失败
+}
+```
+
+## 说明
+
+- `None`: 表示没有结果或未执行操作
+- `Found`: 表示成功找到了现有资源
+- `Created`: 表示成功创建了新资源
+- `NotFound`: 表示未能找到请求的资源
+- `CreateFailed`: 表示尝试创建新资源失败 

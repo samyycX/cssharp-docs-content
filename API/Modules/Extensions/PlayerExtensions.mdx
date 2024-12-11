@@ -1,0 +1,66 @@
+---
+title: PlayerExtensions 类
+description: CounterStrikeSharp 玩家扩展方法，提供额外的玩家相关功能
+icon: Person
+---
+
+# PlayerExtensions 类
+
+`PlayerExtensions` 类提供了对 `CCSPlayerController` 类的扩展方法。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Extensions
+```
+
+## 类定义
+
+```csharp
+public static class PlayerExtensions
+```
+
+## 扩展方法
+
+### GetChatColor
+
+获取玩家的聊天颜色。
+
+```csharp
+public static char GetChatColor(this CCSPlayerController player)
+```
+
+#### 返回值
+
+返回一个字符，表示玩家的聊天颜色代码。
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventPlayerChat>((ev, info) =>
+        {
+            var player = ev.Userid;
+            
+            // 获取玩家的聊天颜色
+            var chatColor = player.GetChatColor();
+            
+            // 使用颜色发送消息
+            Server.PrintToChatAll($"{chatColor}{player.PlayerName}: 消息");
+            
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 说明
+
+- 提供玩家相关的扩展方法
+- 简化聊天颜色处理
+- 支持玩家个性化
+- 便于消息格式化
+- 增强玩家交互功能 

@@ -1,0 +1,189 @@
+---
+title: Utilities 类
+description: CounterStrikeSharp 中的实用工具类，提供了各种辅助功能
+icon: Tool
+---
+
+# Utilities 类
+
+`Utilities` 是一个静态工具类，提供了各种实用的辅助方法，包括玩家查找、实体管理、字符串处理等功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 类定义
+
+```csharp
+public static class Utilities
+```
+
+## 常量
+
+### 实体系统常量
+
+```csharp
+public const int MaxEdictBits = 15;
+public const int MaxEdicts = 1 << MaxEdictBits;
+public const int NumEHandleSerialNumberBits = 17;
+public const uint InvalidEHandleIndex = 0xFFFFFFFF;
+```
+
+## 静态方法
+
+### 玩家查找方法
+
+#### GetPlayerFromIndex
+
+根据索引获取玩家控制器。
+
+```csharp
+public static CCSPlayerController? GetPlayerFromIndex(int index)
+```
+
+#### GetPlayerFromSlot
+
+根据槽位获取玩家控制器。
+
+```csharp
+public static CCSPlayerController? GetPlayerFromSlot(int slot)
+```
+
+#### GetPlayerFromUserid
+
+根据用户ID获取玩家控制器。
+
+```csharp
+public static CCSPlayerController? GetPlayerFromUserid(int userid)
+```
+
+#### GetPlayerFromSteamId
+
+根据Steam ID获取玩家控制器。
+
+```csharp
+public static CCSPlayerController? GetPlayerFromSteamId(ulong steamId)
+```
+
+#### GetPlayers
+
+获取所有有效的玩家控制器列表。
+
+```csharp
+public static List<CCSPlayerController> GetPlayers()
+```
+
+### 实体管理方法
+
+#### GetEntityFromIndex
+
+根据索引获取实体实例。
+
+```csharp
+public static T? GetEntityFromIndex<T>(int index) where T : CEntityInstance
+```
+
+#### CreateEntityByName
+
+根据名称创建新实体。
+
+```csharp
+public static T? CreateEntityByName<T>(string name) where T : CBaseEntity
+```
+
+### 目标处理方法
+
+#### ProcessTargetString
+
+处理目标字符串，用于玩家选择。
+
+```csharp
+public static TargetResult ProcessTargetString(string pattern, CCSPlayerController player)
+```
+
+### 枚举工具方法
+
+#### FlagsToList
+
+将标志枚举转换为列表。
+
+```csharp
+public static IEnumerable<T> FlagsToList<T>(this T flags) where T : Enum
+```
+
+### 字符串处理方法
+
+#### ReadStringUtf8
+
+读取UTF-8编码的字符串。
+
+```csharp
+public static unsafe string ReadStringUtf8(IntPtr ptr)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 获取所有玩家
+        var players = Utilities.GetPlayers();
+        foreach (var player in players)
+        {
+            player.PrintToChat("服务器已加载插件！");
+        }
+        
+        // 根据Steam ID查找玩家
+        var steamId = 76561198012345678UL;
+        var player = Utilities.GetPlayerFromSteamId(steamId);
+        if (player != null)
+        {
+            player.PrintToChat("已找到你的Steam账号！");
+        }
+        
+        // 创建新实体
+        var entity = Utilities.CreateEntityByName<CBaseEntity>("prop_dynamic");
+        if (entity != null)
+        {
+            // 处理实体...
+        }
+        
+        // 处理目标选择
+        var result = Utilities.ProcessTargetString("@ct", player);
+        foreach (var target in result.Players)
+        {
+            target.PrintToChat("你被选中了！");
+        }
+        
+        // 将枚举标志转换为列表
+        var flags = PlayerFlags.FL_ONGROUND | PlayerFlags.FL_DUCKING;
+        var flagList = flags.FlagsToList();
+        foreach (var flag in flagList)
+        {
+            Console.WriteLine($"激活的标志: {flag}");
+        }
+    }
+}
+```
+
+## 说明
+
+- 提供了全面的玩家查找方法
+- 支持实体的创建和管理
+- 包含实用的枚举处理工具
+- 提供字符串处理功能
+- 支持目标选择系统
+
+## 最佳实践
+
+- ���用适当的方法来查找玩家
+- 检查返回值的空值情况
+- 合理使用实体管理功能
+- 注意内存管理和性能影响
+- 使用类型安全的泛型方法
+- 处理目标选择的错误情况
+- 合理使用枚举工具方法 

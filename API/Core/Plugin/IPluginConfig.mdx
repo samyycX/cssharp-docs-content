@@ -1,0 +1,212 @@
+---
+title: IPluginConfig 接口
+description: CounterStrikeSharp 插件配置系统的接口，用于定义插件的配置结构
+icon: Settings
+---
+
+# IPluginConfig 接口
+
+`IPluginConfig<T>` 接口定义了插件配置的基本结构。它允许插件以类型安全的方式管理其配置。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## 接口定义
+
+```csharp
+public interface IPluginConfig<T> where T : IBasePluginConfig, new()
+{
+    T Config { get; set; }
+}
+```
+
+## 类型参数
+
+- `T`: 配置类型，必须实现 `IBasePluginConfig` 接口并有一个无参构造函数
+
+## 属性
+
+### Config
+
+获取或设置插件的配置对象。
+
+```csharp
+T Config { get; set; }
+```
+
+## 相关接口
+
+### IBasePluginConfig
+
+所有配置类必须实现的基础接口。
+
+```csharp
+public interface IBasePluginConfig
+{
+    [JsonPropertyName("ConfigVersion")]
+    int Version { get; set; }
+}
+```
+
+## 使用示例
+
+### 基本配置类
+
+```csharp
+public class MyPluginConfig : BasePluginConfig
+{
+    [JsonPropertyName("WelcomeMessage")]
+    public string WelcomeMessage { get; set; } = "欢迎来到服务器！";
+
+    [JsonPropertyName("EnableFeature")]
+    public bool EnableFeature { get; set; } = true;
+
+    [JsonPropertyName("MaxPlayers")]
+    public int MaxPlayers { get; set; } = 32;
+}
+```
+
+### 在插件中使用配置
+
+```csharp
+public class MyPlugin : BasePlugin, IPluginConfig<MyPluginConfig>
+{
+    public MyPluginConfig Config { get; set; }
+
+    public override string ModuleName => "我的插件";
+    public override string ModuleVersion => "1.0.0";
+
+    public override void Load(bool hotReload)
+    {
+        // 配置会自动加载
+        Logger.LogInformation($"欢迎消息: {Config.WelcomeMessage}");
+        
+        if (Config.EnableFeature)
+        {
+            // 启用特定功能
+        }
+    }
+}
+```
+
+### 带有嵌套配置的示例
+
+```csharp
+public class ServerSettings
+{
+    [JsonPropertyName("Name")]
+    public string Name { get; set; } = "默认服务器";
+
+    [JsonPropertyName("Port")]
+    public int Port { get; set; } = 27015;
+}
+
+public class AdvancedConfig : BasePluginConfig
+{
+    [JsonPropertyName("ServerSettings")]
+    public ServerSettings ServerSettings { get; set; } = new();
+
+    [JsonPropertyName("Features")]
+    public Dictionary<string, bool> Features { get; set; } = new()
+    {
+        ["Feature1"] = true,
+        ["Feature2"] = false
+    };
+}
+
+public class AdvancedPlugin : BasePlugin, IPluginConfig<AdvancedConfig>
+{
+    public AdvancedConfig Config { get; set; }
+
+    public override void Load(bool hotReload)
+    {
+        Logger.LogInformation($"服务器名称: {Config.ServerSettings.Name}");
+        
+        foreach (var feature in Config.Features)
+        {
+            Logger.LogInformation($"功能 {feature.Key}: {feature.Value}");
+        }
+    }
+}
+```
+
+## 配置文件示例
+
+### 基本配置 (config.json)
+
+```json
+{
+    "ConfigVersion": 1,
+    "WelcomeMessage": "欢迎来到我的服务器！",
+    "EnableFeature": true,
+    "MaxPlayers": 32
+}
+```
+
+### 高级配置 (config.json)
+
+```json
+{
+    "ConfigVersion": 1,
+    "ServerSettings": {
+        "Name": "我的游戏服务器",
+        "Port": 27016
+    },
+    "Features": {
+        "Feature1": true,
+        "Feature2": false,
+        "CustomFeature": true
+    }
+}
+```
+
+## 配置版本管理
+
+```csharp
+public class MyPluginConfig : BasePluginConfig
+{
+    public override int Version { get; set; } = 2; // 设置配置版本
+
+    // 版本1的字段
+    public string WelcomeMessage { get; set; } = "欢迎！";
+
+    // 版本2新增的字段
+    public Dictionary<string, string> CustomMessages { get; set; } = new();
+}
+```
+
+## 最佳实践
+
+1. 配置结构
+   - 使用有意义的属性名
+   - 提供合理的默认值
+   - 使用适当的数据类型
+   - 考虑配置的可扩展性
+
+2. 版本控制
+   - 合理使用配置版本号
+   - 在更新配置结构时增加版本号
+   - 提供配置迁移方案
+
+3. 数据验证
+   - 验证配置值的有效性
+   - 处理缺失的配置项
+   - 提供有意义的错误消息
+
+4. 文档和注释
+   - 为配置项添加注释
+   - 说明配置项的用途和限制
+   - 提供配置示例
+
+5. 安全性
+   - 不要在配置中存储敏感信息
+   - 验证用户输入
+   - 使用适当的访问修饰符
+
+6. 性能考虑
+   - 避免过于复杂的配置结构
+   - 合理使用配置缓存
+   - 避免频繁读写配置文件

@@ -1,0 +1,93 @@
+---
+title: EnumUtils 类
+description: CounterStrikeSharp 工具模块中的枚举工具类
+icon: Tool
+---
+
+# EnumUtils 类
+
+`EnumUtils` 类提供了一组用于处理枚举类型的实用工具方法。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 类定义
+
+```csharp
+public static class EnumUtils
+{
+    public static T ToEnum<T>(int value) where T : Enum
+    public static T ToEnum<T>(string value) where T : Enum
+    public static string GetName<T>(T value) where T : Enum
+    public static string GetDescription<T>(T value) where T : Enum
+    public static bool IsDefined<T>(T value) where T : Enum
+    public static IEnumerable<T> GetValues<T>() where T : Enum
+}
+```
+
+## 方法说明
+
+### ToEnum<T>
+
+将整数或字符串值转换为指定枚举类型。
+
+```csharp
+public static T ToEnum<T>(int value) where T : Enum
+public static T ToEnum<T>(string value) where T : Enum
+```
+
+### GetName<T>
+
+获取枚举值的名称。
+
+```csharp
+public static string GetName<T>(T value) where T : Enum
+```
+
+### GetDescription<T>
+
+获取枚举值的描述（如果有 Description 特性）。
+
+```csharp
+public static string GetDescription<T>(T value) where T : Enum
+```
+
+### IsDefined<T>
+
+检查枚举值是否定义。
+
+```csharp
+public static bool IsDefined<T>(T value) where T : Enum
+```
+
+### GetValues<T>
+
+获取枚举的所有值。
+
+```csharp
+public static IEnumerable<T> GetValues<T>() where T : Enum
+```
+
+## 使用示例
+
+```csharp
+// 整数转枚举
+var team = EnumUtils.ToEnum<CsTeam>(2);  // 返回 CsTeam.T
+
+// 字符串转枚举
+var button = EnumUtils.ToEnum<PlayerButtons>("IN_ATTACK");
+
+// 获取枚举名称
+var teamName = EnumUtils.GetName(CsTeam.CT);  // 返回 "CT"
+
+// 获取枚举描述
+var description = EnumUtils.GetDescription(CsTeam.CT);
+
+// 检查枚举值
+var isDefined = EnumUtils.IsDefined(CsTeam.CT);
+
+// 获取所有枚举值
+var allTeams = EnumUtils.GetValues<CsTeam>();

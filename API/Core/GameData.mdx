@@ -1,0 +1,159 @@
+---
+title: GameData 类
+description: CounterStrikeSharp 中的游戏数据管理类，用于加载和管理游戏数据
+icon: Database
+---
+
+# GameData 相关类
+
+游戏数据管理系统包含了多个相关类，用于加载和管理游戏的签名和偏移数据。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## LoadedGameData 类
+
+用于存储加载的游戏数据。
+
+```csharp
+public class LoadedGameData
+{
+    [JsonPropertyName("signatures")]
+    public Signatures? Signatures { get; set; }
+
+    [JsonPropertyName("offsets")]
+    public Offsets? Offsets { get; set; }
+}
+```
+
+## Signatures 类
+
+用于存储不同平台的签名数据。
+
+```csharp
+public class Signatures
+{
+    [JsonPropertyName("library")]
+    public string Library { get; set; }
+
+    [JsonPropertyName("windows")]
+    public string Windows { get; set; }
+
+    [JsonPropertyName("linux")]
+    public string Linux { get; set; }
+}
+```
+
+## Offsets 类
+
+用于存储不同平台的偏移数据。
+
+```csharp
+public class Offsets
+{
+    [JsonPropertyName("windows")]
+    public int Windows { get; set; }
+
+    [JsonPropertyName("linux")]
+    public int Linux { get; set; }
+}
+```
+
+## GameDataProvider 类
+
+游戏数据提供者，负责加载和管理游戏数据。
+
+```csharp
+public sealed class GameDataProvider : IStartupService
+{
+    public Dictionary<string, LoadedGameData> Methods { get; }
+
+    public GameDataProvider(IScriptHostConfiguration scriptHostConfiguration, 
+        ILogger<GameDataProvider> logger)
+    {
+        // 构造函数
+    }
+
+    public void Load()
+    {
+        // 加载游戏数据
+    }
+}
+```
+
+## 配置文件格式
+
+游戏数据使用JSON格式存储，示例如下：
+
+```json
+{
+    "SomeMethod": {
+        "signatures": {
+            "library": "server.dll",
+            "windows": "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ?",
+            "linux": "55 48 89 E5 41 57 41 56 41 55 41 54 53"
+        },
+        "offsets": {
+            "windows": 123,
+            "linux": 456
+        }
+    }
+}
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private readonly GameDataProvider _gameDataProvider;
+
+    public MyPlugin(GameDataProvider gameDataProvider)
+    {
+        _gameDataProvider = gameDataProvider;
+    }
+
+    public override void Load(bool hotReload)
+    {
+        // 访问游戏数据
+        if (_gameDataProvider.Methods.TryGetValue("SomeMethod", out var gameData))
+        {
+            // 根据平台获取签名
+            string signature = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? gameData.Signatures.Windows
+                : gameData.Signatures.Linux;
+
+            // 根据平台获取偏移
+            int offset = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? gameData.Offsets.Windows
+                : gameData.Offsets.Linux;
+
+            Console.WriteLine($"签名: {signature}");
+            Console.WriteLine($"偏移: {offset}");
+        }
+    }
+}
+```
+
+## 说明
+
+- 支持Windows和Linux平台
+- 使用JSON格式存储数据
+- 自动加载游戏数据文件
+- 提供平台特定的签名和偏移
+- 实现了IStartupService接口
+- 支持多个游戏数据文件
+- 提供日志记录功能
+
+## 最佳实践
+
+- 使用正确的文件命名规范
+- 提供完整的平台支持
+- 正确处理重复条目
+- 使用适当的错误处理
+- 记录重要的加载操作
+- 验证数据的完整性
+- 考虑平台兼容性 

@@ -1,0 +1,98 @@
+---
+title: Vector 类
+description: CounterStrikeSharp 工具模块中的三维向量类
+icon: Tool
+---
+
+# Vector 类
+
+`Vector` 类表示3D空间中的向量。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 类定义
+
+```csharp
+public class Vector
+{
+    public float x { get; set; }  // x坐标
+    public float y { get; set; }  // y坐标
+    public float z { get; set; }  // z坐标
+}
+```
+
+## 构造函数
+
+```csharp
+public Vector()  // 创建一个零向量
+public Vector(float x, float y, float z)  // 使用指定的坐标创建向量
+public Vector(Vector v)  // 从现有向量创建副本
+```
+
+## 属性
+
+```csharp
+public float Length { get; }  // 向量长度
+public float LengthSquared { get; }  // 向量长度的平方
+public float Length2D { get; }  // 2D平面上的向量长度
+public float Length2DSquared { get; }  // 2D平面上的向量长度的平方
+```
+
+## 主要方法
+
+```csharp
+public void Normalize()  // 标准化向量
+public Vector Normalized()  // 返回标准化后的新向量
+public float Dot(Vector other)  // 点积
+public Vector Cross(Vector other)  // ��积
+public float DistTo(Vector other)  // 到另一个向量的距离
+public float DistToSquared(Vector other)  // 到另一个向量的距离的平方
+public void Scale(float scale)  // 缩放向量
+```
+
+## 运算符重载
+
+```csharp
+public static Vector operator +(Vector a, Vector b)  // 向量加法
+public static Vector operator -(Vector a, Vector b)  // 向量减法
+public static Vector operator *(Vector a, float b)  // 向量乘以标量
+public static Vector operator /(Vector a, float b)  // 向量除以标量
+public static Vector operator -(Vector a)  // 向量取反
+```
+
+## 使用示例
+
+```csharp
+// 创建向量
+var position = new Vector(100, 200, 300);
+
+// 标准化向量
+position.Normalize();
+
+// 计算两点距离
+var distance = position.DistTo(targetPosition);
+
+// 向量运算
+var direction = targetPosition - position;
+var scaledDirection = direction * 2.0f;
+
+// 点积和叉积
+var dotProduct = position.Dot(direction);
+var crossProduct = position.Cross(direction);
+```
+
+## 说明
+
+- 用于表示3D空间中的位置和方向
+- 提供了完整的向量运算支持
+- 支持标准化和距离计算
+- 实现了基本的数学运算符
+- 提供2D和3D操作方法
+- 适用于位置、速度、方向等计算
+- 支持点积和叉积运算
+- 常用于物理和空间计算
+</rewritten_file> 

@@ -1,0 +1,94 @@
+---
+title: Timer 类
+description: CounterStrikeSharp 定时器模块中的定时器类，提供定时执行功能
+icon: Clock
+---
+
+# Timer 类
+
+`Timer` 类提供了创建和管理定时器的功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Timers
+```
+
+## TimerFlags 枚举
+
+定义了定时器的行为标志。
+
+```csharp
+[Flags]
+public enum TimerFlags
+{
+    REPEAT = (1 << 0),             // 定时器将重复执行直到停止
+    STOP_ON_MAPCHANGE = (1 << 1)   // 地图更换时停止定时器
+}
+```
+
+## 类定义
+
+```csharp
+public class Timer : NativeObject
+```
+
+## 构造函数
+
+```csharp
+public Timer(float interval, Action callback, TimerFlags? flags = null)
+```
+
+参数：
+- `interval`: 定时器间隔（秒）
+- `callback`: 定时器触发时执行的回调函数
+- `flags`: 定时器行为标志（可选）
+
+## 方法
+
+### Kill
+
+停止并销毁定时器。
+
+```csharp
+public void Kill()
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private Timer? _myTimer;
+
+    public override void Load(bool hotReload)
+    {
+        // 创建一个每 5 秒重复执行的定时器
+        _myTimer = new Timer(5.0f, () => {
+            Server.PrintToChatAll("5 秒过去了！");
+        }, TimerFlags.REPEAT);
+        
+        // 创建一个地图更换时自动停止的单次定时器
+        new Timer(10.0f, () => {
+            Server.PrintToChatAll("10 秒后执行一次！");
+        }, TimerFlags.STOP_ON_MAPCHANGE);
+    }
+    
+    public override void Unload(bool hotReload)
+    {
+        // 在插件卸载时停止定时器
+        _myTimer?.Kill();
+    }
+}
+```
+
+## 说明
+
+- 继承自 `NativeObject` 类
+- 支持单次和重复执行
+- 支持地图更换时自动停止
+- 可以手动停止和销毁
+- 使用原生 API 实现
+- 适用于延迟执行和周期性任务
+- 回调函数在服务器主线程中执行
+``` 

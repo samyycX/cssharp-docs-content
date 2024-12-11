@@ -1,0 +1,122 @@
+---
+title: PluginContext 类
+description: CounterStrikeSharp 插件上下文的具体实现类，提供了插件运行时的上下文信息和管理功能
+icon: Box
+---
+
+# PluginContext 类
+
+`PluginContext` 类是 `IPluginContext` 接口的具体实现，提供了插件运行时的上下文信息和管理功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Plugin
+```
+
+## 类定义
+
+```csharp
+public class PluginContext : IPluginContext
+```
+
+## 属性
+
+### Plugin
+
+获取插件实例。
+
+```csharp
+public IPlugin Plugin { get; }
+```
+
+### State
+
+获取或设置插件状态。
+
+```csharp
+public PluginState State { get; set; }
+```
+
+### WorkingDirectory
+
+获取插件的工作目录。
+
+```csharp
+public string WorkingDirectory { get; }
+```
+
+### ConfigDirectory
+
+获取插件的配置目录。
+
+```csharp
+public string ConfigDirectory { get; }
+```
+
+### LogDirectory
+
+获取插件的日志目录。
+
+```csharp
+public string LogDirectory { get; }
+```
+
+## 构造函数
+
+### PluginContext
+
+创建一个新的插件上下文实例。
+
+```csharp
+public PluginContext(IPlugin plugin, string workingDirectory)
+```
+
+#### 参数
+
+- `plugin`: `IPlugin` - 插件实例
+- `workingDirectory`: `string` - 工作目录路径
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private readonly PluginContext _context;
+
+    public MyPlugin()
+    {
+        // 创建插件上下文
+        _context = new PluginContext(this, Path.Combine("plugins", "MyPlugin"));
+    }
+
+    public override void Load(bool hotReload)
+    {
+        // 使用插件上下文
+        Console.WriteLine($"插件状态: {_context.State}");
+        Console.WriteLine($"工作目录: {_context.WorkingDirectory}");
+        Console.WriteLine($"配置目录: {_context.ConfigDirectory}");
+        Console.WriteLine($"日志目录: {_context.LogDirectory}");
+        
+        // 更新插件状态
+        _context.State = PluginState.Loaded;
+        
+        // 加载配置文件
+        var configPath = Path.Combine(_context.ConfigDirectory, "config.json");
+        if (File.Exists(configPath))
+        {
+            // 处理配置文件
+        }
+    }
+}
+```
+
+## 说明
+
+- 实现了 `IPluginContext` 接口
+- 提供了完整的插件上下文管理
+- 管理插件的状态变化
+- 提供标准的目录结构
+- 支持配置和日志管理
+- 便于插件资源管理
+- 集成了依赖注入系统 

@@ -1,0 +1,89 @@
+---
+title: PluginNameEnricher 类
+description: CounterStrikeSharp 日志系统中的插件名称富化器，用于在日志中添加插件名称信息
+icon: FileText
+---
+
+# PluginNameEnricher 类
+
+`PluginNameEnricher` 类是一个日志富化器，用于在日志记录中添加插件名称信息。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Logging
+```
+
+## 类定义
+
+```csharp
+public class PluginNameEnricher : ILogEventEnricher
+```
+
+## 构造函数
+
+### PluginNameEnricher
+
+创建一个新的插件名称富化器实例。
+
+```csharp
+public PluginNameEnricher(string pluginName)
+```
+
+#### 参数
+
+- `pluginName`: `string` - 插件名称
+
+## 方法
+
+### Enrich
+
+富化日志事件，添加插件名称信息。
+
+```csharp
+public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private readonly ILogger<MyPlugin> _logger;
+
+    public MyPlugin()
+    {
+        // 创建日志配置
+        var loggerConfiguration = new LoggerConfiguration()
+            .Enrich.With(new PluginNameEnricher(ModuleName))
+            .WriteTo.Console(
+                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{PluginName}] {Message:lj}{NewLine}{Exception}"
+            );
+
+        // 创建日志记录器
+        _logger = loggerConfiguration.CreateLogger().ForContext<MyPlugin>();
+    }
+
+    public override void Load(bool hotReload)
+    {
+        // 记录日志（将自动包含插件名称）
+        _logger.LogInformation("插件已加载");
+    }
+}
+```
+
+## 输出示例
+
+```
+[14:30:45 INF] [MyPlugin] 插件已加载
+[14:30:46 WRN] [MyPlugin] 这是一个警告消息
+[14:30:47 ERR] [MyPlugin] 发生错误：示例错误
+```
+
+## 说明
+
+- 为日志添加插件名称上下文
+- 便于识别日志来源
+- 支持自定义日志模板
+- 与Serilog日志框架集成
+- 自动应用于所有日志记录 

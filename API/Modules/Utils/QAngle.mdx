@@ -1,0 +1,77 @@
+---
+title: QAngle 类
+description: CounterStrikeSharp 工具模块中的四元数角度类
+icon: Tool
+---
+
+# QAngle 类
+
+`QAngle` 类表示使用四元数的3D空间角度。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 类定义
+
+```csharp
+public class QAngle
+{
+    public float x { get; set; }  // Pitch (俯仰角)
+    public float y { get; set; }  // Yaw (偏航角)
+    public float z { get; set; }  // Roll (翻滚角)
+}
+```
+
+## 构造函数
+
+```csharp
+public QAngle()  // 创建一个所有角度为0的新实例
+public QAngle(float x, float y, float z)  // 使用指定的x、y、z角度创建新实例
+public QAngle(QAngle angles)  // 从现有角度创建副本
+```
+
+## 属性
+
+```csharp
+public float Pitch { get => x; set => x = value; }  // 俯仰角
+public float Yaw { get => y; set => y = value; }    // 偏航角
+public float Roll { get => z; set => z = value; }   // 翻滚角
+```
+
+## 主要方法
+
+```csharp
+public void Normalize()  // 标准化角度到 -180 到 180 度范围
+public QAngle Normalized()  // 返回标准化后的新角度实例
+public Vector ToVector()  // 转换为向量
+public static QAngle FromVector(Vector vec)  // 从向量创建角度
+```
+
+## 使用示例
+
+```csharp
+// 创建一个新角度
+var angle = new QAngle(30, 45, 0);
+
+// 标准化角度
+angle.Normalize();
+
+// 转换为向量
+var vector = angle.ToVector();
+
+// 从向量创建角度
+var newAngle = QAngle.FromVector(vector);
+```
+
+## 说明
+
+- 使用四元数表示3D空间中的角度
+- 提供了角度的标准化功能
+- 支持与向量的相互转换
+- 适用于实体的旋转和朝向计算
+- 防止万向节死锁问题
+- 提供了高精度的角度表示
+</rewritten_file> 

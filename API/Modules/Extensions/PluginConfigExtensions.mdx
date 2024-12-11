@@ -1,0 +1,107 @@
+---
+title: PluginConfigExtensions 类
+description: CounterStrikeSharp 插件配置扩展方法，提供配置文件的管理功能
+icon: Settings
+---
+
+# PluginConfigExtensions 类
+
+`PluginConfigExtensions` 类提供了对插件配置的扩展方法，用于管理和操作配置文件。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Extensions
+```
+
+## 类定义
+
+```csharp
+public static class PluginConfigExtensions
+```
+
+## 属性
+
+### JsonSerializerOptions
+
+获取 JSON 序列化选项。
+
+```csharp
+public static JsonSerializerOptions JsonSerializerOptions { get; }
+```
+
+## 扩展方法
+
+### GetConfigPath<T>
+
+获取配置文件的路径。
+
+```csharp
+public static string GetConfigPath<T>(this T _) where T : BasePluginConfig, new()
+```
+
+#### 返回值
+
+返回配置文件的完整路径。
+
+### Update<T>
+
+更新配置文件。
+
+```csharp
+public static void Update<T>(this T config) where T : BasePluginConfig, new()
+```
+
+### Reload<T>
+
+重新加载配置文件并更新当前配置实例。
+
+```csharp
+public static void Reload<T>(this T config) where T : BasePluginConfig, new()
+```
+
+## 使用示例
+
+```csharp
+public class MyPluginConfig : BasePluginConfig
+{
+    public string WelcomeMessage { get; set; } = "欢迎来到服务器！";
+    public int RoundTime { get; set; } = 120;
+}
+
+public class MyPlugin : BasePlugin<MyPluginConfig>
+{
+    public override void Load(bool hotReload)
+    {
+        // 获取配置文件路径
+        var configPath = Config.GetConfigPath();
+        Console.WriteLine($"配置文件路径: {configPath}");
+        
+        // 修改配置并更新
+        Config.WelcomeMessage = "新的欢迎消息";
+        Config.Update();
+        
+        // 重新加载配置
+        Config.Reload();
+    }
+}
+```
+
+## 配置文件示例
+
+```json
+{
+    "WelcomeMessage": "欢迎来到服务器！",
+    "RoundTime": 120
+}
+```
+
+## 说明
+
+- 提供配置文件管理功能
+- 支持配置文件的读写
+- 自动序列化和反序列化
+- 支持配置热重载
+- 提供错误处理机制
+- 使用 JSON 格式存储
+- 支持类型安全的配置 

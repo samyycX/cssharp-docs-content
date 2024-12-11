@@ -1,0 +1,46 @@
+---
+title: CStrongHandle 类
+description: CounterStrikeSharp 工具模块中的强引用句柄类
+icon: Tool
+---
+
+# CStrongHandle 类
+
+`CStrongHandle` 类提供了一个强引用类型的句柄，用于安全地引用游戏资源。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 类定义
+
+```csharp
+public class CStrongHandle<T> where T : NativeObject
+{
+    public uint Value { get; }  // 句柄值
+}
+```
+
+## 构造函数
+
+```csharp
+public CStrongHandle()  // 创建一个空的强引用句柄
+public CStrongHandle(uint value)  // 使用指定的句柄值创建实例
+```
+
+## 属性
+
+```csharp
+public bool IsValid { get; }  // 检查句柄是否有效
+```
+
+## 说明
+
+- 提供了对游戏资源的强引用
+- 支持泛型，可以用于任何继承自 `NativeObject` 的类型
+- 与 `CHandle` 相比提供更强的引用保证
+- 自动处理资源的有效性检查
+- 适用于需要确保资源不被释放的场景
+- 线程安全的资源引用机制 

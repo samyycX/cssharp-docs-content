@@ -1,0 +1,124 @@
+---
+title: TranslationHelper 类
+description: CounterStrikeSharp 的翻译助手类，提供便捷的翻译工具方法
+icon: Lightbulb
+---
+
+# TranslationHelper 类
+
+`TranslationHelper` 类提供了一系列静态方法，用于简化翻译操作和格式化翻译文本。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Translations
+```
+
+## 类定义
+
+```csharp
+public static class TranslationHelper
+```
+
+## 静态方法
+
+### Translate
+
+获取指定键的翻译，支持参数替换。
+
+```csharp
+public static string Translate(string key, string language, params object[] args)
+```
+
+### TranslateForPlayer
+
+获取针对特定玩家的翻译。
+
+```csharp
+public static string TranslateForPlayer(CCSPlayerController player, string key, params object[] args)
+```
+
+### FormatMessage
+
+格式化带有颜色代码的消息。
+
+```csharp
+public static string FormatMessage(string message, params object[] args)
+```
+
+### StripColors
+
+移除消息中的颜色代码。
+
+```csharp
+public static string StripColors(string message)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        AddCommand("welcome", "欢迎消息", (player, info) =>
+        {
+            if (player == null) return;
+
+            // 基本翻译
+            var message = TranslationHelper.TranslateForPlayer(player, "welcome_message");
+            player.PrintToChat(message);
+
+            // 带参数的翻译
+            var killMessage = TranslationHelper.TranslateForPlayer(
+                player,
+                "player_kill",
+                player.PlayerName,
+                info.GetArg(1)
+            );
+            player.PrintToChat(killMessage);
+
+            // 带颜色的消息
+            var colorMessage = TranslationHelper.FormatMessage(
+                "{green}成功{default} - {red}得分: {0}",
+                "100"
+            );
+            player.PrintToChat(colorMessage);
+        });
+    }
+}
+```
+
+## 翻译文件示例
+
+### messages.json
+```json
+{
+    "welcome_message": "欢迎来到服务器！",
+    "player_kill": "{0} 击杀了 {1}",
+    "score_message": "{green}得分{default}: {0}"
+}
+```
+
+## 颜色代码
+
+支持的颜色代码：
+
+- `{default}` - 默认颜色
+- `{red}` - 红色
+- `{blue}` - 蓝色
+- `{green}` - 绿色
+- `{yellow}` - 黄色
+- `{purple}` - 紫色
+- `{orange}` - 橙色
+
+## 说明
+
+- 提供便捷的翻译方法
+- 支持参数替换
+- 支持颜色代码
+- 玩家特定的翻译
+- 自动语言检测
+- 格式化工具
+- 颜色代码处理
+- 支持多语言回退 

@@ -1,0 +1,275 @@
+---
+title: BasePlugin 类
+description: CounterStrikeSharp 插件系统的基类，提供了插件开发所需的基本功能
+icon: Box
+---
+
+# BasePlugin 类
+
+`BasePlugin` 是一个抽象类，实现了 `IPlugin` 接口，为插件开发提供了基本功能和实用方法。所有 CounterStrikeSharp 插件都应该继承自这个类。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## 类定义
+
+```csharp
+public abstract class BasePlugin : IPlugin
+```
+
+## 必须实现的属性
+
+### ModuleName
+
+获取插件名称。
+
+```csharp
+public abstract string ModuleName { get; }
+```
+
+### ModuleVersion
+
+获取插件版本。
+
+```csharp
+public abstract string ModuleVersion { get; }
+```
+
+## 可选重写的属性
+
+### ModuleAuthor
+
+获取插件作者。
+
+```csharp
+public virtual string ModuleAuthor { get; }
+```
+
+### ModuleDescription
+
+获取插件描述。
+
+```csharp
+public virtual string ModuleDescription { get; }
+```
+
+## 自动管理的属性
+
+### ModulePath
+
+获取或设置插件DLL文件的路径。
+
+```csharp
+public string ModulePath { get; set; }
+```
+
+### ModuleDirectory
+
+获取插件所在目录的路径。
+
+```csharp
+public string ModuleDirectory { get; }
+```
+
+### Logger
+
+获取或设置日志记录器。
+
+```csharp
+public ILogger Logger { get; set; }
+```
+
+### CommandManager
+
+获取或设置命令管理器。
+
+```csharp
+public ICommandManager CommandManager { get; set; }
+```
+
+### Localizer
+
+获取或设置本地化管理器。
+
+```csharp
+public IStringLocalizer Localizer { get; set; }
+```
+
+## 生命周期方法
+
+### Load
+
+插件加载时调用。
+
+```csharp
+public virtual void Load(bool hotReload)
+{
+    // 在这里初始化插件
+}
+```
+
+### Unload
+
+插件卸载时调用。
+
+```csharp
+public virtual void Unload(bool hotReload)
+{
+    // 在这里清理资源
+}
+```
+
+### OnAllPluginsLoaded
+
+所有插件加载完成后调用。
+
+```csharp
+public virtual void OnAllPluginsLoaded(bool hotReload)
+{
+    // 在这里处理依赖其他插件的初始化
+}
+```
+
+## 主要功能
+
+### 注册功能
+
+```csharp
+// 注册所有特性处理器
+public void RegisterAllAttributes(object instance)
+
+// 初始化配置
+public void InitializeConfig(object instance, Type pluginType)
+
+// 注册监听器
+public CallbackSubscriber RegisterListener<T>(Action callback)
+
+// 注册事件处理器
+public CallbackSubscriber RegisterEventHandler<T>(Func<T, GameEventInfo, HookResult> handler)
+
+// 注册命令
+public void AddCommand(string name, string description, CommandCallback callback)
+
+// 注册实体输出
+public void HookEntityOutput(string classname, string output, EntityIO.EntityOutputCallback callback)
+```
+
+### 实用方法
+
+```csharp
+// 添加定时器
+public Timer AddTimer(float interval, Action callback, TimerFlags flags = TimerFlags.REPEAT)
+
+// 创建ConVar
+public ConVar CreateConVar(string name, string defaultValue, string description, ConVarFlags flags = ConVarFlags.NONE)
+
+// 本地化文本
+public string Translate(string key, params object[] args)
+```
+
+## 使用示例
+
+### 基本插件结构
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override string ModuleName => "我的插件";
+    public override string ModuleVersion => "1.0.0";
+    public override string ModuleAuthor => "作者名";
+    public override string ModuleDescription => "插件描述";
+
+    public override void Load(bool hotReload)
+    {
+        // 注册命令
+        AddCommand("hello", "打招呼命令", (player, info) =>
+        {
+            if (player != null)
+            {
+                player.PrintToChat("你好！");
+            }
+            return HookResult.Continue;
+        });
+
+        // 注册事件处理器
+        RegisterEventHandler<EventPlayerDeath>((ev, info) =>
+        {
+            Logger.LogInformation($"玩家 {ev.Userid.PlayerName} 死亡");
+            return HookResult.Continue;
+        });
+    }
+
+    public override void Unload(bool hotReload)
+    {
+        // 清理资源
+    }
+}
+```
+
+### 使用配置
+
+```csharp
+public class MyPluginConfig : BasePluginConfig
+{
+    public string WelcomeMessage { get; set; } = "欢迎！";
+}
+
+public class MyPlugin : BasePlugin, IPluginConfig<MyPluginConfig>
+{
+    public MyPluginConfig Config { get; set; }
+
+    public override void Load(bool hotReload)
+    {
+        // 配置会自动加载
+        Logger.LogInformation(Config.WelcomeMessage);
+    }
+}
+```
+
+### 使用定时器
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private Timer _timer;
+
+    public override void Load(bool hotReload)
+    {
+        _timer = AddTimer(1.0f, () =>
+        {
+            Logger.LogInformation("每秒执行一次");
+        });
+    }
+
+    public override void Unload(bool hotReload)
+    {
+        _timer?.Kill();
+    }
+}
+```
+
+## 注意事项
+
+1. 生命周期管理
+   - 在 `Load` 中初始化资源
+   - 在 `Unload` 中清理资源
+   - 使用 `OnAllPluginsLoaded` 处理插件间依赖
+
+2. 资源管理
+   - 正确处理定时器的生命周期
+   - 清理注册的命令和事件处理器
+   - 管理好配置文件
+
+3. 错误处理
+   - 使用 Logger 记录错误和信息
+   - 合理处理异常情况
+   - 避免在事件处理器中抛出异常
+
+4. 最佳实践
+   - 使用配置文件存储可配置项
+   - 合理使用本地化功能
+   - 注意性能和资源使用
+``` 

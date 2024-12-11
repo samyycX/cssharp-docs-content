@@ -1,0 +1,135 @@
+---
+title: ConVarFlags 枚举
+description: CounterStrikeSharp 中表示控制台变量标志的枚举
+icon: Terminal
+---
+
+# ConVarFlags 枚举
+
+`ConVarFlags` 是一个标记枚举（Flags Enum），用于定义控制台变量（ConVar）的行为和属性。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 枚举定义
+
+```csharp
+[Flags]
+public enum ConVarFlags : Int64
+```
+
+## 枚举值
+
+### 基本标志
+
+- `FCVAR_NONE` = 0 - 无标志
+- `FCVAR_LINKED_CONCOMMAND` = (1 << 0) - 链接到控制台命令
+- `FCVAR_DEVELOPMENTONLY` = (1 << 1) - 仅在开发版本中可见
+- `FCVAR_GAMEDLL` = (1 << 2) - 由游戏DLL定义
+- `FCVAR_CLIENTDLL` = (1 << 3) - 由客户端DLL定义
+- `FCVAR_HIDDEN` = (1 << 4) - 隐藏的变量，不会在查找或自动完成中显示
+
+### 服务器相关标志
+
+- `FCVAR_PROTECTED` = (1 << 5) - 受保护的服务器变量（如密码）
+- `FCVAR_SPONLY` = (1 << 6) - 在多人游戏服务器中客户端无法更改
+- `FCVAR_ARCHIVE` = (1 << 7) - 保存到vars.rc文件
+- `FCVAR_NOTIFY` = (1 << 8) - 当值改变时通知玩家
+- `FCVAR_USERINFO` = (1 << 9) - 改变客户端的信��字符串
+- `FCVAR_REPLICATED` = (1 << 13) - 服务器设置强制同步到客户端
+- `FCVAR_CHEAT` = (1 << 14) - 仅在单人游戏/调试/启用sv_cheats时可用
+
+### 记录和执行标志
+
+- `FCVAR_UNLOGGED` = (1 << 11) - 不记录到日志文件/控制台
+- `FCVAR_DEMO` = (1 << 16) - 录制demo时记录此变量
+- `FCVAR_DONTRECORD` = (1 << 17) - 不在demo文件中记录
+- `FCVAR_RELEASE` = (1 << 19) - 仅在发布版本中对客户可用
+- `FCVAR_NOT_CONNECTED` = (1 << 22) - 连接到服务器时客户端无法更改
+
+### 执行权限标志
+
+- `FCVAR_SERVER_CAN_EXECUTE` = (1 << 24) - 服务器可以在客户端执行此命令
+- `FCVAR_CLIENT_CAN_EXECUTE` = (1 << 25) - 允许客户端执行
+- `FCVAR_CLIENTCMD_CAN_EXECUTE` = (1 << 28) - 允许通过IVEngineClient::ClientCmd执行
+- `FCVAR_EXECUTE_PER_TICK` = (1 << 29) - 每tick执行一次
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 创建一个基本的ConVar
+        var basicCvar = new ConVar("my_cvar", "默认值", "这是一个基本的ConVar");
+        
+        // 创建一个受保护的服务器ConVar
+        var serverCvar = new ConVar("my_server_cvar", "0", 
+            "服务器配置变量",
+            ConVarFlags.FCVAR_PROTECTED | ConVarFlags.FCVAR_NOTIFY);
+        
+        // 创建一个作弊命令
+        var cheatCvar = new ConVar("my_cheat_cvar", "0",
+            "作弊命令",
+            ConVarFlags.FCVAR_CHEAT | ConVarFlags.FCVAR_NOTIFY);
+        
+        // 检查ConVar标志
+        if (serverCvar.Flags.HasFlag(ConVarFlags.FCVAR_PROTECTED))
+        {
+            Console.WriteLine("这是一个受保护的ConVar");
+        }
+        
+        // 修改ConVar标志
+        basicCvar.Flags |= ConVarFlags.FCVAR_NOTIFY; // 添加通知标志
+        basicCvar.Flags &= ~ConVarFlags.FCVAR_NOTIFY; // 移除通知标志
+    }
+}
+```
+
+## 常见组合
+
+```csharp
+// 常用的ConVar标志组合
+public static class ConVarFlagPresets
+{
+    // 基本服务器变量
+    public static readonly ConVarFlags ServerBasic = 
+        ConVarFlags.FCVAR_NOTIFY | 
+        ConVarFlags.FCVAR_REPLICATED;
+    
+    // 受保护的服务器变量
+    public static readonly ConVarFlags ServerProtected = 
+        ConVarFlags.FCVAR_PROTECTED | 
+        ConVarFlags.FCVAR_NOTIFY | 
+        ConVarFlags.FCVAR_SPONLY;
+    
+    // 作弊命令
+    public static readonly ConVarFlags CheatCommand = 
+        ConVarFlags.FCVAR_CHEAT | 
+        ConVarFlags.FCVAR_NOTIFY | 
+        ConVarFlags.FCVAR_REPLICATED;
+}
+```
+
+## 说明
+
+- 支持位运算操作
+- 可以组合多个标志
+- 影响ConVar的行为和可见性
+- 控制变量的同步和复制
+- 管理执行权限和安全性
+
+## 最佳实践
+
+- 合理使用标志组合
+- 注意权限和安全性
+- 正确处理受保护的变量
+- 适当使用通知功能
+- 考虑网络同步影响
+- 谨慎使用作弊标志
+- 记录重要的变量更改
+</rewritten_file> 

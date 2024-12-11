@@ -1,0 +1,33 @@
+---
+title: matrix3x4_t 结构
+description: CounterStrikeSharp 工具模块中的3x4矩阵结构
+icon: Tool
+---
+
+# matrix3x4_t 结构
+
+`matrix3x4_t` 结构表示一个3x4的变换矩阵,用于3D空间中的变换操作。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 结构定义
+
+```csharp
+public struct matrix3x4_t
+{
+    public float[,] Matrix { get; set; }  // 3x4矩阵数组
+}
+```
+
+## 说明
+
+- 用于3D空间中的变换计算
+- 矩阵大小为3行4列
+- 常用于位置、旋转和缩放变换
+- 可以与向量和其他矩阵进行运算
+- 适用于实体的空间变换计算
+- 提供了高效的3D变换支持 

@@ -1,0 +1,115 @@
+---
+title: BaseEntity 类
+description: CounterStrikeSharp 基础实体类，所有游戏实体的基类
+icon: Box
+---
+
+# BaseEntity 类
+
+`BaseEntity` 类是所有游戏实体的基类，提供了实体的基本属性和操作方法。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Entities
+```
+
+## 类定义
+
+```csharp
+public class BaseEntity
+```
+
+## 属性
+
+### Index
+
+获取实体的索引。
+
+```csharp
+public int Index { get; }
+```
+
+### Handle
+
+获取实体的句柄。
+
+```csharp
+public IntPtr Handle { get; }
+```
+
+### DesignerName
+
+获取实体的设计器名称。
+
+```csharp
+public string DesignerName { get; }
+```
+
+### ClassName
+
+获取实体的类名。
+
+```csharp
+public string ClassName { get; }
+```
+
+### IsValid
+
+检查实体是否有效。
+
+```csharp
+public bool IsValid { get; }
+```
+
+## 方法
+
+### GetProperty<T>
+
+获取实体的属性值。
+
+```csharp
+public T GetProperty<T>(string name)
+```
+
+### SetProperty<T>
+
+设置实体的属性值。
+
+```csharp
+public void SetProperty<T>(string name, T value)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 获取实体
+        var entity = Utilities.GetEntityFromIndex(1);
+        
+        if (entity.IsValid)
+        {
+            // 获取实体信息
+            Console.WriteLine($"实体类名: {entity.ClassName}");
+            Console.WriteLine($"设计器名称: {entity.DesignerName}");
+            
+            // 获取和设置属性
+            var health = entity.GetProperty<int>("m_iHealth");
+            entity.SetProperty<int>("m_iHealth", 100);
+        }
+    }
+}
+```
+
+## 说明
+
+- 所有游戏实体的基类
+- 提供实体的基本属性访问
+- 支持属性的获取和设置
+- 提供实体有效性检查
+- 可用于实体操作和管理
+- 支持泛型属性访问
+- 提供实体标识信息 

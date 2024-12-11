@@ -1,0 +1,135 @@
+---
+title: PlayerButtons 枚举
+description: CounterStrikeSharp 中表示玩家按键状态的枚举
+icon: Keyboard
+---
+
+# PlayerButtons 枚举
+
+`PlayerButtons` 是一个标记枚举（Flags Enum），用于表示玩家的按键状态。每个标志代表一个特定的按键或动作。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 枚举定义
+
+```csharp
+[Flags]
+public enum PlayerButtons : UInt64
+```
+
+## 枚举值
+
+### 基本动作按键
+
+- `Attack` = (1 << 0) - 主要攻击键（默认为鼠标左键）
+- `Jump` = (1 << 1) - 跳跃键
+- `Duck` = (1 << 2) - 蹲下键
+- `Forward` = (1 << 3) - 向前移动键
+- `Back` = (1 << 4) - 向后移动键
+- `Use` = (1 << 5) - 使用键
+- `Cancel` = (1 << 6) - 取消键
+- `Left` = (1 << 7) - 向左转向键
+- `Right` = (1 << 8) - 向右转向键
+- `Moveleft` = (1 << 9) - 向左移动键
+- `Moveright` = (1 << 10) - 向右移动键
+
+### 战斗相关按键
+
+- `Attack2` = (1 << 11) - 次要攻击键（默认为鼠标右键）
+- `Attack3` = (1 << 24) - 第三攻击键
+- `Reload` = (1 << 13) - 重新装弹键
+- `Alt1` = (1 << 14) - 备用键1
+- `Alt2` = (1 << 15) - 备用键2
+
+### 移动相关按键
+
+- `Speed` = (1 << 16) - 加速键（默认为Shift）
+- `Walk` = (1 << 17) - 行走键
+- `Zoom` = (1 << 18) - HUD缩放键
+
+### 武器相关按键
+
+- `Weapon1` = (1 << 19) - 武器栏位1
+- `Weapon2` = (1 << 20) - 武器栏位2
+- `Bullrush` = (1 << 21) - 冲锋键
+- `Grenade1` = (1 << 22) - 手雷1
+- `Grenade2` = (1 << 23) - 手雷2
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventPlayerButton>((ev, info) =>
+        {
+            var player = ev.Userid;
+            var buttons = (PlayerButtons)ev.Buttons;
+            
+            // 检查是否按下跳跃键
+            if (buttons.HasFlag(PlayerButtons.Jump))
+            {
+                player.PrintToChat("你按下了跳跃键！");
+            }
+            
+            // 检查是否同时按下蹲下和行走键
+            if (buttons.HasFlag(PlayerButtons.Duck) && buttons.HasFlag(PlayerButtons.Walk))
+            {
+                player.PrintToChat("你正在蹲着行走！");
+            }
+            
+            // 检查是否正在装弹
+            if (buttons.HasFlag(PlayerButtons.Reload))
+            {
+                player.PrintToChat("正在装弹...");
+            }
+            
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 按键组合示例
+
+```csharp
+// 定义常用的按键组合
+public static class ButtonCombos
+{
+    // 静步蹲走
+    public static readonly PlayerButtons SilentWalk = 
+        PlayerButtons.Duck | PlayerButtons.Walk;
+    
+    // 跳蹲
+    public static readonly PlayerButtons JumpCrouch = 
+        PlayerButtons.Jump | PlayerButtons.Duck;
+    
+    // 快速切换武器
+    public static readonly PlayerButtons QuickSwitch = 
+        PlayerButtons.Use | PlayerButtons.Attack2;
+}
+```
+
+## 说明
+
+- 支持位运算操作
+- 可以组合多个按键状态
+- 用于检测玩家输入
+- 可以监听按键事件
+- 支持复杂的按键组合
+
+## 最佳实践
+
+- 使用HasFlag方法检查按键状态
+- 合理处理按键组合
+- 注意按键的持续状态
+- 避免过度频繁的按键检查
+- 考虑按键冲突的情况
+- 提供适当的按键反馈
+- 记录重要的按键操作
+``` 

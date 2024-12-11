@@ -1,0 +1,177 @@
+---
+title: BaseMenu 类
+description: CounterStrikeSharp 菜单模块中的基础菜单类，实现了 IMenu 接口的基本功能
+icon: Menu
+---
+
+# BaseMenu 类
+
+`BaseMenu` 是一个抽象类，实现了 `IMenu` 接口的基本功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Menu
+```
+
+## PostSelectAction 枚举
+
+定义了选择菜单选项后的行为。
+
+```csharp
+public enum PostSelectAction
+{
+    Close,      // 关闭菜单
+    Reset,      // 重置菜单
+    Nothing     // 不做任何操作
+}
+```
+
+## 类定义
+
+```csharp
+public abstract class BaseMenu : IMenu
+{
+    public string Title { get; set; }
+    public List<ChatMenuOption> MenuOptions { get; } = new();
+    public PostSelectAction PostSelectAction { get; set; } = PostSelectAction.Reset;
+    public bool ExitButton { get; set; } = true;
+}
+```
+
+## 构造函数
+
+```csharp
+protected BaseMenu(string title)
+{
+    Title = title;
+}
+```
+
+## 属性
+
+### Title
+
+菜单标题。
+
+```csharp
+public string Title { get; set; }
+```
+
+### MenuOptions
+
+菜单选项列表。
+
+```csharp
+public List<ChatMenuOption> MenuOptions { get; }
+```
+
+### PostSelectAction
+
+选择选项后的行为。
+
+```csharp
+public PostSelectAction PostSelectAction { get; set; }
+```
+
+### ExitButton
+
+是否显示退出按钮。
+
+```csharp
+public bool ExitButton { get; set; }
+```
+
+## 方法
+
+### AddMenuOption
+
+添加菜单选项。
+
+```csharp
+public virtual ChatMenuOption AddMenuOption(
+    string display,
+    Action<CCSPlayerController, ChatMenuOption> onSelect,
+    bool disabled = false
+)
+```
+
+### Open
+
+抽象方法，为指定玩家打开菜单。
+
+```csharp
+public abstract void Open(CCSPlayerController player);
+```
+
+### OpenToAll
+
+为所有玩家打开菜单。
+
+```csharp
+public void OpenToAll()
+```
+
+## ChatMenuOption 类
+
+菜单选项类。
+
+```csharp
+public class ChatMenuOption
+{
+    public string Text { get; set; }
+    public bool Disabled { get; set; }
+    public Action<CCSPlayerController, ChatMenuOption> OnSelect { get; set; }
+}
+```
+
+## BaseMenuInstance 类
+
+基础菜单实例类。
+
+```csharp
+public abstract class BaseMenuInstance : IMenuInstance
+{
+    public virtual int NumPerPage => 6;
+    public bool CloseOnSelect { get; set; } = true;
+    public Stack<int> PrevPageOffsets { get; } = new();
+    public IMenu Menu { get; }
+    public CCSPlayerController Player { get; }
+    public int Page { get; set; }
+    public int CurrentOffset { get; set; }
+}
+```
+
+## 使用示例
+
+```csharp
+public class MyCustomMenu : BaseMenu
+{
+    public MyCustomMenu(string title) : base(title)
+    {
+        // 设置菜单属性
+        PostSelectAction = PostSelectAction.Close;
+        ExitButton = true;
+        
+        // 添加选项
+        AddMenuOption("选项 1", (player, option) => {
+            player.PrintToChat("选择了选项 1");
+        });
+    }
+    
+    public override void Open(CCSPlayerController player)
+    {
+        // 实现打开菜单的逻辑
+        MenuManager.OpenChatMenu(player, this);
+    }
+}
+```
+
+## 说明
+
+- 提供菜单的基本实现
+- 支持自定义选项和行为
+- 支持分页显示
+- 支持禁用选项
+- 支持选择后的行为控制
+- 提供基础的菜单实例管理 

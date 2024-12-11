@@ -1,0 +1,65 @@
+---
+title: TeamExtensions 类
+description: CounterStrikeSharp 团队扩展方法，提供额外的团队相关功能
+icon: Users
+---
+
+# TeamExtensions 类
+
+`TeamExtensions` 类提供了对 `CsTeam` 枚举的扩展方法。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Extensions
+```
+
+## 类定义
+
+```csharp
+public static class TeamExtensions
+```
+
+## 扩展方法
+
+### GetChatColor
+
+获取团队的聊天颜色。
+
+```csharp
+public static char GetChatColor(this CsTeam team)
+```
+
+#### 返回值
+
+返回一个字符，表示团队的聊天颜色代码。
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventRoundStart>((ev, info) =>
+        {
+            // 获取团队颜色
+            var ctColor = CsTeam.CounterTerrorist.GetChatColor();
+            var tColor = CsTeam.Terrorist.GetChatColor();
+            
+            // 使用颜色发送团队消息
+            Server.PrintToChatAll($"{ctColor}反恐精英 vs {tColor}恐怖分子");
+            
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 说明
+
+- 提供团队相关的扩展方法
+- 简化团队颜色处理
+- 支持团队消息格式化
+- 便于团队信息显示
+- 增强团队交互功能 

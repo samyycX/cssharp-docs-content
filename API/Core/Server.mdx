@@ -1,0 +1,187 @@
+---
+title: Server 类
+description: CounterStrikeSharp 中的服务器管理类，提供了服务器相关的功能和操作
+icon: Server
+---
+
+# Server 类
+
+`Server` 类提供了对CS2服务器的基本操作和管理功能，包括命令执行、消息广播、服务器状态查询等。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 类定义
+
+```csharp
+public class Server
+```
+
+## 静态属性
+
+### TickInterval
+
+获取服务器的单个游戏刻的持续时间（以秒为单位）。
+
+```csharp
+public static float TickInterval => 0.015625f;
+```
+
+**说明**: 基于64tick服务器（在CS2中硬编码）。
+
+### MapName
+
+获取当前地图名称。
+
+```csharp
+public static string MapName { get; }
+```
+
+### GameDirectory
+
+获取游戏目录路径。
+
+```csharp
+public static string GameDirectory { get; }
+```
+
+### MaxPlayers
+
+获取服务器最大玩家数。
+
+```csharp
+public static int MaxPlayers { get; }
+```
+
+### TickedTime
+
+获取服务器运行的总时间（以秒为单位）。
+
+```csharp
+public static double TickedTime { get; }
+```
+
+**说明**: 服务器休眠时不会增加。
+
+## 静态方法
+
+### ExecuteCommand
+
+在服务器上执行命令，就像从控制台输入一样。
+
+```csharp
+public static void ExecuteCommand(string command)
+```
+
+### PrintToChatAll
+
+向所有玩家的聊天框发送消息。
+
+```csharp
+public static void PrintToChatAll(string message)
+```
+
+### NextWorldUpdate
+
+在下一个世界更新前执行任务。
+
+```csharp
+public static void NextWorldUpdate(Action task)
+```
+
+**说明**: 即使服务器处于休眠状态也会执行。
+
+### NextWorldUpdateAsync
+
+异步版本的NextWorldUpdate，返回一个在同步任务完成时完成的Task。
+
+```csharp
+public static Task NextWorldUpdateAsync(Action task)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 执行服务器命令
+        Server.ExecuteCommand("mp_friendlyfire 0");
+        
+        // 获取服务器信息
+        Console.WriteLine($"当前地图: {Server.MapName}");
+        Console.WriteLine($"最大玩家数: {Server.MaxPlayers}");
+        Console.WriteLine($"服务器运行时间: {Server.TickedTime}秒");
+        
+        // 向所有玩家发送消息
+        Server.PrintToChatAll("服务器已加载新插件！");
+        
+        // 在下一个世界更新时执行任务
+        Server.NextWorldUpdate(() =>
+        {
+            // 执行需要在世界更新时进行的操作
+            Server.PrintToChatAll("世界更新已完成");
+        });
+        
+        // 异步执行任务
+        await Server.NextWorldUpdateAsync(() =>
+        {
+            // 执行异步任务
+            Server.PrintToChatAll("异步任务已完成");
+        });
+    }
+}
+```
+
+## 事件监听
+
+服务器相关的事件监听示例：
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterListener<Listeners.OnServerPreWorldUpdate>((simulating) =>
+        {
+            if (simulating)
+            {
+                Console.WriteLine("服务器正在模拟世界更新");
+            }
+        });
+        
+        RegisterListener<Listeners.OnHostNameChanged>((hostname) =>
+        {
+            Console.WriteLine($"服务器主机名已更改为: {hostname}");
+        });
+        
+        RegisterListener<Listeners.OnServerPreFatalShutdown>(() =>
+        {
+            Console.WriteLine("服务器即将关闭");
+        });
+    }
+}
+```
+
+## 说明
+
+- 提供服务器基本信息的访问
+- 支持服务器命令执行
+- 提供全局消息广播功能
+- 支持世界更新任务调度
+- 提供服务器事件监听
+- 支持同步和异步操���
+
+## 最佳实践
+
+- 谨慎使用服务器命令
+- 合理控制消息广播频率
+- 正确处理异步任务
+- 注意服务器性能影响
+- 合理使用事件监听
+- 避免过度频繁的操作
+- 注意服务器状态检查 

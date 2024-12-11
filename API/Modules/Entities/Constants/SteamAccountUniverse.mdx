@@ -1,0 +1,131 @@
+---
+title: SteamAccountUniverse 枚举
+description: CounterStrikeSharp Steam 账号宇宙枚举，定义了 Steam 账号所属的不同网络环境
+icon: Globe
+---
+
+# SteamAccountUniverse 枚举
+
+`SteamAccountUniverse` 枚举定义了 Steam 账号所属的不同网络环境或"宇宙"。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Entities.Constants
+```
+
+## 枚举定义
+
+```csharp
+public enum SteamAccountUniverse
+```
+
+## 枚举值
+
+### Invalid
+无效的宇宙。
+```csharp
+Invalid = 0
+```
+
+### Public
+公共网络（标准 Steam 网络）。
+```csharp
+Public = 1
+```
+
+### Beta
+测试网络。
+```csharp
+Beta = 2
+```
+
+### Internal
+内部网络。
+```csharp
+Internal = 3
+```
+
+### Dev
+开发网络。
+```csharp
+Dev = 4
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 注册玩家连接事件处理器
+        RegisterEventHandler<EventPlayerConnected>((ev, info) =>
+        {
+            var player = ev.Userid;
+            var steamId = player.SteamID;
+            
+            // 检查账号所属网络
+            var universe = GetSteamUniverse(steamId);
+            switch (universe)
+            {
+                case SteamAccountUniverse.Public:
+                    Console.WriteLine($"玩家 {player.PlayerName} 来自公共 Steam 网络");
+                    break;
+                    
+                case SteamAccountUniverse.Beta:
+                    Console.WriteLine($"玩家 {player.PlayerName} 来自测试网络");
+                    break;
+                    
+                case SteamAccountUniverse.Invalid:
+                    Console.WriteLine($"玩家 {player.PlayerName} 的网络环境无效");
+                    player.Kick("无效的 Steam 网络");
+                    break;
+            }
+            
+            return HookResult.Continue;
+        });
+    }
+    
+    private SteamAccountUniverse GetSteamUniverse(SteamID steamId)
+    {
+        // 这里是示例，实际实现可能不同
+        return SteamAccountUniverse.Public;
+    }
+}
+```
+
+## 网络验证示例
+
+```csharp
+public void ValidatePlayerNetwork(CCSPlayerController player)
+{
+    var steamId = player.SteamID;
+    var universe = GetSteamUniverse(steamId);
+    
+    // 只允许公共网络和内部网络的玩家
+    if (universe != SteamAccountUniverse.Public && 
+        universe != SteamAccountUniverse.Internal)
+    {
+        player.Kick("不支持的 Steam 网络");
+        return;
+    }
+    
+    // 对于内部网络玩家进行额外验证
+    if (universe == SteamAccountUniverse.Internal)
+    {
+        // 进行额外的验证逻辑
+        ValidateInternalNetworkAccess(steamId);
+    }
+}
+```
+
+## 说明
+
+- 定义 Steam 网络环境
+- 用于网络验证和管理
+- 支持多种网络类型
+- 包含特殊网络环境
+- 用于访问控制
+- 支持网络环境判断
+- 便于网络管理 

@@ -1,0 +1,32 @@
+---
+title: AttachmentHandle_t 结构
+description: CounterStrikeSharp 工具模块中的附件句柄结构
+icon: Tool
+---
+
+# AttachmentHandle_t 结构
+
+`AttachmentHandle_t` 结构用于表示游戏中实体附件的句柄。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 结构定义
+
+```csharp
+public struct AttachmentHandle_t
+{
+    public ushort Value { get; set; }  // 附件句柄值
+}
+```
+
+## 说明
+
+- 用于标识和引用实体的附件点
+- 句柄值为无符号16位整数
+- 通常用于处理模型附件和特效挂载点
+- 是一个轻量级的值类型结构
+``` 

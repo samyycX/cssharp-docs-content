@@ -1,0 +1,168 @@
+---
+title: SteamAccountType 枚举
+description: CounterStrikeSharp Steam 账号类型枚举，定义了不同类型的 Steam 账号
+icon: User
+---
+
+# SteamAccountType 枚举
+
+`SteamAccountType` 枚举定义了不同类型的 Steam 账号。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Entities.Constants
+```
+
+## 枚举定义
+
+```csharp
+public enum SteamAccountType
+```
+
+## 枚举值
+
+### Invalid
+无效账号。
+```csharp
+Invalid = 0
+```
+
+### Individual
+个人账号。
+```csharp
+Individual = 1
+```
+
+### Multiseat
+多用户账号。
+```csharp
+Multiseat = 2
+```
+
+### GameServer
+游戏服务器账号。
+```csharp
+GameServer = 3
+```
+
+### AnonGameServer
+匿名游戏服务器账号。
+```csharp
+AnonGameServer = 4
+```
+
+### Pending
+待定账号。
+```csharp
+Pending = 5
+```
+
+### ContentServer
+内容服务器账号。
+```csharp
+ContentServer = 6
+```
+
+### Clan
+群组账号。
+```csharp
+Clan = 7
+```
+
+### Chat
+聊天账号。
+```csharp
+Chat = 8
+```
+
+### ConsoleUser
+控制台用户账号。
+```csharp
+ConsoleUser = 9
+```
+
+### AnonUser
+匿名用户账号。
+```csharp
+AnonUser = 10
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 注册玩家连接事件处理器
+        RegisterEventHandler<EventPlayerConnected>((ev, info) =>
+        {
+            var player = ev.Userid;
+            var steamId = player.SteamID;
+            
+            // 检查账号类型
+            var accountType = GetAccountType(steamId);
+            switch (accountType)
+            {
+                case SteamAccountType.Individual:
+                    Console.WriteLine($"玩家 {player.PlayerName} 使用个人账号");
+                    break;
+                    
+                case SteamAccountType.AnonUser:
+                    Console.WriteLine($"玩家 {player.PlayerName} 使用匿名账号");
+                    break;
+                    
+                case SteamAccountType.Invalid:
+                    Console.WriteLine($"玩家 {player.PlayerName} 的账号无效");
+                    // 可能需要踢出玩家
+                    player.Kick("无效的 Steam 账号");
+                    break;
+            }
+            
+            return HookResult.Continue;
+        });
+    }
+    
+    private SteamAccountType GetAccountType(SteamID steamId)
+    {
+        // 这里是示例，实际实现可能不同
+        return SteamAccountType.Individual;
+    }
+}
+```
+
+## 账号验证示例
+
+```csharp
+public void ValidatePlayer(CCSPlayerController player)
+{
+    var steamId = player.SteamID;
+    var accountType = GetAccountType(steamId);
+    
+    // 只允许个人账号和游戏服务器账号
+    if (accountType != SteamAccountType.Individual && 
+        accountType != SteamAccountType.GameServer)
+    {
+        player.Kick("不支持的账号类型");
+        return;
+    }
+    
+    // 对于个人账号进行额外验证
+    if (accountType == SteamAccountType.Individual)
+    {
+        // 进行额外的验证逻辑
+        ValidateIndividualAccount(steamId);
+    }
+}
+```
+
+## 说明
+
+- 定义 Steam 账号类型
+- 用于账号验证和管理
+- 支持多种账号类别
+- 包含特殊账号类型
+- 用于权限控制
+- 支持账号类型判断
+- 便于账号管理 

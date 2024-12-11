@@ -1,0 +1,82 @@
+---
+title: IPluginContext 接口
+description: CounterStrikeSharp 插件上下文接口，定义了插件运行时的上下文信息
+icon: Box
+---
+
+# IPluginContext 接口
+
+`IPluginContext` 接口定义了插件运行时的上下文信息，提供了插件的基本信息和状态。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Plugin
+```
+
+## 接口定义
+
+```csharp
+public interface IPluginContext
+```
+
+## 属性
+
+### Plugin
+
+获取插件实例。
+
+```csharp
+IPlugin Plugin { get; }
+```
+
+### State
+
+获取插件状态。
+
+```csharp
+PluginState State { get; }
+```
+
+### WorkingDirectory
+
+获取插件的工作目录。
+
+```csharp
+string WorkingDirectory { get; }
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private readonly IPluginContext _context;
+
+    public MyPlugin(IPluginContext context)
+    {
+        _context = context;
+    }
+
+    public override void Load(bool hotReload)
+    {
+        // 使用插件上下文
+        Console.WriteLine($"插件状态: {_context.State}");
+        Console.WriteLine($"工作目录: {_context.WorkingDirectory}");
+        
+        // 检查插件状态
+        if (_context.State == PluginState.Loaded)
+        {
+            // 执行加载后的操作
+        }
+    }
+}
+```
+
+## 说明
+
+- 提供插件的运行时信息
+- 访问插件的当前状态
+- 获取插件的工作目录
+- 通过依赖注入使用
+- 用于插件生命周期管理 

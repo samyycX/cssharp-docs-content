@@ -1,0 +1,70 @@
+---
+title: ResourceManifest 类
+description: CounterStrikeSharp 工具模块中的资源清单类
+icon: Tool
+---
+
+# ResourceManifest 类
+
+`ResourceManifest` 类用于管理和追踪游戏资源。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Utils
+```
+
+## 类定义
+
+```csharp
+public class ResourceManifest
+{
+    public List<string> Resources { get; }  // 资源列表
+}
+```
+
+## 构造函数
+
+```csharp
+public ResourceManifest()  // 创建一个空的资源清单
+```
+
+## 主要方法
+
+```csharp
+public void AddResource(string resourcePath)  // 添加资源
+public void AddResources(IEnumerable<string> resourcePaths)  // 添加多个资源
+public void RemoveResource(string resourcePath)  // 移除资源
+public void Clear()  // 清空资源列表
+public bool Contains(string resourcePath)  // 检查资源是否存在
+```
+
+## 使用示例
+
+```csharp
+// 创建资源清单
+var manifest = new ResourceManifest();
+
+// 添加资源
+manifest.AddResource("path/to/model.mdl");
+manifest.AddResource("path/to/sound.wav");
+
+// 检查资源是否存在
+if (manifest.Contains("path/to/model.mdl"))
+{
+    // 资源存在的处理逻辑
+}
+
+// 移除资源
+manifest.RemoveResource("path/to/sound.wav");
+```
+
+## 说明
+
+- 用于管理游戏资源的引用
+- 支持多种资源类型的追踪
+- 提供资源的添加和移除功能
+- 可以检查资源的存在性
+- 适用于模型、声音等资源管理
+- 帮助维护资源的完整性
+- 提供了资源生命周期管理

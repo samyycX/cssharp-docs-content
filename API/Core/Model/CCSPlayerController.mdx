@@ -1,0 +1,267 @@
+---
+title: CCSPlayerController 类
+description: CounterStrikeSharp 中表示玩家控制器的核心类，提供了与玩家交互和控制的功能
+icon: User
+---
+
+# CCSPlayerController 类
+
+`CCSPlayerController` 是表示CS2玩家控制器的核心类，提供了与玩家交互、控制和管理的各种功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## 类定义
+
+```csharp
+public partial class CCSPlayerController
+```
+
+## 属性
+
+### UserId
+
+获取玩家的唯一标识符。
+
+```csharp
+public int? UserId { get; }
+```
+
+### Team
+
+获取玩家所在的队伍。
+
+```csharp
+public CsTeam Team { get; }
+```
+
+### IsBot
+
+判断玩家是否为机器人。
+
+```csharp
+public bool IsBot { get; }
+```
+
+### Buttons
+
+获取玩家当前按下的按键状态。
+
+```csharp
+public PlayerButtons Buttons { get; }
+```
+
+## 方法
+
+### 物品管理
+
+#### GiveNamedItem
+
+给予玩家指定的物品。
+
+```csharp
+public IntPtr GiveNamedItem(string item)
+public T? GiveNamedItem<T>(string item) where T : CEntityInstance
+public IntPtr GiveNamedItem(CsItem item)
+```
+
+#### DropActiveWeapon
+
+丢弃玩家当前持有的武器。
+
+```csharp
+public void DropActiveWeapon()
+```
+
+#### RemoveWeapons
+
+移除玩家的所有武器。
+
+```csharp
+public void RemoveWeapons()
+```
+
+### 消息显示
+
+#### PrintToConsole
+
+向玩家的控制台打印消息。
+
+```csharp
+public void PrintToConsole(string message)
+```
+
+#### PrintToChat
+
+向玩家的聊天框发送消息。
+
+```csharp
+public void PrintToChat(string message)
+```
+
+#### PrintToCenter
+
+在玩家屏幕中央显示消息。
+
+```csharp
+public void PrintToCenter(string message)
+```
+
+#### PrintToCenterAlert
+
+在玩家屏幕中央显示警告消息。
+
+```csharp
+public void PrintToCenterAlert(string message)
+```
+
+#### PrintToCenterHtml
+
+在玩家屏幕中央显示HTML格式的消息。
+
+```csharp
+public void PrintToCenterHtml(string message)
+public void PrintToCenterHtml(string message, int duration)
+```
+
+### 玩家控制
+
+#### CommitSuicide
+
+使玩家自杀。
+
+```csharp
+public void CommitSuicide(bool explode, bool force)
+```
+
+#### Respawn
+
+使玩家重生。
+
+```csharp
+public void Respawn()
+```
+
+#### SwitchTeam
+
+强制切换玩家队伍（保持存活和武器）。
+
+```csharp
+public void SwitchTeam(CsTeam team)
+```
+
+#### ChangeTeam
+
+切换玩家队伍（遵循游戏规则）。
+
+```csharp
+public void ChangeTeam(CsTeam team)
+```
+
+### ConVar 管理
+
+#### GetConVarValue
+
+获取玩家的ConVar值。
+
+```csharp
+public string GetConVarValue(string conVar)
+public string GetConVarValue(ConVar? conVar)
+```
+
+#### SetFakeClientConVar
+
+设置机器人的ConVar值。
+
+```csharp
+public void SetFakeClientConVar(string conVar, string value)
+public void SetFakeClientConVar(ConVar conVar, string value)
+```
+
+### 命令和断开连接
+
+#### ExecuteClientCommand
+
+执行客户端命令。
+
+```csharp
+public void ExecuteClientCommand(string command)
+```
+
+#### Disconnect
+
+使玩家断开连接。
+
+```csharp
+public void Disconnect(NetworkDisconnectionReason reason)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventPlayerDeath>((ev, info) =>
+        {
+            var victim = ev.Userid;
+            var attacker = ev.Attacker;
+
+            // 向被击杀者发送消息
+            victim.PrintToChat($"你被 {attacker?.PlayerName ?? "未知"} 击杀了！");
+
+            // 给击杀者一些奖励
+            if (attacker != null && attacker.IsValid)
+            {
+                // 给予物品
+                attacker.GiveNamedItem("weapon_awp");
+                
+                // 显示消息
+                attacker.PrintToCenterHtml("<font color='red'>干得好！</font>", 3);
+            }
+
+            return HookResult.Continue;
+        });
+
+        RegisterListener<Listeners.OnClientConnected>((player) =>
+        {
+            if (!player.IsBot)
+            {
+                // 欢迎消息
+                player.PrintToChat("欢迎来到服务器！");
+                
+                // 检查客户端设置
+                var rate = player.GetConVarValue("rate");
+                if (int.Parse(rate) < 128000)
+                {
+                    player.PrintToConsole("建议提高您的rate值以获得更好的游戏体验");
+                }
+            }
+        });
+    }
+}
+```
+
+## 说明
+
+- 所有方法在使用前都会检查实体是否有效
+- 部分方法需要玩家的Pawn（角色实体）存在
+- 消息显示方法支持多种显示位置和格式
+- 团队切换有两种模式：保持状态和遵循规则
+- 支持机器人特定的操作和设置
+- 提供完整的物品和武器管理功能
+- 支持客户端命令和ConVar管理
+
+## 最佳实践
+
+- 在使用任何方法前检查玩家是否有效
+- 合理使用不同的消息显示方式
+- 注意团队切换方法的区别
+- 谨慎使用强制操作（如强制自杀）
+- 合理处理机器人和真实玩家的区别
+- 使用适当的错误处理机制
+- 避免频繁发送消息或执行命令 

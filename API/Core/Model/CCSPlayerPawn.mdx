@@ -1,0 +1,71 @@
+---
+title: CCSPlayerPawn 类
+description: CounterStrikeSharp 中表示玩家实体（Pawn）的类，提供了玩家实体相关的功能
+icon: User
+---
+
+# CCSPlayerPawn 类
+
+`CCSPlayerPawn` 是表示CS2玩家实体（Pawn）的类，它代表了玩家在游戏世界中的物理实体。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
+
+## 类定义
+
+```csharp
+public partial class CCSPlayerPawn
+```
+
+## 方法
+
+### Respawn
+
+[已过时] 使玩家重生。请使用 `CCSPlayerController.Respawn()` 代替。
+
+```csharp
+[Obsolete("Use CCSPlayerController.Respawn() instead")]
+public void Respawn()
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventPlayerDeath>((ev, info) =>
+        {
+            var victim = ev.Userid;
+            
+            // 不推荐的方式（已过时）
+            victim.PlayerPawn.Value?.Respawn();
+            
+            // 推荐的方式
+            victim.Respawn();
+            
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 说明
+
+- 此类表示玩家在游戏世界中的物理实体
+- 包含玩家的位置、朝向、生命值等物理属性
+- 通常通过 `CCSPlayerController.PlayerPawn.Value` 访问
+- 部分功能已迁移到 `CCSPlayerController` 类
+- 建议使用 `CCSPlayerController` 类中的方法而不是直接操作 Pawn
+
+## 最佳实践
+
+- 避免使用已过时的方法
+- 优先使用 `CCSPlayerController` 类中的方法
+- 在访问 Pawn 之前检查其有效性
+- 注意 Pawn 可能在某些情况下不存在（如玩家死亡时）
+- 使用正确的类型转换和空值检查 

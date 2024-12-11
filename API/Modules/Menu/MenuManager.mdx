@@ -1,0 +1,164 @@
+---
+title: MenuManager 类
+description: CounterStrikeSharp 菜单模块中的菜单管理器类，提供菜单实例的管理和操作功能
+icon: Settings
+---
+
+# MenuManager 类
+
+`MenuManager` 是一个静态类，用于管理和操作菜单实例。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Menu
+```
+
+## 类定义
+
+```csharp
+public static class MenuManager
+{
+    private static readonly Dictionary<IntPtr, IMenuInstance> ActiveMenus = new();
+}
+```
+
+## 方法
+
+### GetActiveMenus
+
+获取所有活动菜单实例。
+
+```csharp
+public static Dictionary<IntPtr, IMenuInstance> GetActiveMenus()
+```
+
+返回值：包含所有活动菜单实例的字典。
+
+### GetActiveMenu
+
+获取指定玩家的活动菜单实例。
+
+```csharp
+public static IMenuInstance? GetActiveMenu(CCSPlayerController player)
+```
+
+参数：
+- `player`: 玩家控制器
+
+返回值：玩家的活动菜单实例，如果没有则返回 `null`。
+
+### CloseActiveMenu
+
+关闭指定玩家的活动菜单。
+
+```csharp
+public static void CloseActiveMenu(CCSPlayerController player)
+```
+
+参数：
+- `player`: 玩家控制��
+
+### OpenChatMenu
+
+为玩家打开聊天菜单。
+
+```csharp
+public static void OpenChatMenu(CCSPlayerController player, ChatMenu menu)
+```
+
+参数：
+- `player`: 玩家控制器
+- `menu`: 聊天菜单实例
+
+### OpenCenterHtmlMenu
+
+为玩家打开中心 HTML 菜单。
+
+```csharp
+public static void OpenCenterHtmlMenu(BasePlugin plugin, CCSPlayerController player, CenterHtmlMenu menu)
+```
+
+参数：
+- `plugin`: 插件实例
+- `player`: 玩家控制器
+- `menu`: 中心 HTML 菜单实例
+
+### OpenConsoleMenu
+
+为玩家打开控制台菜单。
+
+```csharp
+public static void OpenConsoleMenu(CCSPlayerController player, ConsoleMenu menu)
+```
+
+参数：
+- `player`: 玩家控制器
+- `menu`: 控制台菜单实例
+
+### OnKeyPress
+
+处理玩家的按键事件。
+
+```csharp
+public static void OnKeyPress(CCSPlayerController player, int key)
+```
+
+参数：
+- `player`: 玩家控制器
+- `key`: 按键代码
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 创建菜单
+        var chatMenu = new ChatMenu("聊天菜单");
+        var htmlMenu = new CenterHtmlMenu("HTML 菜单");
+        var consoleMenu = new ConsoleMenu("控制台菜单");
+        
+        // 添加菜单选项
+        chatMenu.AddMenuOption("选项 1", (player, option) => {
+            // 处理选项
+        });
+        
+        // 注册事件处理器
+        RegisterEventHandler<EventPlayerConnected>((ev, info) => {
+            var player = ev.Userid;
+            
+            // 打开不同类型的菜单
+            MenuManager.OpenChatMenu(player, chatMenu);
+            MenuManager.OpenCenterHtmlMenu(this, player, htmlMenu);
+            MenuManager.OpenConsoleMenu(player, consoleMenu);
+            
+            return HookResult.Continue;
+        });
+        
+        // 检查玩家的活动菜单
+        RegisterListener<Listeners.OnTick>(() => {
+            foreach (var player in Utilities.GetPlayers())
+            {
+                var activeMenu = MenuManager.GetActiveMenu(player);
+                if (activeMenu != null)
+                {
+                    // 处理活动菜单
+                }
+            }
+        });
+    }
+}
+```
+
+## 说明
+
+- 管理所有类型的菜单实例
+- 支持多种菜单类型
+- 自动处理菜单切换
+- 管理玩家的活动菜单
+- 处理按键事件
+- 提供菜单状态查询
+- 支持菜单的打开和关闭
+- 确保每个玩家只有一个活动菜单 

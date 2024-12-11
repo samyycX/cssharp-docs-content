@@ -1,0 +1,214 @@
+---
+title: AdminManager 类
+description: CounterStrikeSharp 中的管理员系统管理类，提供了管理员权限和组管理功能
+icon: Shield
+---
+
+# AdminManager 类
+
+`AdminManager` 是CounterStrikeSharp的管理员系统核心类，提供了管理员权限管理、组管理和权限检查等功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Admin
+```
+
+## 类定义
+
+```csharp
+public static partial class AdminManager
+```
+
+## 主要功能
+
+### 管理员数据管理
+
+#### LoadAdminData
+
+加载管理员数据。
+
+```csharp
+public static void LoadAdminData(string adminDataPath)
+```
+
+**说明**: 从指定路径加载管理员配置文件（通常是 `configs/admins.json`）。
+
+#### GetPlayerAdminData
+
+获取玩家的管理员数据。
+
+```csharp
+public static AdminData? GetPlayerAdminData(CCSPlayerController? player)
+public static AdminData? GetPlayerAdminData(SteamID? steamId)
+```
+
+#### RemovePlayerAdminData
+
+移除玩家的管理员数据。
+
+```csharp
+public static void RemovePlayerAdminData(CCSPlayerController? player)
+public static void RemovePlayerAdminData(SteamID? steamId)
+```
+
+### 权限管理
+
+#### AddPlayerPermissions
+
+临时添加玩家权限标志。
+
+```csharp
+public static void AddPlayerPermissions(CCSPlayerController? player, params string[] flags)
+public static void AddPlayerPermissions(SteamID? steamId, params string[] flags)
+```
+
+#### RemovePlayerPermissions
+
+移除玩家权限标志。
+
+```csharp
+public static void RemovePlayerPermissions(CCSPlayerController? player, params string[] flags)
+public static void RemovePlayerPermissions(SteamID? steamId, params string[] flags)
+```
+
+### 权限检查
+
+#### PlayerHasPermissions
+
+检查玩家是否拥有指定权限。
+
+```csharp
+public static bool PlayerHasPermissions(CCSPlayerController? player, params string[] permissions)
+```
+
+#### PlayerInGroup
+
+检查玩家是否在指定组中。
+
+```csharp
+public static bool PlayerInGroup(CCSPlayerController? player, params string[] groups)
+```
+
+## 数据结构
+
+### AdminData
+
+```csharp
+public class AdminData
+{
+    public string Identity { get; init; }
+    public HashSet<string> Groups { get; init; }
+    public uint Immunity { get; set; }
+    public Dictionary<string, bool> CommandOverrides { get; init; }
+}
+```
+
+### AdminGroupData
+
+```csharp
+public class AdminGroupData
+{
+    public HashSet<string> Flags { get; init; }
+    public uint Immunity { get; set; }
+    public Dictionary<string, bool> CommandOverrides { get; init; }
+}
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 检查玩家权限
+        RegisterListener<Listeners.OnClientAuthorized>((slot, steamId) =>
+        {
+            var player = Utilities.GetPlayerFromSlot(slot);
+            if (player == null) return;
+            
+            // 检查玩家是否有管理员权限
+            if (AdminManager.PlayerHasPermissions(player, "@css/generic"))
+            {
+                player.PrintToChat("欢迎管理员！");
+            }
+            
+            // 检查玩家是否在VIP组
+            if (AdminManager.PlayerInGroup(player, "@vip"))
+            {
+                player.PrintToChat("欢迎VIP玩家！");
+            }
+        });
+        
+        // 添加临时权限
+        AddCommand("givetemp", "给予临时权限", (player, info) =>
+        {
+            if (info.ArgCount < 2) return;
+            
+            var targetPlayer = info.GetArg(1);
+            if (targetPlayer != null)
+            {
+                AdminManager.AddPlayerPermissions(targetPlayer, "@css/kick");
+                player.PrintToChat($"已给予 {targetPlayer.PlayerName} 临时踢人权限");
+            }
+        });
+    }
+}
+```
+
+## 配置文件示例
+
+### admins.json
+
+```json
+{
+  "STEAM_1:1:12345678": {
+    "identity": "76561198012345678",
+    "flags": ["@css/generic", "@css/kick", "@css/ban"],
+    "immunity": 100,
+    "groups": ["admin", "vip"],
+    "command_overrides": {
+      "sm_kick": true,
+      "sm_ban": false
+    }
+  }
+}
+```
+
+### admin_groups.json
+
+```json
+{
+  "admin": {
+    "flags": ["@css/generic", "@css/rcon"],
+    "immunity": 50,
+    "command_overrides": {
+      "sm_map": true
+    }
+  },
+  "vip": {
+    "flags": ["@vip/reserved"],
+    "immunity": 10
+  }
+}
+```
+
+## 说明
+
+- 支持基于Steam ID的权限管理
+- 提供分组功能，方便批量管理权限
+- 支持权限继承和覆盖
+- 可以动态修改权限
+- 支持命令覆盖系统
+- 提供免疫等级系统
+
+## 最佳实践
+
+- 使用合适的权限标志命名规范
+- 合理设置免疫等级
+- 定期备份管理员配置文件
+- 使用组来管理相似的权限
+- 谨慎使用命令覆盖
+- 注意权限的层级关系
+- 及时清理临时权限 

@@ -1,0 +1,100 @@
+---
+title: IPlayerLanguageManager 接口
+description: CounterStrikeSharp 玩家语言管理接口，用于管理玩家的语言偏好设置
+icon: Globe
+---
+
+# IPlayerLanguageManager 接口
+
+`IPlayerLanguageManager` 接口定义了管理玩家语言偏好的功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Translations
+```
+
+## 接口定义
+
+```csharp
+public interface IPlayerLanguageManager
+```
+
+## 方法
+
+### GetLanguage
+
+获取指定玩家的语言代码。
+
+```csharp
+string GetLanguage(CCSPlayerController player)
+```
+
+#### 参数
+
+- `player`: `CCSPlayerController` - 玩家控制器实例
+
+#### 返回值
+
+- `string` - 玩家的语言代码（例如："en", "zh-CN"）
+
+### SetLanguage
+
+设置玩家的语言偏好。
+
+```csharp
+void SetLanguage(CCSPlayerController player, string language)
+```
+
+#### 参数
+
+- `player`: `CCSPlayerController` - 玩家控制器实例
+- `language`: `string` - 语言代码
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    private readonly IPlayerLanguageManager _languageManager;
+
+    public MyPlugin(IPlayerLanguageManager languageManager)
+    {
+        _languageManager = languageManager;
+    }
+
+    public override void Load(bool hotReload)
+    {
+        RegisterListener<Listeners.OnClientConnected>((player) =>
+        {
+            if (player == null) return;
+
+            // 获取玩家语言
+            var language = _languageManager.GetLanguage(player);
+            Console.WriteLine($"玩家 {player.PlayerName} 的语言是: {language}");
+
+            // 设置玩家语言
+            _languageManager.SetLanguage(player, "zh-CN");
+        });
+
+        AddCommand("setlang", "设置语言", (player, info) =>
+        {
+            if (player == null) return;
+            if (info.ArgCount < 2) return;
+
+            var lang = info.GetArg(1);
+            _languageManager.SetLanguage(player, lang);
+            player.PrintToChat($"你的语言已设置为: {lang}");
+        });
+    }
+}
+```
+
+## 说明
+
+- 管理玩家的语言偏好设置
+- 支持多语言切换
+- 与本地化系统集成
+- 持久化玩家语言选择
+- 支持动态语言切换
+- 便于国际化支持

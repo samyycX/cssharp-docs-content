@@ -1,0 +1,78 @@
+---
+title: Addresses 类
+description: CounterStrikeSharp 内存模块中的地址类，提供游戏关键模块的路径信息
+icon: File
+---
+
+# Addresses 类
+
+`Addresses` 类提供了 CS2 游戏关键模块的文件路径信息。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Memory
+```
+
+## 类定义
+
+```csharp
+public class Addresses
+{
+    public static string EnginePath { get; }
+    public static string Tier0Path { get; }
+    public static string ServerPath { get; }
+    public static string SchemaSystemPath { get; }
+    public static string VScriptPath { get; }
+}
+```
+
+## 属性
+
+### EnginePath
+
+获取 CS2 引擎模块的路径。
+
+```csharp
+public static string EnginePath
+```
+
+### Tier0Path
+
+获取 Tier0 模块的路径。
+
+```csharp
+public static string Tier0Path
+```
+
+### ServerPath
+
+获取服务器模块的路径。
+
+```csharp
+public static string ServerPath
+```
+
+### SchemaSystemPath
+
+获取架构系统模块的路径。
+
+```csharp
+public static string SchemaSystemPath
+```
+
+### VScriptPath
+
+获取 VScript 模块的路径。
+
+```csharp
+public static string VScriptPath
+```
+
+## 说明
+
+- 所有路径都是根据游戏目录动态生成的
+- 路径包含了适当的前缀和后缀
+- 用于内存操作和模块加载
+- 支持跨平台路径处理
+- 提供关键系统模块的访问 

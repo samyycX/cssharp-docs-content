@@ -1,0 +1,107 @@
+---
+title: VoiceFlags 枚举
+description: CounterStrikeSharp 中表示语音通信标志的枚举
+icon: Mic
+---
+
+# VoiceFlags 枚举
+
+`VoiceFlags` 是一个标记枚举（Flags Enum），用于控制玩家的语音通信权限和行为。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 枚举定义
+
+```csharp
+[Flags]
+public enum VoiceFlags : Byte
+```
+
+## 枚举值
+
+### VoiceFlags
+
+- `Normal` = 0 - 正常语音状态
+- `Muted` = (1 << 0) - 玩家被禁言
+- `All` = (1 << 1) - 可以对所有人说话
+- `ListenAll` = (1 << 2) - 可以听到所有人的语音
+- `Team` = (1 << 3) - 可以对队伍说话
+- `ListenTeam` = (1 << 4) - 可以听到队伍的语音
+
+### ListenOverride
+
+```csharp
+public enum ListenOverride
+{
+    Default = 0,  // 默认语音设置
+    Mute,         // 强制禁言
+    Hear          // 强制收听
+}
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventPlayerConnected>((ev, info) =>
+        {
+            var player = ev.Userid;
+            
+            // 设置玩家的语音标志
+            player.VoiceFlags = VoiceFlags.Team | VoiceFlags.ListenTeam;
+            
+            // 检查玩家是否被禁言
+            if (player.VoiceFlags.HasFlag(VoiceFlags.Muted))
+            {
+                player.PrintToChat("你已被禁言");
+            }
+            
+            // 允许玩家听到所有人的语音
+            player.VoiceFlags |= VoiceFlags.ListenAll;
+            
+            // 移除全队语音权限
+            player.VoiceFlags &= ~VoiceFlags.Team;
+            
+            return HookResult.Continue;
+        });
+        
+        // 使用ListenOverride
+        AddCommand("muteplayer", "禁言玩家", (player, info) =>
+        {
+            if (info.ArgCount < 2) return;
+            
+            var targetPlayer = info.GetArg(1);
+            if (targetPlayer != null)
+            {
+                // 设置强制禁言
+                player.SetListenOverride(targetPlayer, ListenOverride.Mute);
+            }
+        });
+    }
+}
+```
+
+## 说明
+
+- VoiceFlags 控制玩家的语音通信权限
+- 可以组合多个标志来创建复杂的语音权限
+- ListenOverride 提供了额外的语音控制选项
+- 标志可以动态修改
+- 影响玩家间的语音交流
+
+## 最佳实践
+
+- 合理使用语音权限控制
+- 注意团队语音和全局语音���区别
+- 使用 `HasFlag` 方法检查语音状态
+- 在修改语音权限时通知玩家
+- 考虑游戏平衡和公平性
+- 提供适当的命令来管理语音权限
+- 记录语音权限的变更 
