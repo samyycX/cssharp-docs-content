@@ -1,0 +1,158 @@
+---
+title: CommandManager 类
+description: CounterStrikeSharp 命令系统的核心实现，负责管理和执行服务器命令
+icon: Terminal
+---
+
+# CommandManager 类
+
+`CommandManager` 类是命令系统的核心实现，负责管理命令的注册、移除和执行。它实现了 `ICommandManager` 接口，并提供了完整的命令管理功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Commands
+```
+
+## 类定义
+
+```csharp
+public class CommandManager : ICommandManager
+```
+
+## 构造函数
+
+### CommandManager
+
+创建一个新的命令管理器实例。
+
+```csharp
+public CommandManager(ILogger<CommandManager> logger)
+```
+
+#### 参数
+
+- `logger`: `ILogger<CommandManager>` - 用于记录命令相关日志的日志记录器
+
+## 实现的接口方法
+
+### RegisterCommand
+
+注册一个新的服务器命令。
+
+```csharp
+public void RegisterCommand(CommandDefinition definition)
+```
+
+#### 参数
+
+- `definition`: `CommandDefinition` - 要注册的命令定义
+
+#### 说明
+
+- 如果命令名称不存在，会创建新的命令列表
+- 支持同名命令的多个实现
+- 命令注册���立即生效
+- 命令会被添加到游戏的控制台系统中
+
+### RemoveCommand
+
+移除一个已注册的服务器命令。
+
+```csharp
+public void RemoveCommand(CommandDefinition definition)
+```
+
+#### 参数
+
+- `definition`: `CommandDefinition` - 要移除的命令定义
+
+#### 说明
+
+- 从命令列表中移除指定的命令定义
+- 如果是最后一个同名命令，会从游戏系统中完全移除该命令
+- 移除后命令立即失效
+
+## 内部实现细节
+
+### 命令执行流程
+
+1. 命令接收
+   - 处理来自玩家或服务器的命令
+   - 解析命令参数和上下文
+
+2. 权限检查
+   - 检查命令执行者的权限
+   - 支持权限覆盖系统
+   - 验证命令使用权限（服务器/客户端限制）
+
+3. 参数验证
+   - 检查最小参数要求
+   - 验证命令使用格式
+
+4. 命令执行
+   - 调用注册的命令回调
+   - 处理命令执行结果
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 注册一个基本命令
+        var simpleCommand = new CommandDefinition
+        {
+            Name = "hello",
+            Description = "简单的问候命令",
+            Callback = (player, info) =>
+            {
+                info.ReplyToCommand("你好！");
+                return HookResult.Continue;
+            }
+        };
+        CommandManager.RegisterCommand(simpleCommand);
+
+        // 注册一个需要权限的命令
+        var adminCommand = new CommandDefinition
+        {
+            Name = "kick",
+            Description = "踢出玩家",
+            Callback = (player, info) =>
+            {
+                if (info.ArgCount < 2)
+                {
+                    info.ReplyToCommand("用法: !kick <玩家名称>");
+                    return HookResult.Continue;
+                }
+                // 实现踢出逻辑
+                return HookResult.Continue;
+            },
+            ExecutableBy = CommandUsage.CLIENT_ONLY,
+            MinArgs = 2,
+            UsageHint = "!kick <玩家名称>"
+        };
+        CommandManager.RegisterCommand(adminCommand);
+    }
+
+    public override void Unload(bool hotReload)
+    {
+        // 在插件卸载时移除命令
+        CommandManager.RemoveCommand(simpleCommand);
+        CommandManager.RemoveCommand(adminCommand);
+    }
+}
+```
+
+## 说明
+
+- 命令管理器支持多插件环境
+- 提供完整的命令生命周期管理
+- 集成了权限系统
+- 支持命令使用限制（服务器/客户端）
+- 提供详细的命令执行日志
+- 支持命令参数验证
+- 支持多语言本地化
+- 命令可以动态注册和移除
+- 支持命令权限覆盖配置 

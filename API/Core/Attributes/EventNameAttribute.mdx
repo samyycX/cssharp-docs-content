@@ -1,25 +1,97 @@
-# EventNameAttribute 类
+---
+title: EventNameAttribute 特性
+description: CounterStrikeSharp 事件系统中用于标记事件类的特性，定义事件的名称
+icon: Bell
+---
+
+# EventNameAttribute 特性
+
+`EventNameAttribute` 是一个用于标记事件类的特性，用于定义游戏事件的名称。此特性只能应用于类，且不会被继承。
 
 ## 命名空间
-`CounterStrikeSharp.API.Core.Attributes`
 
-## 说明
-用于标记事件类的名称。
+```csharp
+namespace CounterStrikeSharp.API.Core.Attributes
+```
 
-## 构造函数
+## 特性定义
 
-### EventNameAttribute(string name)
-创建一个新的EventNameAttribute实例。
-
-**参数**:
-- `name`: `string` - 事件的名称
+```csharp
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+public class EventNameAttribute : Attribute
+```
 
 ## 属性
 
 ### Name
+
 获取事件的名称。
 
-**类型**: `string`
+```csharp
+public string Name { get; init; }
+```
 
-## 使用位置
-- 类 
+## 构造函数
+
+### EventNameAttribute
+
+创建一个新的事件名称特性实例。
+
+```csharp
+public EventNameAttribute(string name)
+```
+
+#### 参数
+
+- `name`: `string` - 事件的名称
+
+## 使用示例
+
+```csharp
+// 定义一个玩家死亡事件类
+[EventName("player_death")]
+public class EventPlayerDeath : GameEvent
+{
+    public CCSPlayerController Userid { get; set; }
+    public CCSPlayerController? Attacker { get; set; }
+    public string Weapon { get; set; }
+    public bool Headshot { get; set; }
+}
+
+// 在插件中处理事件
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventPlayerDeath>((ev, info) =>
+        {
+            // 事件处理逻辑
+            Console.WriteLine($"玩家 {ev.Userid.PlayerName} 被 {ev.Attacker?.PlayerName ?? "未知"} 使用 {ev.Weapon} 击杀");
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 说明
+
+- 此特性用于将C#事件类映射到游戏内部事件
+- 特性只能应用于类
+- 不支持继承，每个事件类都需要显式标记
+- 事件名称必须与游戏内部事件名称匹配
+- 常用的事件名称包括：
+  - `player_death` - 玩家死亡
+  - `player_spawn` - 玩家重生
+  - `round_start` - 回合开始
+  - `round_end` - 回合结束
+  - `player_hurt` - 玩家受伤
+  - `weapon_fire` - 武器开火
+  - 等等
+
+## 最佳实践
+
+- 事件名称应该使用小写字母和下划线
+- 确保事件名称与游戏内部事件完全匹配
+- 为每个事件类创建合适的属性以映射事件数据
+- 在注册事件处理器时使用正确的事件类型
+- 在处理事件时要考虑可能的空值情况

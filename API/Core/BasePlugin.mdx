@@ -1,134 +1,229 @@
+---
+title: BasePlugin 类
+description: CounterStrikeSharp 插件系统的基类，提供了插件开发所需的基本功能
+icon: Box
+---
+
 # BasePlugin 类
 
+`BasePlugin` 是一个抽象类，实现了 `IPlugin` 接口，为插件开发提供了基本功能和实用方法。所有 CounterStrikeSharp 插件都应该继承自这个类。
+
 ## 命名空间
-`CounterStrikeSharp.API.Core`
 
-## 说明
-插件的基类,提供了插件的基本功能和生命周期管理。
+```csharp
+namespace CounterStrikeSharp.API.Core
+```
 
-## 抽象属性
+## 类定义
 
-### ModuleName
-获取插件模块名称。
-
-**类型**: `string`
-
-### ModuleVersion
-获取插件模块版本。
-
-**类型**: `string`
-
-## 虚拟属性
-
-### ModuleAuthor
-获取插件作者。
-
-**类型**: `string`
-
-### ModuleDescription
-获取插件描述。
-
-**类型**: `string`
+```csharp
+public abstract class BasePlugin : IPlugin
+```
 
 ## 属性
 
-### ModulePath
-获取或设置插件模块路径。
+### ModuleName
 
-**类型**: `string`
+获取插件名称（必须在派生类中实现）。
+
+```csharp
+public abstract string ModuleName { get; }
+```
+
+### ModuleVersion
+
+获取插件版本（必须在派生类中实现）。
+
+```csharp
+public abstract string ModuleVersion { get; }
+```
+
+### ModuleAuthor
+
+获取插件作者（可选重写）。
+
+```csharp
+public virtual string ModuleAuthor { get; }
+```
+
+### ModuleDescription
+
+获取插件描述（可选重写）。
+
+```csharp
+public virtual string ModuleDescription { get; }
+```
+
+### ModulePath
+
+获取或设置插件DLL文件的路径。
+
+```csharp
+public string ModulePath { get; set; }
+```
 
 ### ModuleDirectory
-获取插件模块所在目录。
 
-**类型**: `string`
+获取插件所在目录的路径。
+
+```csharp
+public string ModuleDirectory { get; }
+```
 
 ### Logger
-获取或设置插件日志记录器。
 
-**类型**: `ILogger`
+获取或设置日志记录器。
+
+```csharp
+public ILogger Logger { get; set; }
+```
 
 ### CommandManager
+
 获取或设置命令管理器。
 
-**类型**: `ICommandManager`
+```csharp
+public ICommandManager CommandManager { get; set; }
+```
 
 ### Localizer
+
 获取或设置本地化器。
 
-**类型**: `IStringLocalizer`
+```csharp
+public IStringLocalizer Localizer { get; set; }
+```
 
-## 虚拟方法
+## 方法
 
-### Load(bool hotReload)
-插件加载时调用。
+### 事件处理
 
-**参数**:
-- `hotReload`: `bool` - 是否为热重载
+#### RegisterEventHandler&lt;T&gt;
 
-### Unload(bool hotReload)
-插件卸载时调用。
-
-**参数**:
-- `hotReload`: `bool` - 是否为热重载
-
-### OnAllPluginsLoaded(bool hotReload)
-所有插件加载完成后调用。
-
-**参数**:
-- `hotReload`: `bool` - 是否为热重载
-
-## 公共方法
-
-### RegisterEventHandler<T>(GameEventHandler<T> handler, HookMode hookMode = HookMode.Post)
 注册游戏事件处理器。
 
-**参数**:
-- `handler`: `GameEventHandler<T>` - 事件处理器
-- `hookMode`: `HookMode` - 钩子模式,默认为Post
+```csharp
+public void RegisterEventHandler<T>(GameEventHandler<T> handler, HookMode hookMode = HookMode.Post) where T : GameEvent
+```
 
-### AddCommand(string name, string description, CommandInfo.CommandCallback handler)
-添加一个控制台命令。
+##### 参数
 
-**参数**:
+- `handler`: `GameEventHandler<T>` - 事件处理器委托
+- `hookMode`: `HookMode` - 钩子模式，默认为 `HookMode.Post`
+
+#### DeregisterEventHandler&lt;T&gt;
+
+注销游戏事件处理器。
+
+```csharp
+public void DeregisterEventHandler<T>(GameEventHandler<T> handler, HookMode hookMode = HookMode.Post) where T : GameEvent
+```
+
+### 命令管理
+
+#### AddCommand
+
+注册一个新的服务器命令。
+
+```csharp
+public void AddCommand(string name, string description, CommandInfo.CommandCallback handler)
+```
+
+##### 参数
+
 - `name`: `string` - 命令名称
 - `description`: `string` - 命令描述
-- `handler`: `CommandInfo.CommandCallback` - 命令处理器
+- `handler`: `CommandInfo.CommandCallback` - 命令处理回调函数
 
-### AddCommandListener(string name, CommandInfo.CommandListenerCallback handler, HookMode mode = HookMode.Pre)
-添加一个命令监听器。
+#### AddCommandListener
 
-**参数**:
-- `name`: `string` - 命令名称
-- `handler`: `CommandInfo.CommandListenerCallback` - 命令监听器处理器
-- `mode`: `HookMode` - 钩子模式,默认为Pre
+添加命令监听器。
 
-### RegisterListener<T>(T handler) where T : Delegate
-注册一个全局监听器。
+```csharp
+public void AddCommandListener(string? name, CommandInfo.CommandListenerCallback handler, HookMode mode = HookMode.Pre)
+```
 
-**参数**:
-- `handler`: `T` - 监听器处理器
+##### 参数
 
-### AddTimer(float interval, Action callback, TimerFlags? flags = null)
-添加一个定时器。
+- `name`: `string?` - 命令名称，例如 `jointeam`
+- `handler`: `CommandInfo.CommandListenerCallback` - 命令监听回调函数
+- `mode`: `HookMode` - 钩子模式，默认为 `HookMode.Pre`
 
-**参数**:
-- `interval`: `float` - 时间间隔(秒)
-- `callback`: `Action` - 回调函数
-- `flags`: `TimerFlags?` - 定时器标志
+#### RemoveCommand
 
-**返回���**: `Timer` - 创建的定时器实例
+移除服务器命令。
 
-### HookEntityOutput(string classname, string outputName, EntityIO.EntityOutputHandler handler, HookMode mode = HookMode.Pre)
-钩住实体输出。
+```csharp
+public void RemoveCommand(string name, CommandInfo.CommandCallback handler)
+```
 
-**参数**:
-- `classname`: `string` - 实体类名
-- `outputName`: `string` - 输出名称
-- `handler`: `EntityIO.EntityOutputHandler` - 处理器
-- `mode`: `HookMode` - 钩子模式,默认为Pre
+#### RemoveCommandListener
 
-### RegisterAllAttributes(object instance)
-注册实例上的所有特性处理器。
+移除命令监听器。
 
-**参数**:
-- `instance`: `object` - 要注册特性的实例 
+```csharp
+public void RemoveCommandListener(string name, CommandInfo.CommandListenerCallback handler, HookMode mode)
+```
+
+## 生命周期方法
+
+### Load
+
+插件加载时调用的方法（可选重写）。
+
+```csharp
+public virtual void Load(bool hotReload)
+```
+
+### Unload
+
+插件卸载时调用的方法（可选重写）。
+
+```csharp
+public virtual void Unload(bool hotReload)
+```
+
+### OnAllPluginsLoaded
+
+所有插件加载完成后调用的方法（可选重写）。
+
+```csharp
+public virtual void OnAllPluginsLoaded(bool hotReload)
+```
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override string ModuleName => "示例插件";
+    public override string ModuleVersion => "1.0.0";
+    public override string ModuleAuthor => "作者名称";
+    public override string ModuleDescription => "这是一个示例插件";
+
+    public override void Load(bool hotReload)
+    {
+        // 注册命令
+        AddCommand("hello", "打招呼命令", (player, info) =>
+        {
+            if (player != null)
+            {
+                player.PrintToChat("你好！");
+            }
+            return HookResult.Continue;
+        });
+
+        // 注册事件处理器
+        RegisterEventHandler<EventPlayerDeath>((ev, info) =>
+        {
+            Logger.LogInformation($"玩家 {ev.Userid.PlayerName} 死亡");
+            return HookResult.Continue;
+        });
+    }
+
+    public override void Unload(bool hotReload)
+    {
+        // 清理资源
+    }
+}
+``` 

@@ -1,66 +1,176 @@
+---
+title: CommandDefinition 类
+description: CounterStrikeSharp 命令系统中的命令定义类，用于定义服务器命令的属性和行为
+icon: Terminal
+---
+
 # CommandDefinition 类
 
-## 命名空间
-`CounterStrikeSharp.API.Core.Commands`
+`CommandDefinition` 类用于定义服务器命令的属性和行为。它包含了命令的名称、描述、回调函数等基本信息。
 
-## 说明
-定义一个命令的配置。
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Core.Commands
+```
+
+## 类定义
+
+```csharp
+public class CommandDefinition
+```
 
 ## 构造函数
 
-### CommandDefinition()
+### CommandDefinition
+
 创建一个新的命令定义实例。
 
-### CommandDefinition(string name, string description, CommandInfo.CommandCallback callback)
-使用指定的名称、描述和回调创建一个新的命令定义实例。
+```csharp
+public CommandDefinition(string name, string description, CommandInfo.CommandCallback callback)
+```
 
-**参数**:
+#### 参数
+
 - `name`: `string` - 命令名称
 - `description`: `string` - 命令描述
-- `callback`: `CommandInfo.CommandCallback` - 命令回调
+- `callback`: `CommandInfo.CommandCallback` - 命令执行时的回调函数
+
+### CommandDefinition
+
+创建一个空的命令定义实例。
+
+```csharp
+public CommandDefinition()
+```
 
 ## 属性
 
 ### Name
+
 获取命令名称。
 
-**类型**: `string`
-**访问修饰符**: `public init`
+```csharp
+public string Name { get; init; }
+```
 
 ### Description
+
 获取命令描述。
 
-**类型**: `string`
-**访问修饰符**: `public init`
+```csharp
+public string Description { get; init; }
+```
 
 ### Callback
-获取命令回调。
 
-**类型**: `CommandInfo.CommandCallback`
-**访问修饰符**: `public init`
+获取命令的回调函数。
+
+```csharp
+public CommandInfo.CommandCallback Callback { get; init; }
+```
 
 ### ExecutableBy
-获取或设置命令的执行权限。
 
-**类型**: `CommandUsage`
-**默认值**: `CommandUsage.CLIENT_AND_SERVER`
-**访问修饰符**: `public init`
+获取命令的执行权限。默认为 `CommandUsage.CLIENT_AND_SERVER`。
+
+```csharp
+public CommandUsage ExecutableBy { get; init; } = CommandUsage.CLIENT_AND_SERVER;
+```
 
 ### UsageHint
-获取或设置命令的使用提示。
 
-**类型**: `string?`
-**访问修饰符**: `public init`
+获取命令的使用提示。
+
+```csharp
+public string? UsageHint { get; init; }
+```
 
 ### MinArgs
-获取或设置命令的最小参数数量。
 
-**类型**: `int?`
-**访问修饰符**: `public init`
+获取命令的最小参数数量。
+
+```csharp
+public int? MinArgs { get; init; }
+```
 
 ## 方法
 
-### ToString()
+### ToString
+
 返回命令定义的字符串表示。
 
-**返回值**: `string` - 包含命令详细信息的字符串 
+```csharp
+public override string ToString()
+```
+
+#### 返回值
+
+包含命令详细信息的字符串。
+
+## 使用示例
+
+```csharp
+// 创建基本命令定义
+var command = new CommandDefinition(
+    name: "hello",
+    description: "向玩家打招呼",
+    callback: (player, info) =>
+    {
+        if (player != null)
+        {
+            player.PrintToChat("你好！");
+        }
+        return HookResult.Continue;
+    }
+);
+
+// 创建带有详细配置的命令定义
+var advancedCommand = new CommandDefinition
+{
+    Name = "give",
+    Description = "给予物品",
+    Callback = (player, info) =>
+    {
+        if (info.ArgCount < 2)
+        {
+            player?.PrintToChat("用法: !give <物品名称>");
+            return HookResult.Continue;
+        }
+        // 处理命令逻辑
+        return HookResult.Continue;
+    },
+    ExecutableBy = CommandUsage.CLIENT_ONLY,
+    UsageHint = "!give <物品名称>",
+    MinArgs = 2
+};
+
+// 在插件中注册命令
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 使用CommandDefinition注册命令
+        var command = new CommandDefinition(
+            "test",
+            "测试命令",
+            (player, info) => 
+            {
+                Logger.LogInformation("测试命令被执行");
+                return HookResult.Continue;
+            }
+        );
+        
+        CommandManager.RegisterCommand(command);
+    }
+}
+```
+
+## 说明
+
+- 命令定义包含了命令的所有必要信息
+- 属性使用 `init` 设置器，确保命令定义的不可变性
+- `ExecutableBy` 属性控制命令的执行范围
+- `UsageHint` 用于提供命令使用说明
+- `MinArgs` 用于指定命令所需的最小参数数量
+- 可以通过构造函数或对象初始化器创建命令定义 

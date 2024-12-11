@@ -1,32 +1,91 @@
-# PlayerCapability<T> 类
+---
+title: PlayerCapability<T> 类
+description: 玩家能力系统的核心类，用于管理和获取玩家特定的能力
+icon: User
+---
+
+# PlayerCapability&lt;T&gt; 类
+
+`PlayerCapability<T>` 类是一个密封类，用于定义和管理与玩家相关的能力。
 
 ## 命名空间
-`CounterStrikeSharp.API.Core.Capabilities`
 
-## 说明
-表示玩家的一个能力。
+```csharp
+namespace CounterStrikeSharp.API.Core.Capabilities
+```
 
-## 构造函数
+## 类定义
 
-### PlayerCapability(string name)
-创建一个新的玩家能力实例。
-
-**参数**:
-- `name`: `string` - 能力的名称
+```csharp
+public sealed class PlayerCapability<T>
+```
 
 ## 属性
 
 ### Name
+
 获取能力的名称。
 
-**类型**: `string`
+```csharp
+public string Name { get; }
+```
+
+## 内部字段
+
+### Providers
+
+存储能力提供者的静态字典。
+
+```csharp
+internal static readonly Dictionary<string, List<Func<CCSPlayerController, T>>> Providers
+```
+
+## 构造函数
+
+### PlayerCapability
+
+创建一个新的玩家能力实例。
+
+```csharp
+public PlayerCapability(string name)
+```
+
+#### 参数
+
+- `name`: `string` - 能力的名称
 
 ## 方法
 
-### Get(CCSPlayerController entity)
+### Get
+
 获取指定玩家的能力值。
 
-**参数**:
-- `entity`: `CCSPlayerController` - 要获取能力值的玩家
+```csharp
+public T? Get(CCSPlayerController entity)
+```
 
-**返回值**: `T?` - 能力值,如果未找到则返回默认值 
+#### 参数
+
+- `entity`: `CCSPlayerController` - 要获取能力值的玩家控制器
+
+#### 返回值
+
+- `T?` - 玩家的能力值，如果没有提供者则返回默认值
+
+#### 说明
+
+此方法遍历所有注册的能力提供者，并返回第一个提供者返回的值。如果没有提供者，则返回类型T的默认值。
+
+## 使用示例
+
+```csharp
+// 创建一个新的玩家能力实例
+var scoreCapability = new PlayerCapability<int>("playerScore");
+
+// 注册能力提供者
+Capabilities.RegisterPlayerCapability(scoreCapability, player => 100);
+
+// 获取玩家的能力值
+CCSPlayerController player = /* ... */;
+int? score = scoreCapability.Get(player);
+``` 

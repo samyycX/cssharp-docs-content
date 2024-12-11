@@ -1,26 +1,104 @@
-# ListenerNameAttribute 类
+---
+title: ListenerNameAttribute 特性
+description: CounterStrikeSharp 监听器系统中用于标记监听器委托的特性，定义监听器的名称
+icon: Ear
+---
+
+# ListenerNameAttribute 特性
+
+`ListenerNameAttribute` 是一个用于标记监听器委托的特性，用于定义游戏监听器的名称。此特性只能应用于委托，且不会被继承。
 
 ## 命名空间
-`CounterStrikeSharp.API.Core.Attributes`
 
-## 说明
-用于标记监听器委托的名称。
+```csharp
+namespace CounterStrikeSharp.API.Core.Attributes
+```
 
-## 构造函数
+## 特性定义
 
-### ListenerNameAttribute(string name)
-创建一个新的ListenerNameAttribute实例。
-
-**参数**:
-- `name`: `string` - 监听器的名称
+```csharp
+[AttributeUsage(AttributeTargets.Delegate, Inherited = false)]
+public class ListenerNameAttribute : Attribute
+```
 
 ## 属性
 
 ### Name
+
 获取监听器的名称。
 
-**类型**: `string`
-**访问修饰符**: `public`
+```csharp
+public string Name { get; init; }
+```
 
-## 使用位置
-- 委托
+## 构造函数
+
+### ListenerNameAttribute
+
+创建一个新的监听器名称特性实例。
+
+```csharp
+public ListenerNameAttribute(string name)
+```
+
+#### 参数
+
+- `name`: `string` - 监听器的名称
+
+## 使用示例
+
+```csharp
+// 定义一个监听器委托
+[ListenerName("OnMapStart")]
+public delegate void OnMapStart();
+
+// 定义一个监听器委托（带参数）
+[ListenerName("OnPlayerSpawn")]
+public delegate void OnPlayerSpawn(CCSPlayerController player);
+
+// 在插件中使用监听器
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 注册地图开始监听器
+        RegisterListener<Listeners.OnMapStart>(() =>
+        {
+            Console.WriteLine("地图开始加载");
+        });
+
+        // 注册玩家重生监听器
+        RegisterListener<Listeners.OnPlayerSpawn>((player) =>
+        {
+            if (player != null && player.IsValid)
+            {
+                player.PrintToChat($"欢迎回来，{player.PlayerName}！");
+            }
+        });
+    }
+}
+```
+
+## 说明
+
+- 此特性用于将C#委托映射到游戏内部监听器
+- 特性只能应用于委托
+- 不支持继承，每个监听器委托都需要显式标记
+- 监听器名称必须与游戏内部监听器名称匹配
+- 常用的监听器包括：
+  - `OnMapStart` - 地图开始加载
+  - `OnMapEnd` - 地图结束
+  - `OnClientPutInServer` - 玩家加入服务器
+  - `OnClientDisconnect` - 玩家断开连接
+  - `OnPlayerSpawn` - 玩家重生
+  - `OnTick` - 每帧更新
+  - 等等
+
+## 最佳实践
+
+- 监听器名称应该使用驼峰命名法
+- 确保监听器名称与游戏内部监听器完全匹配
+- 根据需要为监听器委托定义适当的参数
+- 在注册监听器时要考虑性能影响
+- 在处理监听器事件时要进行必要的空值检查
+- 建议在插件卸载时注销不再需要的监听器
