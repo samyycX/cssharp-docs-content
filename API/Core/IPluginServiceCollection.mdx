@@ -1,0 +1,105 @@
+---
+title: IPluginServiceCollection
+sidebar_position: 11
+tags: [core, plugins, dependency-injection]
+---
+
+# IPluginServiceCollection  接口
+
+`IPluginServiceCollection ` 接口用于配置插件的依赖注入服务。它允许插件注册自己的服务到依赖注入容器中。
+
+## 类型参数
+
+- `T`: 插件类型，必须实现 `IPlugin` 接口
+
+## 方法
+
+### ConfigureServices
+```csharp
+void ConfigureServices(IServiceCollection serviceCollection)
+```
+
+用于配置依赖注入服务。
+
+#### 参数
+- `serviceCollection`: 服务集合，用于注册服务
+
+## 使用示例
+
+```csharp
+// 定义插件服务配置
+public class MyPluginServiceCollection : IPluginServiceCollection<MyPlugin>
+{
+    public void ConfigureServices(IServiceCollection serviceCollection)
+    {
+        // 注册单例服务
+        serviceCollection.AddSingleton<IMyService, MyService>();
+        
+        // 注册范围服务
+        serviceCollection.AddScoped<IMyRepository, MyRepository>();
+        
+        // 注册瞬态服务
+        serviceCollection.AddTransient<IMyHelper, MyHelper>();
+        
+        // 注册配置
+        serviceCollection.Configure<MyOptions>(options => {
+            options.Setting1 = "value1";
+            options.Setting2 = 42;
+        });
+    }
+}
+
+// 在插件中使用注入的服务
+public class MyPlugin : BasePlugin
+{
+    private readonly IMyService _myService;
+    private readonly IMyRepository _myRepository;
+    
+    public MyPlugin(IMyService myService, IMyRepository myRepository)
+    {
+        _myService = myService;
+        _myRepository = myRepository;
+    }
+    
+    public override void Load(bool hotReload)
+    {
+        // 使用注入的服务
+        _myService.DoSomething();
+        _myRepository.SaveData();
+    }
+}
+```
+
+## 内置服务
+
+CounterStrikeSharp 自动注册以下服务：
+
+```csharp
+// 日志服务
+ILogger
+ILoggerFactory
+
+// 命令管理
+ICommandManager
+
+// 本地化
+IStringLocalizer
+IStringLocalizerFactory
+
+// 插件上下文
+IPluginContext
+```
+
+## 注意事项
+
+- 服务配置在插件加载时执行
+- 每个插件可以有自己的服务作用域
+- 支持所有标准的依赖注入生命周期：
+  - Singleton（单例）
+  - Scoped（范围）
+  - Transient（瞬态）
+- 可以访问和扩展内置服务
+- 建议使用接口而不是具体类型进行注册
+- 避免在服务配置中执行耗时操作
+- 注意管理服务的生命周期和资源释放
+``` 

@@ -27,13 +27,13 @@ public static class Capabilities
 注册一个插件能力。
 
 ```csharp
-public static void RegisterPluginCapability<T>(PluginCapability<T> capability, Func<T> supplier)
+public static void RegisterPluginCapability (PluginCapability  capability, Func  supplier)
 ```
 
 #### 参数
 
-- `capability`: `PluginCapability<T>` - 要注册的插件能力
-- `supplier`: `Func<T>` - 提供能力值的函数
+- `capability`: `PluginCapability ` - 要注册的插件能力
+- `supplier`: `Func ` - 提供能力值的函数
 
 #### 说明
 
@@ -44,12 +44,12 @@ public static void RegisterPluginCapability<T>(PluginCapability<T> capability, F
 注册一个玩家能力。
 
 ```csharp
-public static void RegisterPlayerCapability<T>(PlayerCapability<T> capability, Func<CCSPlayerController, T> supplier)
+public static void RegisterPlayerCapability (PlayerCapability  capability, Func<CCSPlayerController, T> supplier)
 ```
 
 #### 参数
 
-- `capability`: `PlayerCapability<T>` - 要注册的玩家能力
+- `capability`: `PlayerCapability ` - 要注册的玩家能力
 - `supplier`: `Func<CCSPlayerController, T>` - 提供玩家能力值的函数
 
 #### 说明

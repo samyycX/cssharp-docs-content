@@ -19,12 +19,12 @@ namespace CounterStrikeSharp.API.Modules.Utils
 ```csharp
 public static class EnumUtils
 {
-    public static T ToEnum<T>(int value) where T : Enum
-    public static T ToEnum<T>(string value) where T : Enum
-    public static string GetName<T>(T value) where T : Enum
-    public static string GetDescription<T>(T value) where T : Enum
-    public static bool IsDefined<T>(T value) where T : Enum
-    public static IEnumerable<T> GetValues<T>() where T : Enum
+    public static T ToEnum (int value) where T : Enum
+    public static T ToEnum (string value) where T : Enum
+    public static string GetName (T value) where T : Enum
+    public static string GetDescription (T value) where T : Enum
+    public static bool IsDefined (T value) where T : Enum
+    public static IEnumerable  GetValues () where T : Enum
 }
 ```
 
@@ -35,8 +35,8 @@ public static class EnumUtils
 将整数或字符串值转换为指定枚举类型。
 
 ```csharp
-public static T ToEnum<T>(int value) where T : Enum
-public static T ToEnum<T>(string value) where T : Enum
+public static T ToEnum (int value) where T : Enum
+public static T ToEnum (string value) where T : Enum
 ```
 
 ### GetName< T >
@@ -44,7 +44,7 @@ public static T ToEnum<T>(string value) where T : Enum
 获取枚举值的名称。
 
 ```csharp
-public static string GetName<T>(T value) where T : Enum
+public static string GetName (T value) where T : Enum
 ```
 
 ### GetDescription< T >
@@ -52,7 +52,7 @@ public static string GetName<T>(T value) where T : Enum
 获取枚举值的描述（如果有 Description 特性）。
 
 ```csharp
-public static string GetDescription<T>(T value) where T : Enum
+public static string GetDescription (T value) where T : Enum
 ```
 
 ### IsDefined< T >
@@ -60,7 +60,7 @@ public static string GetDescription<T>(T value) where T : Enum
 检查枚举值是否定义。
 
 ```csharp
-public static bool IsDefined<T>(T value) where T : Enum
+public static bool IsDefined (T value) where T : Enum
 ```
 
 ### GetValues< T >
@@ -68,7 +68,7 @@ public static bool IsDefined<T>(T value) where T : Enum
 获取枚举的所有值。
 
 ```csharp
-public static IEnumerable<T> GetValues<T>() where T : Enum
+public static IEnumerable  GetValues () where T : Enum
 ```
 
 ## 使用示例

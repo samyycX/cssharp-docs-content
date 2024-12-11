@@ -1,0 +1,81 @@
+---
+title: BasePluginConfig
+sidebar_position: 4
+tags: [core, plugins, config]
+---
+
+# BasePluginConfig 类
+
+`BasePluginConfig` 是插件配置的基类，提供了基本的配置版本管理功能。所有插件配置类都应该继承自这个类。
+
+## 接口
+
+### IBasePluginConfig
+```csharp
+public interface IBasePluginConfig
+{
+    [JsonPropertyName("ConfigVersion")]
+    int Version { get; set; }
+}
+```
+
+定义了插件配置的基本接口。
+
+## 属性
+
+### Version
+```csharp
+[JsonPropertyName("ConfigVersion")]
+public virtual int Version { get; set; } = 1;
+```
+
+配置文件的版本号，默认为1。
+
+## 使用示例
+
+```csharp
+// 定义插件配置类
+public class MyPluginConfig : BasePluginConfig
+{
+    public string WelcomeMessage { get; set; } = "Welcome!";
+    public int MaxPlayers { get; set; } = 32;
+    public bool EnableFeature { get; set; } = true;
+}
+
+// 在插件中使用配置
+public class MyPlugin : BasePlugin
+{
+    public MyPluginConfig Config { get; set; }
+
+    public override void Load(bool hotReload)
+    {
+        // 加载配置
+        Config = new ConfigManager<MyPluginConfig>().Load(ModuleDirectory);
+
+        // 使用配置
+        Logger.LogInformation($"Welcome message: {Config.WelcomeMessage}");
+        Logger.LogInformation($"Max players: {Config.MaxPlayers}");
+        Logger.LogInformation($"Feature enabled: {Config.EnableFeature}");
+    }
+}
+```
+
+## 配置文件示例
+
+```json
+{
+  "ConfigVersion": 1,
+  "WelcomeMessage": "Welcome to my server!",
+  "MaxPlayers": 32,
+  "EnableFeature": true
+}
+```
+
+## 注意事项
+
+- 所有插件配置类都应该继承 `BasePluginConfig`
+- `Version` 属性用于配置版本管理和迁移
+- 使用 `JsonPropertyName` 特性可以自定义 JSON 属性名
+- 配置文件通常保存在插件目录下
+- 使用 `ConfigManager ` 来加载和保存配置
+- 建议为所有配置属性提供默认值

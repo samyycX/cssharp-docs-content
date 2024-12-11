@@ -1,0 +1,89 @@
+---
+title: RangeValidator
+sidebar_position: 2
+tags: [cvars, validators, range]
+---
+
+# RangeValidator  类
+
+`RangeValidator ` 类是一个通用的范围验证器，用于验证值是否在指定的范围内。它实现了 `IValidator ` 接口，并要求类型 `T` 实现 `IComparable ` 接口。
+
+## 构造函数
+
+### RangeValidator(T min, T max)
+```csharp
+public RangeValidator(T min, T max)
+```
+
+创建一个新的范围验证器实例。
+
+#### 参数
+- `min`: 允许的最小值
+- `max`: 允许的最大值
+
+## 方法
+
+### Validate
+```csharp
+public bool Validate(T value, out string? errorMessage)
+```
+
+验证指定的值是否在构造函数中设定的范围内。
+
+#### 参数
+- `value`: 要验证的值
+- `errorMessage`: 如果验证失败，输出错误消息
+
+#### 返回值
+- `true`: 如果值在指定范围内
+- `false`: 如果值超出范围
+
+## 使用示例
+
+```csharp
+// 创建一个整数范围验证器
+var intValidator = new RangeValidator<int>(0, 100);
+
+// 验证整数值
+if (intValidator.Validate(50, out var error))
+{
+    // 值在范围内
+    Console.WriteLine("值有效");
+}
+else
+{
+    // 值超出范围
+    Console.WriteLine($"错误: {error}");
+}
+
+// 创建一个浮点数范围验证器
+var floatValidator = new RangeValidator<float>(0.0f, 1.0f);
+
+// 验证浮点数值
+if (floatValidator.Validate(0.5f, out error))
+{
+    // 值在范围内
+}
+else
+{
+    // 值超出范围
+}
+```
+
+## 类型约束
+
+- `T` 必须实现 `IComparable ` 接口
+- 常用的类型包括：
+  - `int`
+  - `float`
+  - `double`
+  - `decimal`
+  - 其他实现了 `IComparable ` 的类型
+
+## 注意事项
+
+- 最小值和最大值是包含在有效范围内的
+- 错误消息会包含最小值和最大值的信息
+- 验证器是无状态的，可以重复使用
+- 通常用于验证数值类型的ConVar值
+``` 

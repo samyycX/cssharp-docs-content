@@ -1,0 +1,44 @@
+---
+title: PermissionCharacters 类
+description: 权限字符常量定义类
+icon: Characters
+---
+
+# PermissionCharacters 类
+
+`PermissionCharacters` 类定义了用于权限系统的特殊字符常量。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Admin
+```
+
+## 常量
+
+| 常量名 | 类型 | 值 | 描述 |
+|--------|------|-----|------|
+| `GroupPermissionChar` | `char` | `#` | 组权限标识字符，例如: "#css/admin" |
+| `UserPermissionChar` | `char` | `@` | 用户权限标识字符，例如: "@css/manipulate_players" |
+
+## 使用示例
+
+```csharp
+// 使用组权限字符
+string groupPermission = PermissionCharacters.GroupPermissionChar + "css/admin";
+
+// 使用用户权限字符
+string userPermission = PermissionCharacters.UserPermissionChar + "css/manipulate_players";
+```
+
+## 权限格式说明
+
+权限字符串由以下部分组成：
+1. 权限类型字符（`#` 或 `@`）
+2. 域名（例如 "css"）
+3. 斜杠（"/"）
+4. 具体权限名称
+
+### 示例
+- 组权限：`#css/admin`
+- 用户权限：`@css/manipulate_players` 

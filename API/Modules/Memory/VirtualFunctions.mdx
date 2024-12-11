@@ -1,0 +1,92 @@
+---
+title: VirtualFunctions
+sidebar_position: 1
+tags: [memory, virtual functions, game functions]
+---
+
+# VirtualFunctions 类
+
+`VirtualFunctions` 类提供了一组静态方法和委托，用于访问游戏引擎的各种核心功能。这个类封装了对游戏内部函数的直接调用。
+
+## 主要功能
+
+### 客户端打印
+```csharp
+public static Action<IntPtr, HudDestination, string, IntPtr, IntPtr, IntPtr, IntPtr> ClientPrint
+public static Action<HudDestination, string, IntPtr, IntPtr, IntPtr, IntPtr> ClientPrintAll
+```
+用于向客户端发送消息的函数。
+
+### 物品管理
+```csharp
+public static Func<IntPtr, string, IntPtr, IntPtr, IntPtr, IntPtr, IntPtr> GiveNamedItem
+```
+给予玩家指定物品的函数。
+
+### 团队管理
+```csharp
+public static Action<IntPtr, byte> SwitchTeam
+```
+切换玩家队伍的函数。
+
+### 实体管理
+```csharp
+public static Action<IntPtr> UTIL_Remove
+public static Action<IntPtr, string> SetModel
+public static Func<string, int, IntPtr> UTIL_CreateEntityByName
+public static Action<IntPtr, IntPtr> CBaseEntity_DispatchSpawn
+```
+用于实体的创建、删除和修改的函��。
+
+### 游戏规则
+```csharp
+public static Action<IntPtr, RoundEndReason, float, nint, byte> TerminateRound
+```
+用于控制游戏回合的函数。
+
+### 玩家控制
+```csharp
+public static Action<CBasePlayerController, CBasePlayerPawn, bool, bool> CBasePlayerController_SetPawnFunc
+public static Action<CEntityInstance, CTakeDamageInfo> CBaseEntity_TakeDamageOld
+```
+用于玩家控制和伤害处理的函数。
+
+### 武器系统
+```csharp
+public static Func<CCSPlayer_WeaponServices, CBasePlayerWeapon, bool> CCSPlayer_WeaponServices_CanUse
+public static Func<int, string, CCSWeaponBaseVData> GetCSWeaponDataFromKey
+```
+用于武器系统的函数。
+
+### 触发器系统
+```csharp
+public static Action<CBaseTrigger, CBaseEntity> CBaseTrigger_StartTouch
+public static Action<CBaseTrigger, CBaseEntity> CBaseTrigger_EndTouch
+```
+用于处理触发器事件的函数。
+
+## 使用示例
+
+```csharp
+// 打印消息给所有玩家
+VirtualFunctions.ClientPrintAll(HudDestination.Console, "Hello World!", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+
+// 切换玩家队伍
+VirtualFunctions.SwitchTeam(playerPtr, (byte)CsTeam.CounterTerrorist);
+
+// 结束回合
+VirtualFunctions.TerminateRound(gameRulesPtr, RoundEndReason.CTWin, 3.0f, IntPtr.Zero, 0);
+
+// 创建实体
+var entityPtr = VirtualFunctions.UTIL_CreateEntityByName("weapon_ak47", 0);
+VirtualFunctions.CBaseEntity_DispatchSpawn(entityPtr, IntPtr.Zero);
+```
+
+## 注意事项
+
+- 这些函数直接操作游戏内存，使用时需要格外小心
+- 参数类型和数量必须严格匹配
+- 某些函数可能在特定游戏状态下不可用
+- 使用前应确保游戏数据签名已正确加载
+- 这是一个底层API，建议在了解游戏引擎工作原理的情况下使用
+``` 

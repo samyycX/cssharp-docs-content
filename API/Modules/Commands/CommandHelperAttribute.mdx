@@ -1,0 +1,55 @@
+---
+title: CommandHelperAttribute
+sidebar_position: 3
+tags: [commands, attributes]
+---
+
+# CommandHelperAttribute 类
+
+`CommandHelperAttribute` 是一个特性（Attribute）类，用于为命令处理方法提供额外的元数据和验证信息。
+
+## CommandUsage 枚举
+
+| 值 | 描述 |
+|---|---|
+| `CLIENT_AND_SERVER` | 命令可以由客户端和服务器端执行 |
+| `CLIENT_ONLY` | 命令只能由客户端执行 |
+| `SERVER_ONLY` | 命令只能由服务器端执行 |
+
+## 属性
+
+- `MinArgs`: 执行此命令所需的最小参数数量
+- `Usage`: 当命令执行失败时，向调用者显示的使用说明
+- `WhoCanExcecute`: 指定谁可以执行此命令（客户端、服务器端或两者）
+
+## 构造函数
+
+```csharp
+public CommandHelperAttribute(
+    int minArgs = 0, 
+    string usage = "", 
+    CommandUsage whoCanExecute = CommandUsage.CLIENT_AND_SERVER
+)
+```
+
+### 参数
+
+- `minArgs`: 执行此命令所需的最小参数数量
+- `usage`: 命令失败时显示的使用说明
+- `whoCanExecute`: 命令的执行限制（默认为客户端和服务器端都可执行）
+
+## 使用示例
+
+```csharp
+[CommandHelper(
+    minArgs: 2,
+    usage: "!kick <player> <reason>",
+    whoCanExecute: CommandUsage.CLIENT_AND_SERVER
+)]
+public void OnKickCommand(CommandInfo command)
+{
+    var target = command.GetArg(1);
+    var reason = command.GetArg(2);
+    // 执行踢出玩家的逻辑
+}
+```

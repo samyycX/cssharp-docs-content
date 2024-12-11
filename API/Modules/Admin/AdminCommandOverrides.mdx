@@ -1,0 +1,124 @@
+---
+title: AdminCommandOverrides 类
+description: 管理命令权限覆盖的核心类
+icon: Command
+---
+
+# AdminCommandOverrides 类
+
+`CommandData` 类和 `AdminManager` 类中的命令覆盖相关功能用于管理和控制命令的权限覆盖。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Admin
+```
+
+## CommandData 类
+
+### 属性
+
+| 属性名 | 类型 | 描述 |
+|--------|------|------|
+| `Flags` | `HashSet<string>` | 命令所需的权限标志集合 |
+| `Enabled` | `bool` | 命令覆盖是否启用，默认为 true |
+| `CheckType` | `string` | 权限检查类型 |
+
+## AdminManager 类命令覆盖方法
+
+### LoadCommandOverrides
+
+加载命令覆盖配置。
+
+```csharp
+public static void LoadCommandOverrides(string overridePath)
+```
+
+### CommandIsOverriden
+
+检查命令是否有覆盖权限。
+
+```csharp
+public static bool CommandIsOverriden(string commandName)
+```
+
+### GetCommandOverrideData
+
+获取命令覆盖数据。
+
+```csharp
+public static CommandData? GetCommandOverrideData(string commandName)
+```
+
+### GetPermissionOverrides
+
+获取命令的覆盖权限。
+
+```csharp
+public static string[] GetPermissionOverrides(string commandName)
+```
+
+### AddPermissionOverride
+
+添加命令权限覆盖。
+
+```csharp
+public static void AddPermissionOverride(string commandName, params string[] permissions)
+```
+
+### RemovePermissionOverride
+
+移除命令权限覆盖。
+
+```csharp
+public static void RemovePermissionOverride(string commandName, params string[] permissions)
+```
+
+### ClearPermissionOverride
+
+清除命令权限覆盖。
+
+```csharp
+public static void ClearPermissionOverride(string commandName, bool disable = true)
+```
+
+### DeleteCommandOverride
+
+删除命令覆盖。
+
+```csharp
+public static void DeleteCommandOverride(string commandName)
+```
+
+### SetCommandOverideState
+
+设置命令覆盖状态。
+
+```csharp
+public static void SetCommandOverideState(string commandName, bool state)
+```
+
+## 使用示例
+
+```csharp
+// 添加命令权限覆盖
+AdminManager.AddPermissionOverride("css_kick", "@css/kick");
+
+// 检查命令是否被覆盖
+bool isOverriden = AdminManager.CommandIsOverriden("css_kick");
+
+// 获取命令覆盖权限
+string[] permissions = AdminManager.GetPermissionOverrides("css_kick");
+
+// 移除命令权限覆盖
+AdminManager.RemovePermissionOverride("css_kick", "@css/kick");
+
+// 清除命令权限覆盖
+AdminManager.ClearPermissionOverride("css_kick");
+
+// 删除命令覆盖
+AdminManager.DeleteCommandOverride("css_kick");
+
+// 设置命令覆盖状态
+AdminManager.SetCommandOverideState("css_kick", false);
+```

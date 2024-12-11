@@ -1,149 +1,126 @@
 ---
-title: EntityOutputHookAttribute 特性
-description: CounterStrikeSharp 实体系统中用于通过特性注册实体输出钩子的特性
-icon: Box
+title: EntityOutputHookAttribute
+sidebar_position: 3
+tags: [core, attributes, entities]
 ---
 
-# EntityOutputHookAttribute 特性
+# EntityOutputHookAttribute 类
 
-`EntityOutputHookAttribute` 是一个用于标记方法的特性，用于将方法注册为实体输出的处理器。此特性可以多次应用于同一个方法，允许一个方法处理多个实体输出。
+`EntityOutputHookAttribute` 是一个特性类，用于将方法标记为实体输出处理器。它允许通过特性声明的方式监听实体的输出事件。
 
-## 命名空间
-
-```csharp
-namespace CounterStrikeSharp.API.Core.Attributes.Registration
-```
-
-## 特性定义
+## 特性用法
 
 ```csharp
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public class EntityOutputHookAttribute : Attribute
 ```
 
-## 属性
-
-### Classname
-
-获取实体的类名。
-
-```csharp
-public string Classname { get; }
-```
-
-### OutputName
-
-获取输出名称。
-
-```csharp
-public string OutputName { get; }
-```
+- 只能应用于方法
+- 允许在同一个方法上多次使用此特性
 
 ## 构造函数
 
 ### EntityOutputHookAttribute
-
-创建一个新的实体输出钩子特性实例。
-
 ```csharp
 public EntityOutputHookAttribute(string classname, string outputName)
 ```
 
-#### 参数
+创建一个新的实体输出钩子特性实例。
 
-- `classname`: `string` - 要监听的实体类名
-- `outputName`: `string` - 要监听的输出名称
+#### 参数
+- `classname`: 实体类名
+- `outputName`: 输出事件名称
+
+## 属性
+
+### Classname
+```csharp
+public string Classname { get; }
+```
+
+获取实体类名。
+
+### OutputName
+```csharp
+public string OutputName { get; }
+```
+
+获取输出事件名称。
 
 ## 使用示例
 
 ```csharp
 public class MyPlugin : BasePlugin
 {
-    // 监听按钮被按下
+    // 监听按钮按下事件
     [EntityOutputHook("func_button", "OnPressed")]
-    public HookResult OnButtonPressed(CEntityIOOutput output, string name, CEntityInstance activator, CEntityInstance caller, CVariant value)
+    public HookResult OnButtonPressed(CEntityIOOutput output, string name, CEntityInstance activator, CEntityInstance caller, CVariant value, float delay)
     {
-        if (activator is CCSPlayerController player)
+        var button = caller as CBaseEntity;
+        var player = activator as CCSPlayerController;
+
+        if (button != null && player != null)
         {
-            player.PrintToChat("你按下了按钮！");
+            Server.PrintToChatAll($"玩家 {player.PlayerName} 按下了按钮！");
         }
+
+        return HookResult.Continue;
+    }
+
+    // 监听多个实体输出
+    [EntityOutputHook("trigger_multiple", "OnStartTouch")]
+    [EntityOutputHook("trigger_once", "OnStartTouch")]
+    public HookResult OnTriggerTouch(CEntityIOOutput output, string name, CEntityInstance activator, CEntityInstance caller, CVariant value, float delay)
+    {
+        var trigger = caller as CBaseEntity;
+        var player = activator as CCSPlayerController;
+
+        if (trigger != null && player != null)
+        {
+            player.PrintToChat($"你触发了一个触发器！");
+            
+            // 阻止触发器激活
+            if (trigger.ClassName == "trigger_once")
+            {
+                return HookResult.Handled;
+            }
+        }
+
         return HookResult.Continue;
     }
 
     // 监听门的状态变化
     [EntityOutputHook("func_door", "OnOpen")]
     [EntityOutputHook("func_door", "OnClose")]
-    public HookResult OnDoorStateChange(CEntityIOOutput output, string name, CEntityInstance activator, CEntityInstance caller, CVariant value)
+    public HookResult OnDoorStateChange(CEntityIOOutput output, string name, CEntityInstance activator, CEntityInstance caller, CVariant value, float delay)
     {
-        var action = name == "OnOpen" ? "打开" : "关闭";
-        Console.WriteLine($"门被{action}了");
-        return HookResult.Continue;
-    }
+        var door = caller as CBaseEntity;
+        var player = activator as CCSPlayerController;
 
-    // 监听触发器
-    [EntityOutputHook("trigger_multiple", "OnStartTouch")]
-    public HookResult OnTriggerTouch(CEntityIOOutput output, string name, CEntityInstance activator, CEntityInstance caller, CVariant value)
-    {
-        if (activator is CCSPlayerController player)
+        if (door != null)
         {
-            player.PrintToChat("你触发了一个区域！");
-            
-            // 获取触发器的位置
-            if (caller is CBaseEntity entity)
-            {
-                var position = entity.AbsOrigin;
-                Console.WriteLine($"触发器位置: {position}");
-            }
+            string action = name == "OnOpen" ? "打开" : "关闭";
+            string message = player != null 
+                ? $"玩家 {player.PlayerName} {action}了门"
+                : $"门被{action}了";
+                
+            Server.PrintToChatAll(message);
         }
-        return HookResult.Continue;
-    }
 
-    public override void Load(bool hotReload)
-    {
-        // 特性会自动注册实体输出钩子，无需手动注册
-        RegisterAllAttributes(this);
+        return HookResult.Continue;
     }
 }
 ```
 
-## 说明
+## 注意事项
 
-- 此特性用于监听实体的输出事件
-- 可以应用于任何符合实体输出处理方法签名的方法
-- 一个方法可以处理多个不同的实体输出
-- 实体输出处理方法必须符合以下签名：
-  - 返回值为 `HookResult`
-  - 参数列表：
-    - `output`: `CEntityIOOutput` - 输出对象
-    - `name`: `string` - 输出名称
-    - `activator`: `CEntityInstance` - 触发者
-    - `caller`: `CEntityInstance` - 调用者
-    - `value`: `CVariant` - 输出值
-
-## 常用实体类名和输出
-
-- `func_button`
-  - `OnPressed` - 按钮被按下
-  - `OnReleased` - 按钮被释放
-
-- `func_door`
-  - `OnOpen` - 门开启
-  - `OnClose` - 门关闭
-  - `OnFullyOpen` - 门完全开启
-  - `OnFullyClosed` - 门完全关闭
-
-- `trigger_multiple`
-  - `OnStartTouch` - 开始接触
-  - `OnEndTouch` - 结束接触
-  - `OnTrigger` - 触发器被触发
-
-## 最佳实践
-
-- 为每个实体输出钩子提供清晰的方法名
-- 在处理方法中进行适当的类型检查
-- 合理使用 `HookResult` 返回值
-- 处理可能的空值情况
-- 考虑性能影响，避免在频繁触发的输出中执行耗时操作
-- 使用有意义的变量名来增加代码可读性
-- 添加适当的日志记录以便调试
+- 实体类名必须是有效的实体类型
+- 输出事件名称必须是实体支持的输出
+- 处理方法必须有正确的参数签名
+- 可以在一个方法上监听多个输出事件
+- 返回 `HookResult.Handled` 可以阻止输出事件
+- 返回 `HookResult.Stop` 可以阻止后续处理器执行
+- 处理器会在插件卸载时自动注销
+- 注意检查实体和玩家的有效性
+- 支持热重载
+- 可以与其他特性组合使用
   

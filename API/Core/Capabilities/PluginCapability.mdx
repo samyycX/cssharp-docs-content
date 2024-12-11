@@ -6,7 +6,7 @@ icon: Plugin
 
 # PluginCapability 类
 
-`PluginCapability<T>` 类是一个密封类，用于定义和管理插件级别的能力。
+`PluginCapability ` 类是一个密封类，用于定义和管理插件级别的能力。
 
 ## 命名空间
 
@@ -17,7 +17,7 @@ namespace CounterStrikeSharp.API.Core.Capabilities
 ## 类定义
 
 ```csharp
-public sealed class PluginCapability<T>
+public sealed class PluginCapability 
 ```
 
 ## 属性
@@ -37,7 +37,7 @@ public string Name { get; }
 存储能力提供者的静态字典。
 
 ```csharp
-internal static readonly Dictionary<string, List<Func<T>>> Providers
+internal static readonly Dictionary<string, List<Func >> Providers
 ```
 
 ## 构造函数

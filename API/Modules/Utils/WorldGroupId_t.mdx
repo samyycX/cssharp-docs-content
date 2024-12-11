@@ -1,0 +1,44 @@
+---
+title: WorldGroupId_t
+sidebar_position: 1
+tags: [utils, world, groups]
+---
+
+# WorldGroupId_t 类
+
+`WorldGroupId_t` 类是一个世界组ID的包装器类，继承自 `NativeObject`。它用于表示和管理游戏世界中的组标识符。
+
+## 属性
+
+| 属性 | 类型 | 描述 |
+|------|------|------|
+| `Value` | `uint` | 获取或设置世界组的ID值 |
+
+## 构造函数
+
+### WorldGroupId_t(IntPtr pointer)
+```csharp
+public WorldGroupId_t(IntPtr pointer) : base(pointer)
+```
+使用指定的本机指针创建 `WorldGroupId_t` 实例。
+
+## 使用示例
+
+```csharp
+// 假设我们有一个本机指针
+IntPtr nativePtr = /* 从某处获取本机指针 */;
+var worldGroupId = new WorldGroupId_t(nativePtr);
+
+// 读取世界组ID
+uint id = worldGroupId.Value;
+
+// 修改世界组ID
+worldGroupId.Value = 42;
+```
+
+## 注意事项
+
+- 这个类是对本机内存的包装器，直接操作底层内存
+- 属性是通过不安全代码实现的引用访问
+- 使用时需要确保本机指针的有效性
+- 通常用于游戏引擎内部的世界分组系统

@@ -1,0 +1,41 @@
+---
+title: Helpers
+sidebar_position: 6
+tags: [core, native]
+---
+
+# Helpers 类
+
+`Helpers` 类是一个静态工具类，提供了与本机代码交互的底层功能。这个类主要用于内部实现，通常不需要直接使用。
+
+## 方法
+
+### InvokeNative
+```csharp
+[SecurityCritical]
+[DllImport(dllPath, EntryPoint = "InvokeNative")]
+public static extern void InvokeNative(IntPtr ptr)
+```
+
+调用本机（native）函数的方法。
+
+#### 参数
+- `ptr`: 指向本机函数的指针
+
+## 常量
+
+### dllPath
+```csharp
+private const string dllPath = "counterstrikesharp"
+```
+
+CounterStrikeSharp 本机库的路径。
+
+## 注意事项
+
+- 这是一个内部使用的工具类
+- 包含关键的本机代码调用功能
+- 使用了 `SecurityCritical` 特性
+- 依赖于 counterstrikesharp 本机库
+- 不建议在插件代码中直接使用
+- 主要用于框架内部的本机代码交互 

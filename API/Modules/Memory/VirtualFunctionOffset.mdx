@@ -1,0 +1,56 @@
+---
+title: VirtualFunction
+sidebar_position: 1
+tags: [memory, virtual functions]
+---
+
+# VirtualFunction 类
+
+`VirtualFunction` 类提供了一组静态方法，用于创建和管理虚函数调用。这个类允许你通过对象指针和偏移量来创建和执行虚函数。
+
+## 方法
+
+### CreateVirtualFunction
+```csharp
+private static IntPtr CreateVirtualFunction(IntPtr objectPtr, int offset, IEnumerable<DataType> argumentTypes, DataType returnType, object[] arguments)
+```
+创建一个虚函数调用的基础方法。
+
+### Create
+```csharp
+public static Action Create(IntPtr objectPtr, int offset)
+```
+创建一个无参数无返回值的虚函数。
+
+### CreateVoid 
+```csharp
+public static Action<TArg1> CreateVoid<TArg1>(IntPtr objectPtr, int offset)
+public static Action<TArg1, TArg2> CreateVoid<TArg1, TArg2>(IntPtr objectPtr, int offset)
+public static Action<TArg1, TArg2, TArg3> CreateVoid<TArg1, TArg2, TArg3>(IntPtr objectPtr, int offset)
+// ... 最多支持8个参数
+```
+创建具有不同参数数量的无返回值虚函数。
+
+## 使用示例
+
+```csharp
+// 创建无参数虚函数
+var voidFunc = VirtualFunction.Create(objectPtr, 5);
+voidFunc();
+
+// 创建带一个参数的虚函数
+var oneArgFunc = VirtualFunction.CreateVoid<int>(objectPtr, 10);
+oneArgFunc(42);
+
+// 创建带两个参数的虚函数
+var twoArgsFunc = VirtualFunction.CreateVoid<int, string>(objectPtr, 15);
+twoArgsFunc(42, "hello");
+```
+
+## 注意事项
+
+- 所有方法都需要有效的对象指针和正确的虚函数表偏移量
+- 参数类型必须与原生函数签名匹配
+- 不正确的参数类型会导致异常
+- 最多支持8个参数的虚函数调用
+- 这是一个底层API，使用时需要谨慎，确保类型安全 
