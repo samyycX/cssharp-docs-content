@@ -1,0 +1,65 @@
+---
+title: 共享插件API
+description: 如何实现插件间的通信
+---
+
+# Shared Plugin API 共享插件API
+
+在多个插件之间如何公开和使用共享插件的API
+
+## 创建一个共享库
+
+插件间的通信需要一个共享库，该库只需使用简单的接口来公开 API 例如以下代码（以余额添加，减少为例）：
+
+```csharp
+public interface IBalanceHandler
+{
+    decimal Balance { get; }
+
+    // 这里只是为了说明您可以在共享类型上使用方法.
+    // 您还可以为 'Blance'（余额） 属性添加一个 Setter。
+    public decimal Add(decimal amount);
+    public decimal Subtract(decimal amount);
+}
+```
+
+该库最好不包含任何业务逻辑，而只是为调用者定义一个框架。
+该库应放置在 `shared` 子文件夹中，与插件文件夹布局相同。因此，如果共享的DLL 命名为 `MySharedApi.dll`，其文件路径应为 `shared/MySharedApi/MySharedApi.dll`。
+
+## 创建一个功能
+
+可以在插件类中使用一个简单的静态变量来声明功能。`PlayerCapability`是玩家特有的功能，而`PluginCapability`则是插件可以公开的通用功能。
+
+```csharp
+public static PlayerCapability<IBalanceHandler> BalanceCapability { get; } = new("myplugin:balance");
+
+public static PluginCapability<IBalanceService> BalanceServiceCapability { get; } = new("myplugin:balance_service");
+```
+
+插件想使用这个"Balance API"（余额API）则必须实现`IBalanceHandler`这个接口的方法并使用相同的名称`myplugin:balance`。
+
+## 注册一个功能
+
+如果您是提供 API 基础的插件（例如，您提供的货币/余额插件除了存储用户余额外什么也不做），那么您需要提供其他调用者将使用的实现。这可以通过使用`Capabilities`类上的静态成员来实现：
+
+```csharp
+//玩家功能由调用的玩家上下文提供
+Capabilities.RegisterPlayerCapability(BalanceCapability, player => new BalanceHandler(player));
+
+// 插件功能可以简单地返回接口的实例
+Capabilities.RegisterPluginCapability(BalanceServiceCapability, () => new BalanceService());
+```
+
+### 使用功能
+
+要使用功能，只需调用先前声明的静态变量上提供的 `.Get()` 方法，即
+
+```csharp
+var balance = BalanceCapability.Get(player);
+var balanceService = BalanceServiceCapability.Get();
+
+if (balance == null) return;
+
+balance.Add(500);
+```
+必须检查此值是否为空，因为如果没有插件提供给定功能的实现，此方法将返回空值，您必须在您的插件中处理此流程。
