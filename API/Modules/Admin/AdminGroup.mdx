@@ -1,0 +1,92 @@
+---
+title: AdminGroup 类
+description: 管理管理员组的核心类
+icon: Group
+---
+
+# AdminGroup 类
+
+`AdminGroup` 相关类用于管理管理员组及其权限。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Admin
+```
+
+## AdminData 类
+
+### 属性
+
+| 属性名 | 类型 | 描述 |
+|--------|------|------|
+| `Groups` | `HashSet<string>` | 管理员所属的组集合 |
+
+## AdminGroupData 类
+
+### 属性
+
+| 属性名 | 类型 | 描述 |
+|--------|------|------|
+| `Flags` | `HashSet<string>` | 组拥有的权限标志集合 |
+| `Immunity` | `uint` | 组的免疫等级，默认为 0 |
+| `CommandOverrides` | `Dictionary<string, bool>` | 组的命令覆盖配置 |
+
+## AdminManager 类组管理方法
+
+### LoadAdminGroups
+
+加载管理员组配置。
+
+```csharp
+public static void LoadAdminGroups(string adminGroupsPath)
+```
+
+### PlayerInGroup
+
+检查玩家是否属于指定组。
+
+```csharp
+public static bool PlayerInGroup(CCSPlayerController? player, params string[] groups)
+public static bool PlayerInGroup(SteamID? steamId, params string[] groups)
+```
+
+### AddPlayerToGroup
+
+将玩家添加到组。
+
+```csharp
+public static void AddPlayerToGroup(CCSPlayerController? player, params string[] groups)
+public static void AddPlayerToGroup(SteamID? steamId, params string[] groups)
+```
+
+### RemovePlayerFromGroup
+
+从组中移除玩家。
+
+```csharp
+public static void RemovePlayerFromGroup(CCSPlayerController? player, bool removeInheritedFlags = true, params string[] groups)
+public static void RemovePlayerFromGroup(SteamID? steamId, bool removeInheritedFlags = true, params string[] groups)
+```
+
+## 使用示例
+
+```csharp
+// 检查玩家是否在组中
+bool isInGroup = AdminManager.PlayerInGroup(player, "admin", "vip");
+
+// 添加玩家到组
+AdminManager.AddPlayerToGroup(player, "vip");
+
+// 从组中移除玩家
+AdminManager.RemovePlayerFromGroup(player, true, "vip");
+
+// 使用 SteamID 检查组成员
+bool isInGroup = AdminManager.PlayerInGroup(steamId, "admin");
+
+// 使用 SteamID 添加到组
+AdminManager.AddPlayerToGroup(steamId, "admin");
+
+// 使用 SteamID 从组中移除
+AdminManager.RemovePlayerFromGroup(steamId, true, "admin");
+``` 

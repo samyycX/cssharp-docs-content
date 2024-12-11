@@ -1,75 +1,137 @@
 ---
-title: PluginCommandManagerDecorator 类
-description: 用于跟踪和管理插件命令的装饰器类
-icon: Command
+title: PluginCommandManagerDecorator
+sidebar_position: 4
+tags: [core, commands]
 ---
 
-# PluginCommandManagerDecorator
+# PluginCommandManagerDecorator 类
 
-这个类是 `ICommandManager` 的装饰器,用于跟踪已注册的命令并在插件卸载时移除它们。
-
-## 接口     
-
-实现了以下接口:
-- `ICommandManager`
-- `IDisposable`
+`PluginCommandManagerDecorator` 类是 `ICommandManager` 的装饰器实现，用于跟踪和管理特定插件的命令。它确保插件卸载时能正确清理其注册的所有命令。
 
 ## 构造函数
 
-
+### PluginCommandManagerDecorator
+```csharp
+public PluginCommandManagerDecorator(
+    ICommandManager inner,
+    IPluginContext pluginContext,
+    ILogger<PluginCommandManagerDecorator> logger)
 ```
-PluginCommandManagerDecorator(ICommandManager inner, IPluginContext pluginContext, ILogger<PluginCommandManagerDecorator> logger)
+
+创建命令管理器装饰器的新实例。
+
+#### 参数
+- `inner`: 被装饰的命令管理器实例
+- `pluginContext`: 插件上下文
+- `logger`: 日志记录器
+
+## 属性
+
+### 内部字段
+```csharp
+private readonly ICommandManager _inner
+private readonly IPluginContext _pluginContext
+private readonly ILogger<PluginCommandManagerDecorator> _logger
+private readonly List<CommandDefinition> _trackedCommands
 ```
 
-创建一个新的命令管理器装饰器实例。
+用于跟踪和管理命令的内部字段。
 
-**参数**:
-- `inner`: `ICommandManager` - 内部命令管理器
-- `pluginContext`: `IPluginContext` - 插件上下文
-- `logger`: `ILogger<PluginCommandManagerDecorator>` - 日志记录器
-
-## 公共方法
+## 方法
 
 ### RegisterCommand
-
-注册一个新的命令。
-
 ```csharp
 public void RegisterCommand(CommandDefinition definition)
 ```
 
-参数:
-- `definition` - 要注册的命令定义
+注册一个新的命令并开始跟踪它。
 
-### RemoveCommand 
+#### 参数
+- `definition`: 要注册的命令定义
 
-移除一个已注册的命令。
-
+### RemoveCommand
 ```csharp
 public void RemoveCommand(CommandDefinition definition)
 ```
 
-参数:
-- `definition` - 要移除的命令定义
+移除一个已注册的命令并停止跟踪它。
+
+#### 参数
+- `definition`: 要移除的命令定义
 
 ### Dispose
-
-释放资源并移除所有已注册的命令。
-
 ```csharp
 public void Dispose()
 ```
+
+释放资源并移除所有跟踪的命令。
+
 ## 使用示例
 
 ```csharp
-// 创建装饰器实例
-var decorator = new PluginCommandManagerDecorator(commandManager, pluginContext, logger);
-// 注册命令
-var command = new CommandDefinition("test", "测试命令", callback);
-decorator.RegisterCommand(command);
-// 插件卸载时会自动移除所有命令
-decorator.Dispose();
+public class MyPlugin : BasePlugin
+{
+    private readonly List<CommandDefinition> _commands = new();
+    private readonly ILogger<MyPlugin> _logger;
+
+    public MyPlugin(ILogger<MyPlugin> logger)
+    {
+        _logger = logger;
+    }
+
+    public override void Load(bool hotReload)
+    {
+        // 创建命令
+        var helpCommand = new CommandDefinition(
+            name: "help",
+            description: "显示帮助信息",
+            callback: (player, info) => {
+                info.ReplyToCommand("可用命令：...");
+                return HookResult.Continue;
+            }
+        );
+        _commands.Add(helpCommand);
+
+        var statsCommand = new CommandDefinition(
+            name: "stats",
+            description: "显示玩家统计信息",
+            callback: (player, info) => {
+                if (player == null)
+                {
+                    info.ReplyToCommand("此命令只能由玩家使用！");
+                    return HookResult.Continue;
+                }
+                ShowPlayerStats(player);
+                return HookResult.Continue;
+            }
+        );
+        _commands.Add(statsCommand);
+
+        // 注册所有命令
+        foreach (var command in _commands)
+        {
+            CommandManager.RegisterCommand(command);
+            _logger.LogInformation($"注册命令: {command.Name}");
+        }
+    }
+
+    private void ShowPlayerStats(CCSPlayerController player)
+    {
+        // 实现显示玩家统计信息的逻辑
+    }
+}
 ```
 
+## 注意事项
+
+- 装饰器自动跟踪插件注册的所有命令
+- 插件卸载时会自动清理其命令
+- 支持热重载场景
+- 记录命令注册和移除的日志
+- 每个插件有自己的命令管理器装饰器实例
+- 装饰器维护命令的生命周期
+- 避免在插件卸载后访问已移除的命令
+- 使用日志记录重要的命令操作
+- 建议在插件类中保持对命令定义的引用
  
 

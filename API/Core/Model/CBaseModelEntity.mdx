@@ -1,0 +1,20 @@
+---
+title: CBaseModelEntity
+sidebar_position: 2
+tags: [实体, 模型]
+---
+
+# CBaseModelEntity
+
+`CBaseModelEntity` 是一个带有模型的基础实体类,继承自 `CBaseEntity`。
+
+## 方法
+
+### SetModel
+```csharp
+public void SetModel(string model)
+```
+- 描述: 设置实体的模型。
+- 参数:
+  - `model`: 模型的路径字符串
+- 异常: 如果实体无效,会抛出 `InvalidOperationException`。 

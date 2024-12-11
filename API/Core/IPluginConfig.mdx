@@ -1,0 +1,92 @@
+---
+title: IPluginConfig
+sidebar_position: 8
+tags: [core, plugins, config]
+---
+
+# IPluginConfig  接口
+
+`IPluginConfig ` 接口定义了插件配置的基本结构。它提供了配置的访问和解析回调功能。
+
+## 类型参数
+
+- `T`: 配置类型，必须实现 `IBasePluginConfig` 接口并有无参构造函数
+
+## 属性
+
+### Config
+```csharp
+T Config { get; set; }
+```
+
+获取或设置插件的配置实例。
+
+## 方法
+
+### OnConfigParsed
+```csharp
+void OnConfigParsed(T config)
+```
+
+当 `ConfigManager` 解析完配置文件后调用此方法。
+
+#### 参数
+- `config`: 已解析的配置实例
+
+## 使用示例
+
+```csharp
+// 定义配置类
+public class MyConfig : BasePluginConfig
+{
+    public string ServerName { get; set; } = "Default Server";
+    public int MaxPlayers { get; set; } = 32;
+    public bool EnableFeature { get; set; } = true;
+}
+
+// 实现插件类
+public class MyPlugin : BasePlugin, IPluginConfig<MyConfig>
+{
+    public MyConfig Config { get; set; }
+
+    public override string ModuleName => "MyPlugin";
+    public override string ModuleVersion => "1.0.0";
+
+    public override void Load(bool hotReload)
+    {
+        // 配置会在这之前自动加载
+        Logger.LogInformation($"Server name: {Config.ServerName}");
+    }
+
+    public void OnConfigParsed(MyConfig config)
+    {
+        // 配置已被解析，可以进行验证或修改
+        if (config.MaxPlayers > 64)
+        {
+            Logger.LogWarning("MaxPlayers超过了64，将被限制为64");
+            config.MaxPlayers = 64;
+        }
+    }
+}
+```
+
+## 配置文件示例
+
+```json
+{
+  "ConfigVersion": 1,
+  "ServerName": "My Awesome Server",
+  "MaxPlayers": 32,
+  "EnableFeature": true
+}
+```
+
+## 注意事项
+
+- 配置类必须继承 `BasePluginConfig`
+- 配置文件通常保存在插件目录下
+- `OnConfigParsed` 可以用于验证和修改配置
+- 配置在插件加载时自动解析
+- 使用 `ConfigManager ` 来手动加载或保存配置
+- 建议为所有配置属性提供默认值
+- 配置更改后需要手动保存才能持久化

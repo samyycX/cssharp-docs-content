@@ -1,0 +1,52 @@
+---
+title: DynamicHook
+sidebar_position: 2
+tags: [内存, 钩子]
+---
+
+# DynamicHook
+
+`DynamicHook` 类提供了动态钩子的功能,用于获取和设置函数参数和返回值。
+
+## 描述
+
+这个类继承自 `NativeObject`,提供了一组方法来操作函数钩子的参数和返回值。它是实现函数钩子功能的核心类。
+
+## 构造函数
+
+### DynamicHook(IntPtr pointer)
+创建一个新的动态钩子实例。
+
+- `pointer`: 指向原生钩子的指针
+
+## 方法
+
+### T GetParam (int index)
+获取指定索引的参数值。
+
+- `T`: 参数类型
+- `index`: 参数索引
+- 返回: 参数值
+
+### T GetReturn ()
+获取函数的返回值。
+
+- `T`: 返回值类型
+- 返回: 函数返回值
+
+### void SetParam (int index, T value)
+设置指定索引的参数值。
+
+- `T`: 参数类型
+- `index`: 参数索引
+- `value`: 要设置的值
+
+### void SetReturn (T value)
+设置函数的返回值。
+
+- `T`: 返回值类型
+- `value`: 要设置的返回值
+
+## 备注
+
+`GetReturn (int index)` 方法已被标记为过时,请使用 `GetReturn ()` 替代。 

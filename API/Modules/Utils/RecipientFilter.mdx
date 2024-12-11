@@ -1,0 +1,100 @@
+---
+title: RecipientFilter
+sidebar_position: 1
+tags: [utils, recipients, players]
+---
+
+# RecipientFilter 类
+
+`RecipientFilter` 类是一个通用的过滤器，用于确定消息、声音等应该发送给哪些玩家。它实现了 `IList<CCSPlayerController>` 和 `IMarshalToNative` 接口。
+
+## 构造函数
+
+### RecipientFilter()
+创建一个空的接收者过滤器。
+
+### RecipientFilter(params CCSPlayerController[] slots)
+使用指定的玩家控制器创建过滤器。
+
+### RecipientFilter(params int[] slots)
+使用指定的玩家槽位创建过滤器。
+
+### RecipientFilter(ulong mask)
+使用位掩码创建过滤器，每个位代表一个玩家槽位。
+
+## 属性
+
+| 属性 | 类型 | 描述 |
+|------|------|------|
+| `Count` | `int` | 获取过滤器中的玩家数量 |
+| `IsReadOnly` | `bool` | 获取过滤器是否为只读（始终返回 false） |
+
+## 方法
+
+### GetRecipientMask()
+```csharp
+public ulong GetRecipientMask()
+```
+获取表示当前接收者的位掩码。
+
+### Add(int slot)
+```csharp
+public void Add(int slot)
+```
+通过槽位号添加玩家到过滤器。
+
+### Add(CCSPlayerController item)
+```csharp
+public void Add(CCSPlayerController item)
+```
+添加玩家控制器到过滤器。
+
+### AddAllPlayers()
+```csharp
+public void AddAllPlayers()
+```
+添加所有玩家到过滤器。
+
+### Clear()
+```csharp
+public void Clear()
+```
+清空过滤器中的所有玩家。
+
+### Contains(CCSPlayerController item)
+```csharp
+public bool Contains(CCSPlayerController item)
+```
+检查指定玩家是否在过滤器中。
+
+### Remove(CCSPlayerController item)
+```csharp
+public bool Remove(CCSPlayerController item)
+```
+从过滤器中移除指定玩家。
+
+## 隐式转换
+
+支持从 `CCSPlayerController` 到 `RecipientFilter` 的隐式转换。
+
+## 使用示例
+
+```csharp
+// 创建一个空的过滤器
+var filter = new RecipientFilter();
+
+// 添加特定玩家
+filter.Add(player);
+
+// 添加所有玩家
+filter.AddAllPlayers();
+
+// 使用玩家槽位创建过滤器
+var slotFilter = new RecipientFilter(0, 1, 2); // 添加槽位0、1、2的玩家
+
+// 使用位掩码创建过滤器
+var maskFilter = new RecipientFilter(0b111); // 添加前三个槽位的玩家
+
+// 隐式转换
+RecipientFilter singlePlayerFilter = player; // 创建只包含一个玩家的过滤器
+```

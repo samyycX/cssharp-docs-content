@@ -1,0 +1,77 @@
+---
+title: MemoryFunctionVoid
+sidebar_position: 3
+tags: [内存, 函数]
+---
+
+# MemoryFunctionVoid
+
+`MemoryFunctionVoid` 类系列提供了一组无返回值的内存函数类。
+
+## 描述
+
+这个类系列继承自 `BaseMemoryFunction`,提供了多个泛型版本以支持不同数量的参数。每个类都提供了一个 `Invoke` 方法来调用相应的内存函数。
+
+## 类型
+
+### MemoryFunctionVoid
+无参数版本。
+
+### MemoryFunctionVoid<T1>
+单参数版本。
+
+### MemoryFunctionVoid<T1, T2>
+双参数版本。
+
+### MemoryFunctionVoid<T1, T2, T3>
+三参数版本。
+
+### MemoryFunctionVoid<T1, T2, T3, T4>
+四参数版本。
+
+### MemoryFunctionVoid<T1, T2, T3, T4, T5>
+五参数版本。
+
+### MemoryFunctionVoid<T1, T2, T3, T4, T5, T6>
+六参数版本。
+
+### MemoryFunctionVoid<T1, T2, T3, T4, T5, T6, T7>
+七参数版本。
+
+### MemoryFunctionVoid<T1, T2, T3, T4, T5, T6, T7, T8>
+八参数版本。
+
+### MemoryFunctionVoid<T1, T2, T3, T4, T5, T6, T7, T8, T9>
+九参数版本。
+
+## 构造函数
+
+每个类都有两个构造函数:
+
+### (string signature)
+使用函数签名创建实例。
+
+- `signature`: ���数签名
+
+### (string signature, string binarypath)
+使用函数签名和二进制文件路径创建实例。
+
+- `signature`: 函数签名
+- `binarypath`: 二进制文件路径
+
+## 方法
+
+### Invoke([params])
+调用内存函数。参数数量和类型取决于具体的泛型版本。
+
+## 示例
+
+```csharp
+// 创建无参数的内存函数
+var func = new MemoryFunctionVoid("signature");
+func.Invoke();
+
+// 创建双参数的内存函数
+var func2 = new MemoryFunctionVoid<int, string>("signature");
+func2.Invoke(42, "test");
+``` 

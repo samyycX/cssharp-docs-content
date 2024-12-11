@@ -17,7 +17,7 @@ namespace CounterStrikeSharp.API.Modules.Utils
 ## 类定义
 
 ```csharp
-public class CHandle<T> where T : NativeObject
+public class CHandle  where T : NativeObject
 {
     public uint Value { get; }  // 句柄值
 }
@@ -49,8 +49,8 @@ public void Reset()  // 重置句柄
 ## 运算符重载
 
 ```csharp
-public static implicit operator T(CHandle<T> handle)  // 从句柄到实体的隐式转换
-public static implicit operator CHandle<T>(T entity)  // 从实体到句柄的隐式转换
+public static implicit operator T(CHandle  handle)  // 从句柄到实体的隐式转换
+public static implicit operator CHandle (T entity)  // 从实体到句柄的隐式转换
 ```
 
 ## 使用示例

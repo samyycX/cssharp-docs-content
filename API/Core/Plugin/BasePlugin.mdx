@@ -145,10 +145,10 @@ public void RegisterAllAttributes(object instance)
 public void InitializeConfig(object instance, Type pluginType)
 
 // 注册监听器
-public CallbackSubscriber RegisterListener<T>(Action callback)
+public CallbackSubscriber RegisterListener (Action callback)
 
 // 注册事件处理器
-public CallbackSubscriber RegisterEventHandler<T>(Func<T, GameEventInfo, HookResult> handler)
+public CallbackSubscriber RegisterEventHandler (Func<T, GameEventInfo, HookResult> handler)
 
 // 注册命令
 public void AddCommand(string name, string description, CommandCallback callback)

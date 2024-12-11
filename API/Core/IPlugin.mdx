@@ -1,0 +1,131 @@
+---
+title: IPlugin
+sidebar_position: 7
+tags: [core, plugins, interface]
+---
+
+# IPlugin 接口
+
+`IPlugin` 是所有 CounterStrikeSharp 插件必须实现的接口。它定义了插件的基本结构和生命周期方法。
+
+## 属性
+
+### 基本信息
+```csharp
+string ModuleName { get; }
+string ModuleVersion { get; }
+string ModuleAuthor { get; }
+string ModuleDescription { get; }
+```
+
+插件的基本信息属性：
+- `ModuleName`: 插件名称
+- `ModuleVersion`: 插件版本
+- `ModuleAuthor`: 插件作者
+- `ModuleDescription`: 插件描述
+
+### 路径和服务
+```csharp
+string ModulePath { get; internal set; }
+ILogger Logger { get; set; }
+IStringLocalizer Localizer { get; set; }
+ICommandManager CommandManager { get; set; }
+```
+
+插件的路径和核心服务：
+- `ModulePath`: 插件DLL文件的路径
+- `Logger`: 日志记录器
+- `Localizer`: 本地化服务
+- `CommandManager`: 命令管理器
+
+## 生命周期方法
+
+### Load
+```csharp
+void Load(bool hotReload)
+```
+
+插件加载时调用。相当于插件的构造函数。
+- `hotReload`: 是否为热重载（在插件文件夹中替换DLL文件时）
+
+### Unload
+```csharp
+void Unload(bool hotReload)
+```
+
+插件卸载时调用。用于清理资源。事件处理器和监听器会自动注销。
+- `hotReload`: 是否为热重载
+
+### OnAllPluginsLoaded
+```csharp
+void OnAllPluginsLoaded(bool hotReload)
+```
+
+所有插件加载完成后调用。在重载或延迟加载后也会调用。
+- `hotReload`: 是否为热重载
+
+## 配置和属性方法
+
+### RegisterAllAttributes
+```csharp
+void RegisterAllAttributes(object instance)
+```
+
+注册实例上的所有特性。
+
+### InitializeConfig
+```csharp
+void InitializeConfig(object instance, Type pluginType)
+```
+
+初始化插件配置。
+
+## 使用示例
+
+```csharp
+public class MyPlugin : IPlugin
+{
+    public string ModuleName => "MyPlugin";
+    public string ModuleVersion => "1.0.0";
+    public string ModuleAuthor => "Your Name";
+    public string ModuleDescription => "A sample plugin";
+
+    public ILogger Logger { get; set; }
+    public IStringLocalizer Localizer { get; set; }
+    public ICommandManager CommandManager { get; set; }
+    public string ModulePath { get; set; }
+
+    public void Load(bool hotReload)
+    {
+        Logger.LogInformation("Plugin is loading...");
+        // 初始化插件
+    }
+
+    public void Unload(bool hotReload)
+    {
+        Logger.LogInformation("Plugin is unloading...");
+        // 清理资源
+    }
+
+    public void OnAllPluginsLoaded(bool hotReload)
+    {
+        Logger.LogInformation("All plugins have been loaded");
+        // 处理依赖其他插件的初始化
+    }
+
+    public void Dispose()
+    {
+        // 实现 IDisposable
+    }
+}
+```
+
+## 注意事项
+
+- 必须实现所有接口成员
+- `Load` 方法是插件的主要初始化点
+- `Unload` 方法应该清理所有资源
+- `OnAllPluginsLoaded` 适合处理插件间依赖
+- 使用提供的服务（Logger、Localizer等）而不是创建自己的实例
+- 配置初始化通常在 `Load` 方法中完成
+- 热重载功能需要特别注意状态的保存和恢复

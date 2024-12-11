@@ -1,0 +1,111 @@
+---
+title: NativeEntity 类
+description: CounterStrikeSharp 中的原生实体基类
+icon: Box
+---
+
+# NativeEntity 类
+
+`NativeEntity` 是一个抽象基类，继承自 `NativeObject`，用于表示游戏中的实体对象。它提供了实体句柄和指针之间的转换功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 类定义
+
+```csharp
+public abstract class NativeEntity : NativeObject
+```
+
+## 属性
+
+### Handle
+
+```csharp
+public new IntPtr Handle { get; }
+```
+
+获取实体的内存指针。通过实体句柄获取实体指针，如果实体无效则返回 `IntPtr.Zero`。
+
+### EntityHandle
+
+```csharp
+public CEntityHandle EntityHandle { get; }
+```
+
+获取实体的句柄。这是一个唯一标识实体的值。
+
+## 构造函数
+
+### NativeEntity(IntPtr pointer)
+
+```csharp
+public NativeEntity(IntPtr pointer) : base(pointer)
+```
+
+使用实体指针创建实体实例。
+
+参数：
+- `pointer`: 指向实体的内存指针
+
+### NativeEntity(uint rawHandle)
+
+```csharp
+public NativeEntity(uint rawHandle) : base(EntitySystem.GetEntityByHandle(rawHandle) ?? IntPtr.Zero)
+```
+
+使用原始句柄创建实体实例。
+
+参数：
+- `rawHandle`: 实体的原始句柄值
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventPlayerSpawn>((ev, info) =>
+        {
+            var player = ev.Userid;
+            if (player != null)
+            {
+                // 获取玩家实体的句柄
+                var handle = player.EntityHandle;
+                
+                // 使用句柄创建新的实体实例
+                var newPlayerEntity = new CCSPlayerController(handle.Value);
+                
+                // 检查实体是否有效
+                if (newPlayerEntity.Handle != IntPtr.Zero)
+                {
+                    newPlayerEntity.PrintToChat("实体重新创建成功！");
+                }
+            }
+            
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 说明
+
+- 作为所有游戏实体的基类
+- 管理实体句柄和指针的转换
+- 提供实体有效性检查
+- 支持不同的实体创建方式
+- 确保实体引用的安全性
+
+## 最佳实践
+
+- 检查实体的有效性
+- 正确处理实体句柄
+- 注意实体的生命周期
+- 避免保存过期的实体引用
+- 使用适当的构造方法
+- 处理无效实体的情况 

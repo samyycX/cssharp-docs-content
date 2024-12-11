@@ -1,0 +1,191 @@
+---
+title: Utilities 类
+description: CounterStrikeSharp 中的实用工具类
+icon: Tools
+---
+
+# Utilities 类
+
+`Utilities` 是一个静态工具类，提供了各种游戏实体操作、玩家查找、数据转换等实用功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 类定义
+
+```csharp
+public static class Utilities
+```
+
+## 常量
+
+```csharp
+public const int MaxEdictBits = 15;
+public const int MaxEdicts = 1 << MaxEdictBits;
+public const int NumEHandleSerialNumberBits = 17;
+public const uint InvalidEHandleIndex = 0xFFFFFFFF;
+```
+
+## 扩展方法
+
+### FlagsToList&lt;T&gt;
+
+```csharp
+public static IEnumerable  FlagsToList (this T flags) where T : Enum
+```
+
+将枚举标志转换为列表。
+
+## 实体操作方法
+
+### GetEntityFromIndex&lt;T&gt;
+
+```csharp
+public static T? GetEntityFromIndex (int index) where T : CEntityInstance
+```
+
+通过索引获取实体。
+
+### CreateEntityByName&lt;T&gt;
+
+```csharp
+public static T? CreateEntityByName (string name) where T : CBaseEntity
+```
+
+通过名称创建实体。
+
+### GetPlayerFromIndex
+
+```csharp
+public static CCSPlayerController? GetPlayerFromIndex(int index)
+```
+
+通过索引获取玩家控制器。
+
+### GetPlayerFromSlot
+
+```csharp
+public static CCSPlayerController? GetPlayerFromSlot(int slot)
+```
+
+通过槽位获取玩家控制器。
+
+### GetPlayerFromUserid
+
+```csharp
+public static CCSPlayerController? GetPlayerFromUserid(int userid)
+```
+
+通过用户ID获取玩家控制器。
+
+### GetPlayerFromSteamId
+
+```csharp
+public static CCSPlayerController? GetPlayerFromSteamId(ulong steamId)
+```
+
+通过Steam ID获取玩家控制器。
+
+### RemoveItemByDesignerName
+
+```csharp
+public static bool RemoveItemByDesignerName(this CCSPlayerController player, string designerName)
+public static bool RemoveItemByDesignerName(this CCSPlayerController player, string designerName, bool shouldRemoveEntity)
+```
+
+通过设计器名称移除玩家物品。
+
+### FindAllEntitiesByDesignerName&lt;T&gt;
+
+```csharp
+public static IEnumerable  FindAllEntitiesByDesignerName (string designerName) where T : CEntityInstance
+```
+
+通过设计器名称查找所有实体。
+
+### GetAllEntities
+
+```csharp
+public static IEnumerable<CEntityInstance> GetAllEntities()
+```
+
+获取所有实体。
+
+### GetPlayers
+
+```csharp
+public static List<CCSPlayerController> GetPlayers()
+```
+
+获取所有有效的玩家控制器。
+
+## 网络和状态方法
+
+### SetStateChanged
+
+```csharp
+public static void SetStateChanged(CBaseEntity entity, string className, string fieldName, int extraOffset = 0)
+```
+
+标记实体的字段状态已更改，用于网络传输。
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 获取所有玩家
+        var players = Utilities.GetPlayers();
+        foreach (var player in players)
+        {
+            player.PrintToChat("服务器已加载插件");
+        }
+        
+        // 通过Steam ID查找玩家
+        var steamId = 76561198012345678UL;
+        var player = Utilities.GetPlayerFromSteamId(steamId);
+        if (player != null)
+        {
+            // 移除玩家的武器
+            player.RemoveItemByDesignerName("weapon_ak47");
+        }
+        
+        // 查找所有特定类型的实体
+        var bombs = Utilities.FindAllEntitiesByDesignerName<CBaseEntity>("weapon_c4");
+        foreach (var bomb in bombs)
+        {
+            Console.WriteLine($"找到炸弹: {bomb.Handle}");
+        }
+        
+        // 将枚举标志转换为列表
+        var flags = PlayerFlags.FL_ONGROUND | PlayerFlags.FL_DUCKING;
+        var flagList = flags.FlagsToList();
+        foreach (var flag in flagList)
+        {
+            Console.WriteLine($"玩家标志: {flag}");
+        }
+    }
+}
+```
+
+## 说明
+
+- 提供实体管理功能
+- 支持玩家查找和操作
+- 处理网络状态更新
+- 提供枚举和标志转换
+- 支持实体遍历和查找
+
+## 最佳实践
+
+- 检查返回的实体是否有效
+- 合理使用网络状态更新
+- 注意实体查找的性能
+- 正确处理空引用
+- 适当使用实体缓存
+- 注意内存管理

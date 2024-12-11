@@ -1,0 +1,44 @@
+---
+title: CommandExtensions
+sidebar_position: 2
+tags: [commands, extensions]
+---
+
+# CommandExtensions 类
+
+`CommandExtensions` 是一个静态类，为 `CommandInfo` 类提供了额外的扩展方法。
+
+## 方法
+
+### GetArgTargetResult
+
+```csharp
+public static TargetResult GetArgTargetResult(this CommandInfo commandInfo, int index)
+```
+
+将指定索引位置的参数作为目标字符串（如 @all、@me 等）进行处理，并返回目标结果。
+
+#### 参数
+
+- `commandInfo`: 当前命令的信息对象
+- `index`: 要处理的参数索引
+
+#### 返回值
+
+返回 `TargetResult` 对象，包含目标选择的结果。
+
+#### 使用示例
+
+```csharp
+public void OnCommand(CommandInfo command)
+{
+    // 获取第一个参数的目标结果
+    var targetResult = command.GetArgTargetResult(1);
+    
+    // 处理目标结果
+    if (targetResult.Players.Count > 0)
+    {
+        // 对目标玩家执行操作
+    }
+}
+``` 

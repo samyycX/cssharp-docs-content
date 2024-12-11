@@ -1,0 +1,74 @@
+---
+title: IValidator
+sidebar_position: 1
+tags: [cvars, validators, interfaces]
+---
+
+# IValidator  接口
+
+`IValidator ` 接口定义了一个通用的验证器接口，用于验证控制台变量（ConVar）的值。
+
+## 方法
+
+### Validate
+```csharp
+bool Validate(T value, out string? errorMessage)
+```
+
+验证指定的值是否有效。
+
+#### 参数
+- `value`: 要验证的值
+- `errorMessage`: 如果验证失败，输出错误消息
+
+#### 返回值
+- `true`: 如果值有效
+- `false`: 如果值无效
+
+## 使用示例
+
+```csharp
+// 实现一个简单的范围验证器
+public class RangeValidator : IValidator<int>
+{
+    private readonly int _min;
+    private readonly int _max;
+
+    public RangeValidator(int min, int max)
+    {
+        _min = min;
+        _max = max;
+    }
+
+    public bool Validate(int value, out string? errorMessage)
+    {
+        if (value >= _min && value <= _max)
+        {
+            errorMessage = null;
+            return true;
+        }
+
+        errorMessage = $"值必须在 {_min} 和 {_max} 之间";
+        return false;
+    }
+}
+
+// 使用验证器
+var validator = new RangeValidator(0, 100);
+if (validator.Validate(50, out var error))
+{
+    // 值有效
+}
+else
+{
+    // 值无效，使用error中的错误消息
+}
+```
+
+## 注意事项
+
+- 验证器应该是无状态的
+- 错误消息应该清晰地描述验证失败的原因
+- 验证器可以用于任何类型的值，只要指定了正确的泛型参数
+- 通常用于ConVar系统中验证用户输入的值
+``` 

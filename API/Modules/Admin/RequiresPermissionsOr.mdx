@@ -1,0 +1,85 @@
+---
+title: RequiresPermissionsOr 类
+description: 实现 OR 逻辑的权限要求属性类
+icon: Lock
+---
+
+# RequiresPermissionsOr 类
+
+`RequiresPermissionsOr` 是一个特殊的权限属性类，它继承自 `BaseRequiresPermissions`，实现了 OR 逻辑的权限检查。这意味着只要玩家拥有指定权限中的任意一个，就可以执行命令。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Admin
+```
+
+## 特性说明
+
+```csharp
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+```
+
+- 只能用于方法
+- 允许多个属性
+- 支持继承
+
+## 构造函数
+
+```csharp
+public RequiresPermissionsOr(params string[] permissions) : base(permissions)
+```
+
+创建一个新的 OR 逻辑权限要求实例。
+
+### 参数
+
+- `permissions`: 所需的权限数组（只需满足其中之一）
+
+## 方法
+
+### CanExecuteCommand
+
+```csharp
+public override bool CanExecuteCommand(CCSPlayerController? caller)
+```
+
+检查指定玩家是否可以执行命令。只要玩家满足以下任一条件即可：
+- 拥有任一指定的组权限
+- 拥有任一指定的用户���限
+- 拥有相关域的根权限
+
+#### 参数
+
+- `caller`: 尝试执行命令的玩家控制器
+
+#### 返回值
+
+- `bool`: 如果玩家满足任一权限要求则返回 true，否则返回 false
+
+## 使用示例
+
+```csharp
+// 在方法上使用 RequiresPermissionsOr 属性
+[RequiresPermissionsOr("@css/admin", "@css/kick")]
+public void KickPlayer(CCSPlayerController caller, string targetName)
+{
+    // 方法实现
+}
+
+// 使用多个 RequiresPermissionsOr 属性
+[RequiresPermissionsOr("@css/admin")]
+[RequiresPermissionsOr("@css/kick", "@css/ban")]
+public void ModeratePlayer(CCSPlayerController caller, string targetName)
+{
+    // 方法实现
+}
+```
+
+## 权限检查逻辑
+
+1. 首先检查命令覆盖设置
+2. 检查玩家是否有相关域的根权限
+3. 如果有根权限，移除该域下的所有权限检查
+4. 分别检查组权限和用户权限
+5. 只要满足任一权限即可通过检查 

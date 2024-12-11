@@ -1,0 +1,63 @@
+---
+title: BaseRequiresPermissions 类
+description: 权限要求的基础类
+icon: Lock
+---
+
+# BaseRequiresPermissions 类
+
+`BaseRequiresPermissions` 是一个基础属性类，用于实现权限检查功能。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API.Modules.Admin
+```
+
+## 属性
+
+| 属性名 | 类型 | 描述 |
+|--------|------|------|
+| `Permissions` | `HashSet<string>` | 命令所需的权限集合 |
+| `Command` | `string` | 与此属性关联的命令名称 |
+| `Enabled` | `bool` | 此属性是否用于权限检查 |
+
+## 构造函数
+
+```csharp
+public BaseRequiresPermissions(params string[] permissions)
+```
+
+创建一个新的权限要求实例。
+
+### 参数
+
+- `permissions`: 所需的权限数组
+
+## 方法
+
+### CanExecuteCommand
+
+```csharp
+public virtual bool CanExecuteCommand(CCSPlayerController? caller)
+```
+
+检查指定玩家是否可以执行命令。
+
+#### 参数
+
+- `caller`: 尝试执行命令的玩家控制器
+
+#### 返回值
+
+- `bool`: 如果玩家有权限执行命令则返回 true，否则返回 false
+
+## 使用示例
+
+```csharp
+// 创建一个基础权限要求
+var requiresPermissions = new BaseRequiresPermissions("@css/admin", "@css/kick");
+
+// 检查玩家是否可以执行命令
+bool canExecute = requiresPermissions.CanExecuteCommand(player);
+``` 

@@ -6,7 +6,7 @@ icon: Settings
 
 # IPluginConfig 接口
 
-`IPluginConfig<T>` 接口定义了插件配置的基本结构。它允许插件以类型安全的方式管理其配置。
+`IPluginConfig ` 接口定义了插件配置的基本结构。它允许插件以类型安全的方式管理其配置。
 
 ## 命名空间
 
@@ -17,7 +17,7 @@ namespace CounterStrikeSharp.API.Core
 ## 接口定义
 
 ```csharp
-public interface IPluginConfig<T> where T : IBasePluginConfig, new()
+public interface IPluginConfig  where T : IBasePluginConfig, new()
 {
     T Config { get; set; }
 }
