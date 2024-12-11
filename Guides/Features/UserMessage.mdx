@@ -1,0 +1,177 @@
+---
+title: UserMessage 
+description: NetMessage 与 UserMessage
+---
+
+# 什么是 NetMessage？
+
+NetMessage 是 CS2 网络通信使用的一系列数据包，本质通过 Protobuf 实现。
+
+# 什么是 UserMessage？
+
+准确的来说，UserMessage 是 NetMessage 的一种，他通过 `CSVCMsg_UserMessage (72)` NetMessage Protobuf 发送。
+从内容看，UserMessage 主要负责游戏性的网络通信。
+
+<Callout title="警告" type="warn">
+  在 CounterStrikeSharp 中，NetMessage 和 UserMessage 都使用 `UserMessage` 类表示，这意味着所有 NetMessage 都可以被 CounterStrikeSharp 处理。
+</Callout>
+
+# 从何处获取这些 Protobuf 结构？
+
+CS2的全 Proto 文件仓库：[https://github.com/SteamDatabase/GameTracking-CS2](https://github.com/SteamDatabase/GameTracking-CS2/blob/master/Protobufs/)
+
+# UserMessage 对象
+
+虽然目前的 CounterStrikeSharp 无法做到与 Protobuf 对象直接交互，但它提供了 `UserMessage` 对象，其本质是一个 Protobuf 对象，但是只能对其进行一些基础的读写操作。
+
+## 构造 UserMessage
+
+你可以使用两种方式来构造一个 UserMessage 对象。
+### 从 id 创建
+```csharp
+UserMessage.FromId(messageId);
+```
+创建一个  对应 id `messageId` 的 UserMessage 对象，具体 id 可以在 Proto 文件中获得。
+
+**样例：**
+```csharp
+UserMessage.FromId(120);
+```
+创建一个 `UM_Shake (120)` UserMessage，其结构为 `CUserMessageShake`。
+
+### 从 部分名称 创建
+
+```csharp
+UserMessage.FromPartialName(partialName);
+```
+寻找名称含有 `partialName` 的 NetMessage 并创建一个 UserMessage 对象，具体名称可以在 Proto 文件中获得。
+**样例：**
+```csharp
+UserMessage.FromPartialName("SayText2");
+```
+创建一个 `UM_SayText (118)` UserMessage，其结构为 `CUserMessageSayText2`。
+
+
+## 读取字段
+
+你可以使用以下示例代码在 CounterStrikeSharp 中读取一个 UserMessage 的字段：
+```csharp
+UserMessage userMessage; // 你的 userMessage
+bool f1 = userMessage.ReadBool(fieldName, index); // 读取 bool 类型
+double f2 = userMessage.ReadDouble(fieldName, index); // 读取 double 类型
+float f3 = userMessage.ReadFloat(fieldName, index); // 读取 float 类型
+int f4 = userMessage.ReadInt(fieldName, index); // 读取 int 类型
+long f5 = userMessage.ReadInt64(fieldName, index); // 读取 long 类型
+uint f6 = userMessage.ReadUInt(fieldName, index); // 读取 uint 类型
+ulong f7 = userMessage.ReadUInt64(fieldName, index); // 读取 ulong 类型
+string f8 = userMessage.ReadString(fieldName, index); // 读取 string 类型
+```
+其中 `fieldName` 是字段名称，`index` 是一个可留空的参数，读取 `repeated` 字段时需要传入，代表索引。
+
+<Callout title="警告" type="warn">
+  由于技术限制，你目前只能在 CounterStrikeSharp 中操作以上基础类型，不支持嵌套复杂类型。
+</Callout>
+
+## 写入字段
+
+你可以使用以下示例代码在 CounterStrikeSharp 中写入一个 UserMessage 的字段。
+
+如果字段是单个值：
+```csharp
+UserMessage userMessage; // 你的 userMessage
+userMessage.SetBool(fieldName, value); // 写入 bool 类型
+userMessage.SetDouble(fieldName, value); // 写入 double 类型
+userMessage.SetFloat(fieldName, value); // 写入 float 类型
+userMessage.SetInt(fieldName, value); // 写入 int 类型
+userMessage.SetInt64(fieldName, value); // 写入 long 类型
+userMessage.SetUInt(fieldName, value); // 写入 uint 类型
+userMessage.SetUInt64(fieldName, value); // 写入 ulong 类型
+userMessage.SetString(fieldName, value); // 写入 string 类型
+```
+
+如果字段是 `repeated` 字段：
+```csharp
+UserMessage userMessage; // 你的 userMessage
+userMessage.AddBool(fieldName, value); // 添加 bool 类型
+userMessage.AddDouble(fieldName, value); // 添加 double 类型
+userMessage.AddFloat(fieldName, value); // 添加 float 类型
+userMessage.AddInt(fieldName, value); // 添加 int 类型
+userMessage.AddInt64(fieldName, value); // 添加 long 类型
+userMessage.AddUInt(fieldName, value); // 添加 uint 类型
+userMessage.AddUInt64(fieldName, value); // 添加 ulong 类型
+userMessage.AddString(fieldName, value); // 添加 string 类型
+```
+
+其中 `fieldName` 是字段名称。
+
+<Callout title="警告" type="warn">
+  由于技术限制，你目前只能在 CounterStrikeSharp 中操作以上基础类型，不支持嵌套复杂类型。
+</Callout>
+
+### Recipients
+
+Recipients 是 UserMessage 的接收者列表，代表一个 UserMessage 可以发送给哪些玩家，你可以使用以下示例代码来设置 Recipients：
+```csharp
+UserMessage userMessage; // 你的 userMessage
+userMessage.Recipients.Add(playerController); // 将一个玩家添加到接收者列表
+userMessage.Recipients.Remove(playerController); // 将一个玩家从接收者列表移除
+userMessage.Recipients.AddAllPlayers(); // 添加所有玩家
+userMessage.Recipients.Clear(); // 删除所有玩家
+```
+
+# 监听 NetMessage
+
+你可以使用以下示例代码在 CounterStrikeSharp 中注册一个 NetMessage 监听器：
+```csharp
+HookUserMessage(messageId, (userMessage) => {
+    return HookResult.Continue;
+}, HookMode.Pre);
+```
+参数解释：
+- `messageId`: NetMessage 或 UserMessage 的 id, 可以在上文中的 Proto 文件中获得
+- `userMessage`: `UserMessage` 对象
+- `HookMode`: Hook 模式
+
+可以看到，监听 NetMessage 的方式和 Hook 函数基本是一样的。
+
+<Callout title="警告" type="warn">
+  截至 2024 年 12 月 11 日，CounterStrikeSharp 仅支持监听从服务器发至客户端的 NetMessage，而不支持客户端发送至服务器的 NetMessage。
+</Callout>
+
+# 主动发送 NetMessage
+你可以使用以下示例代码在 CounterStrikeSharp 中主动发送一个 NetMessage：
+```csharp
+UserMessage userMessage = UserMessage.FromId(messageId); // 准备你的 UserMessage
+userMessage.SetBool(fieldName, value); // 写入需要的字段
+userMessage.Recipients.AddAllPlayers(); // 添加所有玩家
+userMessage.Send(); // 发送
+```
+
+# 实际应用样例
+
+## 屏蔽所有由 point_soundevent 发出的声音
+```csharp
+// 208 : GE_SosStartSoundEvent 
+HookUserMessage(208, (userMessage) => {
+    int entityIndex = userMessage.ReadInt("source_entity_index");
+    CEntityInstance? entity = Utilities.GetEntityFromIndex<CEntityInstance>(index);
+    if (entity?.DesignerName == "point_soundevent")
+    {
+      userMessage.Recipients.Clear();
+    }
+    return HookResult.Continue;
+}, HookMode.Pre);
+```
+
+## 向指定玩家发送一个屏幕抖动
+```csharp
+var userMessage = UserMessage.FromPartialName("Shake");
+
+userMessage.SetFloat("duration", 2);
+userMessage.SetFloat("amplitude", 5);
+userMessage.SetFloat("frequency", 10f);
+userMessage.SetInt("command", 0);
+
+userMessage.Recipients.Add(player);
+
+message.Send();
