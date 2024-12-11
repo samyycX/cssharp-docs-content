@@ -1,0 +1,34 @@
+---
+title: 全局监听器
+description: 如何创建 CounterStrikeSharp 全局监听器
+icon: Calendar-check
+---
+
+# 全局监听器
+
+如何创建 CounterStrikeSharp 全局监听器?
+
+## 添加监听器
+
+全局侦听器的类型多种多样，无法自动注册，因此您需要手动添加它们，可以通过在 `Load` 方法中调用 `RegisterListener` 来添加。
+
+```csharp
+public override void Load(bool hotReload)
+{
+    RegisterListener<Listeners.OnEntitySpawned>(entity =>
+    {
+        if (entity.DesignerName != "smokegrenade_projectile") return;
+
+        var projectile = new CSmokeGrenadeProjectile(entity.Handle);
+
+        // 每次生成烟雾弹时将其颜色更改为随机颜色。
+        Server.NextFrame(() =>
+        {
+            projectile.SmokeColor.X = Random.Shared.NextSingle() * 255.0f;
+            projectile.SmokeColor.Y = Random.Shared.NextSingle() * 255.0f;
+            projectile.SmokeColor.Z = Random.Shared.NextSingle() * 255.0f;
+            Logger.LogInformation("Smoke grenade spawned with color {SmokeColor}", projectile.SmokeColor);
+        });
+    });
+}
+```
