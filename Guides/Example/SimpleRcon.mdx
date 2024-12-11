@@ -1,0 +1,66 @@
+---
+title:实现简单的Rcon命令功能
+description:只能实现在游戏内执行命令 做不到完全修复原版rcon
+icon: terminal
+---
+
+# 实现简单的Rcon命令
+
+**由于CS2原版的Rcon无法使用，这个示例就可以让你实现一个在游戏内执行Rcon命令**
+
+<Callout title="警告" type="error">
+    以下代码是每个玩家都可以执行！！！ 请配合CounterStrikeSharp中的管理员框架使用
+</Callout>
+
+```c#
+public class RconCommand : BasePlugin
+{
+    //这里使用override关键字重写 ModuleName（插件的名称，版本，作者名，描述内容）
+    //安装好插件,在你启动CS2服务端后可以输入css_plugins list 来查看已加载的插件的信息就包括以上内容
+    public override string ModuleName => "RCON Command Plugin";
+    public override string ModuleVersion => "0.0.1a";
+    public override string ModuleAuthor => "L1MIT1337";
+    public override string ModuleDescription => "RCON Command Plugin Author's Github: https://github.com/L1MIT1337/";
+
+    //这里使用的是在Load()方法内注册命令，当然你也可以在案例中使用其他方法来注册命令
+    public override void Load(bool hotReload)
+    {
+        //将"RCON插件已加载" 打印到CS2服务端控制台
+        Console.WriteLine("RCON插件已加载");
+
+        //使用AddCommand()方法添加命令 第一个参数是命令 第二个是描述 第三个是输入命令后触发的方法或者说事件
+        //这里需要在游戏控制台输入.rcon 如需在聊天框输入!rcon 则把第一个参数更改为css_rcon
+        AddCommand(".rcon", "Execute RCON command", CommandRcon);
+
+    }
+
+    private void CommandRcon(CCSPlayerController? player, CommandInfo command)
+    {
+        // 检查玩家是否为空 为空就返回
+        if (player == null)
+        {
+            player?.PrintToConsole($" \x02你没有权限执行此命令！");
+            player?.PrintToChat($" \x02你没有权限执行此命令！");
+            return;
+        }
+
+        // 获取命令参数 command的方法可去指南中的 控制台命令 查看
+        string rconCommand = command.ArgString;
+
+        //如果命令为空就在控制台和聊天框内打印"用法: .rcon <命令>"
+        if (string.IsNullOrEmpty(rconCommand))
+        {
+            player.PrintToConsole("用法: .rcon <命令>");
+            player.PrintToChat("用法: .rcon <命令>");
+            return;
+        }
+
+        // 执行命令
+        Server.ExecuteCommand(rconCommand);
+        //在聊天框打印以下内容
+        player.PrintToChat($" \x04已执行RCON命令: {rconCommand}"); // 使用绿色(\x04)显示成功消息
+    }
+
+}
+```
+
