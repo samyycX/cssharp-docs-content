@@ -29,4 +29,7 @@ icon: 文档Icon(非必须)，Icon 值源自 https://lucide.dev/icons/ ，首字
 ---
 ```
 
+关于mdx文件名:
+必须为大写，例如core-configuration.mdx -> Core-Configuration.mdx
+
 感谢您对 CounterStrikeSharp 文档的贡献！
