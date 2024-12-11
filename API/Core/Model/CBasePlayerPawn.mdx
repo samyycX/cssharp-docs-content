@@ -1,0 +1,32 @@
+---
+title: CBasePlayerPawn
+sidebar_position: 4
+tags: [玩家, Pawn]
+---
+
+# CBasePlayerPawn
+
+`CBasePlayerPawn` 是玩家 Pawn 的基类。
+
+## 方法
+
+### CommitSuicide
+```csharp
+public void CommitSuicide(bool explode, bool force)
+```
+- 描述: 强制玩家自杀。
+- 参数:
+  - `explode`: 是否爆炸
+  - `force`: 是否强制执行
+- 异常: 如果实体无效,会抛出 `InvalidOperationException`。
+
+### RemovePlayerItem
+```csharp
+public void RemovePlayerItem(CBasePlayerWeapon weapon)
+```
+- 描述: 移除玩家的物品。
+- 参数:
+  - `weapon`: 要移除的武器实例
+- 异常: 
+  - 如果实体无效,会抛出 `InvalidOperationException`
+  - 如果武器实体无效,会抛出 `InvalidOperationException` 

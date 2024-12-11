@@ -1,0 +1,123 @@
+---
+title: Marshaling 类
+description: CounterStrikeSharp 中的数据封送处理工具
+icon: ArrowsUpDown
+---
+
+# Marshaling 类
+
+`Marshaling` 类提供了在托管代码和非托管代码之间转换数据的功能。它主要用于处理颜色等特殊类型的数据封送。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 类定义
+
+```csharp
+public static class Marshaling
+```
+
+## 静态属性
+
+### ColorMarshaler
+
+```csharp
+public static ColorMarshaler ColorMarshaler { get; }
+```
+
+用于处理颜色值的封送处理器。
+
+## 接口
+
+### ICustomMarshal&lt;T&gt;
+
+```csharp
+public interface ICustomMarshal<T>
+{
+    T NativeToManaged(IntPtr pointer);
+    void ManagedToNative(IntPtr pointer, T managedObj);
+}
+```
+
+定义了自定义封送处理器的接口。
+
+方法：
+- `NativeToManaged`: 将非托管数据转换为托管对象
+- `ManagedToNative`: 将托管对象转换为非托管数据
+
+### IMarshalToNative
+
+```csharp
+internal interface IMarshalToNative
+{
+    IEnumerable<object> GetNativeObject();
+}
+```
+
+定义了将对象转换为原生格式的接口。
+
+## 实现类
+
+### ColorMarshaler
+
+```csharp
+public class ColorMarshaler : ICustomMarshal<Color>
+```
+
+用于在托管的 `System.Drawing.Color` 和非托管的颜色值之间进行转换。
+
+方法：
+- `NativeToManaged`: 将32位整数颜色值转换为 Color 对象
+- `ManagedToNative`: 将 Color 对象转换为32位整数颜色值
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public void ColorConversionExample()
+    {
+        // 创建一个颜色对象
+        var color = Color.FromArgb(255, 128, 64, 32);
+        
+        // 分配非托管内存
+        IntPtr nativePtr = Marshal.AllocHGlobal(sizeof(int));
+        
+        try
+        {
+            // 将颜色转换为非托管格式
+            Marshaling.ColorMarshaler.ManagedToNative(nativePtr, color);
+            
+            // 从非托管格式转回颜色对象
+            Color convertedColor = Marshaling.ColorMarshaler.NativeToManaged(nativePtr);
+            
+            Console.WriteLine($"转换后的颜色: A={convertedColor.A}, R={convertedColor.R}, G={convertedColor.G}, B={convertedColor.B}");
+        }
+        finally
+        {
+            // 释放非托管内存
+            Marshal.FreeHGlobal(nativePtr);
+        }
+    }
+}
+```
+
+## 说明
+
+- 处理托管和非托管代码之间的数据转换
+- 提供颜色值的特殊处理
+- 支持自定义封送处理器
+- 管理内存安全转换
+- 确保数据格式正确性
+
+## 最佳实践
+
+- 正确处理非托管内存
+- 使用 try-finally 块确保资源释放
+- 验证转换后的数据
+- 注意字节序和数据对齐
+- 处理可能的转换异常
+- 遵循封送处理的性能最佳实践 

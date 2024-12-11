@@ -1,0 +1,83 @@
+---
+title: Guard 类
+description: CounterStrikeSharp 中的防护检查工具类
+icon: Shield
+---
+
+# Guard 类
+
+`Guard` 是一个静态工具类，用于执行各种防护检查，以确保代码的安全性和正确性。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 类定义
+
+```csharp
+public static class Guard
+```
+
+## 方法
+
+### IsValidEntity
+
+```csharp
+public static void IsValidEntity(CEntityInstance ent)
+```
+
+检查实体是否有效。如果实体无效，则抛出异常。
+
+参数：
+- `ent`: 要检查的实体实例
+
+异常：
+- `InvalidOperationException`: 当实体无效时抛出
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventPlayerSpawn>((ev, info) =>
+        {
+            var player = ev.Userid;
+            
+            try
+            {
+                // 在使用实体之前进行检查
+                Guard.IsValidEntity(player);
+                
+                // 实体有效，可以安全使用
+                player.PrintToChat("你已重生！");
+            }
+            catch (InvalidOperationException)
+            {
+                // 处理无效实体的情况
+                Console.WriteLine("玩家实体无效");
+            }
+            
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 说明
+
+- 提供实体有效性检查
+- 防止对无效实体的操作
+- 提供清晰的错误信息
+- 帮助早期发现问题
+
+## 最佳实践
+
+- 在使用实体之前进行检查
+- 适当处理异常情况
+- 在关键操作前使用防护检查
+- 配合 try-catch 使用
+- 记录防护检查失败的情况 

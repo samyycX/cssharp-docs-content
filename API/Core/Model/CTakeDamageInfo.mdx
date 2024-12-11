@@ -1,0 +1,26 @@
+---
+title: CTakeDamageInfo
+sidebar_position: 15
+tags: [伤害]
+---
+
+# CTakeDamageInfo
+
+`CTakeDamageInfo` 是用于处理伤害信息的类。
+
+## 方法
+
+### GetHitGroup
+```csharp
+public HitGroup_t GetHitGroup()
+```
+- 描述: 获取受击部位。
+- 返回: 返回一个 `HitGroup_t` 枚举值,表示玩家当前的受击部位。
+- 返回值:
+  - 如果无法确定受击部位,返回 `HitGroup_t.HITGROUP_INVALID`
+  - 如果是通用受击,返回 `HitGroup_t.HITGROUP_GENERIC`
+  - 其他情况返回具体的受击部位枚举值
+
+## 备注
+
+这个类用于在游戏中处理和传递伤害相关的信息,包括伤害量、伤害类型、受击部位等。 

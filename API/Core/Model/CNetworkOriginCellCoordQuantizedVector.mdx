@@ -1,0 +1,32 @@
+---
+title: CNetworkOriginCellCoordQuantizedVector
+sidebar_position: 13
+tags: [网络, 向量]
+---
+
+# CNetworkOriginCellCoordQuantizedVector
+
+`CNetworkOriginCellCoordQuantizedVector` 是一个用于网络传输的量化原点坐标向量类。
+
+## 常量
+
+### CELL_WIDTH
+- 值: `512` (1 << 9)
+- 描述: 单个网格单元的宽度。
+
+## 属性
+
+### Vector
+- 类型: `Vector`
+- 描述: 获取解量化后的向量。
+- 计算方式: 
+  ```csharp
+  new Vector(
+      (CellX - 32) * CELL_WIDTH + X,
+      (CellY - 32) * CELL_WIDTH + Y,
+      (CellZ - 32) * CELL_WIDTH + Z)
+  ```
+
+## 备注
+
+这个类用于在网络传输中优化向量数据的传输。它通过将向量数据量化为网格坐标来减少传输的数据量,同时保持足够的精度。 

@@ -1,0 +1,29 @@
+---
+title: CCheckTransmitInfo
+sidebar_position: 6
+tags: [网络, 传输]
+---
+
+# CCheckTransmitInfo
+
+`CCheckTransmitInfo` 是一个用于网络传输检查的结构体。
+
+## 属性
+
+### TransmitEntities
+- 类型: `CFixedBitVecBase`
+- 描述: 表示实体 n 已经标记为传输。
+
+### TransmitAlways
+- 类型: `CFixedBitVecBase`
+- 描述: 表示实体 n 总是发送,即使不在 PVS 中(仅用于 HLTV 和回放)。
+
+# CCheckTransmitInfoList
+
+`CCheckTransmitInfoList` 是一个实现了 `IReadOnlyList<(CCheckTransmitInfo info, CCSPlayerController? player)>` 的类。
+
+## 属性
+
+### Count
+- 类型: `int`
+- 描述: 获取列表中的元素数量。 

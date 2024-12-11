@@ -1,0 +1,96 @@
+---
+title: NativeObject 类
+description: CounterStrikeSharp 中的原生对象基类
+icon: Code
+---
+
+# NativeObject 类
+
+`NativeObject` 是一个抽象基类，用于封装和管理与游戏引擎原生对象的交互。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 类定义
+
+```csharp
+public abstract class NativeObject
+```
+
+## 属性
+
+### Handle
+
+```csharp
+public IntPtr Handle { get; internal set; }
+```
+
+表示原生对象的内存指针。这个指针用于与游戏引擎的原生代码进行交互。
+
+## 构造函数
+
+```csharp
+protected NativeObject(IntPtr pointer)
+```
+
+创建一个新的 `NativeObject` 实例。
+
+参数：
+- `pointer`: 指向原生对象的指针
+
+## 方法
+
+### As&lt;T&gt;
+
+```csharp
+public T As<T>() where T : NativeObject
+```
+
+将当前对象转换为指定类型的新实例。
+
+类型参数：
+- `T`: 目标类型，必须继承自 `NativeObject`
+
+返回值：
+- 使用当前对象的指针创建的新类型实例
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        RegisterEventHandler<EventPlayerSpawn>((ev, info) =>
+        {
+            var player = ev.Userid;
+            
+            // 将玩家对象转换为武器服务对象
+            var weaponServices = player.As<CCSPlayer_WeaponServices>();
+            
+            // 现在可以使用武器服务的特定功能
+            var activeWeapon = weaponServices.ActiveWeapon;
+            
+            return HookResult.Continue;
+        });
+    }
+}
+```
+
+## 说明
+
+- 作为所有原生对象包装器的基类
+- 管理与游戏引擎的底层交互
+- 提供类型安全的对象转换机制
+- 封装了原生内存指针的处理
+
+## 最佳实践
+
+- 谨慎使用 Handle 属性
+- 正确处理对象的生命周期
+- 使用 As&lt;T&gt; 方法进行安全的类型转换
+- 避免直接操作原生指针
+- 注意内存管理和资源释放

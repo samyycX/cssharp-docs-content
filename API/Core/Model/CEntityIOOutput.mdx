@@ -1,0 +1,85 @@
+---
+title: CEntityIOOutput
+sidebar_position: 10
+tags: [实体, IO]
+---
+
+# CEntityIOOutput
+
+`CEntityIOOutput` 是实体输入/输出系统的输出类。
+
+## 属性
+
+### Connections
+- 类型: `EntityIOConnection_t?`
+- 描述: 获取输出连接信息。
+
+### Description
+- 类型: `EntityIOOutputDesc_t`
+- 描述: 获取输出描述信息。
+
+# EntityIOOutputDesc_t
+
+`EntityIOOutputDesc_t` 是输出描述类。
+
+## 属性
+
+### Name
+- 类型: `string`
+- 描述: 获取输出名称。
+
+### Flags
+- 类型: `uint`
+- 描述: 获取或设置输出标志。
+
+### OutputOffset
+- 类型: `uint`
+- 描述: 获取或设置输出偏移量。
+
+# EntityIOConnection_t
+
+`EntityIOConnection_t` 是输出连接类,继承自 `EntityIOConnectionDesc_t`。
+
+## 属性
+
+### MarkedForRemoval
+- 类型: `bool`
+- 描述: 获取或设置是否标记为移除。
+
+### Next
+- 类型: `EntityIOConnection_t?`
+- 描述: 获取下一个连接。
+
+# EntityIOConnectionDesc_t
+
+`EntityIOConnectionDesc_t` 是连接描述的基类。
+
+## 属性
+
+### TargetDesc
+- 类型: `string`
+- 描述: 获取目标描述。
+
+### TargetInput
+- 类型: `string`
+- 描述: 获取目标输入。
+
+### ValueOverride
+- 类型: `string`
+- 描述: 获取值覆盖。
+
+### Target
+- 类型: `CEntityHandle`
+- 描述: 获取目标实体句柄。
+
+### TargetType
+- 类型: `EntityIOTargetType_t`
+- 描述: 获取或设置目标类型。
+
+### TimesToFire
+- 类型: `int`
+- 描述: 获取或设置触发次数。
+
+### Delay
+- 类型: `float`
+- 描述: 获取或设置延迟时间。 

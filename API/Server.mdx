@@ -1,0 +1,230 @@
+---
+title: Server 类
+description: CounterStrikeSharp 中的服务器功能类
+icon: Server
+---
+
+# Server 类
+
+`Server` 类提供了访问和控制服务器的各种功能，包括时间管理、命令执行、地图操作等。
+
+## 命名空间
+
+```csharp
+namespace CounterStrikeSharp.API
+```
+
+## 类定义
+
+```csharp
+public class Server
+```
+
+## 属性
+
+### TickInterval
+
+```csharp
+public static float TickInterval { get; }
+```
+
+单个游戏 tick 的持续时间（秒），基于 64 tick 服务器（CS2 中硬编码）。
+- 返回值：0.015625f（1/64 秒）
+
+### MapName
+
+```csharp
+public static string MapName { get; }
+```
+
+获取当前地图名称。
+
+### TickedTime
+
+```csharp
+public static double TickedTime { get; }
+```
+
+获取服务器运行的总时间（秒）。
+- 注意：服务器休眠时不会增加
+
+### CurrentTime
+
+```csharp
+public static float CurrentTime { get; }
+```
+
+获取当前地图时间（秒），作为服务器 tick 间隔的倍数。
+- 注意：服务器休眠时仍会增加
+
+### TickCount
+
+```csharp
+public static int TickCount { get; }
+```
+
+获取当前地图的 tick 计数。
+- CS2 是 64 tick 服务器，每秒增加 64
+
+### EngineTime
+
+```csharp
+public static double EngineTime { get; }
+```
+
+获取服务器运行的总时间（秒）。
+- 注意：服务器休眠时仍会增加
+
+### FrameTime
+
+```csharp
+public static float FrameTime { get; }
+```
+
+获取上一个服务器或客户端帧的处理时间。
+
+### GameDirectory
+
+```csharp
+public static string GameDirectory { get; }
+```
+
+获取游戏目录路径。
+
+### MaxPlayers
+
+```csharp
+public static int MaxPlayers { get; }
+```
+
+获取服务器最大玩家数。
+
+## 方法
+
+### ExecuteCommand
+
+```csharp
+public static void ExecuteCommand(string command)
+```
+
+在服务器上执行命令，就像从控制台输入一样。
+
+### PrecacheModel
+
+```csharp
+public static void PrecacheModel(string name)
+```
+
+预缓存模型文件。
+
+### RunOnTick / RunOnTickAsync
+
+```csharp
+public static void RunOnTick(int tick, Action task)
+public static Task RunOnTickAsync(int tick, Action task)
+```
+
+在指定的 tick 执行任务。
+- 注意：服务器休眠时不会执行
+
+### NextFrame / NextFrameAsync
+
+```csharp
+public static void NextFrame(Action task)
+public static Task NextFrameAsync(Action task)
+```
+
+在下一个游戏帧执行任务。
+- 注意：服务器休眠时不会执行
+
+### NextWorldUpdate / NextWorldUpdateAsync
+
+```csharp
+public static void NextWorldUpdate(Action task)
+public static Task NextWorldUpdateAsync(Action task)
+```
+
+在下一次世界更新时执行任务。
+- 注意：服务器休眠时仍会执行
+
+### PrintToChatAll
+
+```csharp
+public static void PrintToChatAll(string message)
+```
+
+向所有玩家的聊天框发送消息。
+
+### IsMapValid
+
+```csharp
+public static bool IsMapValid(string mapName)
+```
+
+检查指定地图是否有效。
+
+### GetMapList
+
+```csharp
+public static string[] GetMapList()
+```
+
+获取可用地图列表。
+
+### PrintToConsole
+
+```csharp
+public static void PrintToConsole(string s)
+```
+
+向服务器控制台打印消息。
+
+## 使用示例
+
+```csharp
+public class MyPlugin : BasePlugin
+{
+    public override void Load(bool hotReload)
+    {
+        // 获取服务器信息
+        Console.WriteLine($"当前地图: {Server.MapName}");
+        Console.WriteLine($"最大玩家数: {Server.MaxPlayers}");
+        Console.WriteLine($"服务器运行时间: {Server.EngineTime}秒");
+        
+        // 执行服务器命令
+        Server.ExecuteCommand("mp_warmup_time 60");
+        
+        // 向所有玩家发送消息
+        Server.PrintToChatAll("欢迎来到服务器！");
+        
+        // 在下一帧执行任务
+        Server.NextFrame(() =>
+        {
+            Server.PrintToChatAll("这条消息在下一帧显示");
+        });
+        
+        // 在指定tick执行任务
+        Server.RunOnTick(Server.TickCount + 128, () =>
+        {
+            Server.PrintToChatAll("这条消息将在2秒后显示");
+        });
+    }
+}
+```
+
+## 说明
+
+- 提供服务器控制功能
+- 管理时间和tick
+- 执行服务器命令
+- 处理地图相关操作
+- 支持异步任务执行
+
+## 最佳实践
+
+- 合理使用时间和tick函数
+- 注意服务器休眠状态
+- 正确处理异步操作
+- 避免频繁执行耗时命令
+- 适当使用预缓存功能
+- 注意消息发送频率
