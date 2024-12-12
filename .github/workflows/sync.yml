@@ -33,7 +33,7 @@ jobs:
           # 清除目标目录中的旧文件
           rm -rf cssharp-docs/content/docs/*
           # 将文档仓库的内容拷贝到网站仓库的 docs 目录
-          cp -r * cssharp-docs/content/docs/
+          cp -r `ls . | grep -v cssharp-docs | xargs` cssharp-docs/content/docs/
           rm -rf cssharp-docs/content/docs/README.md
           cd cssharp-docs
           git add .
