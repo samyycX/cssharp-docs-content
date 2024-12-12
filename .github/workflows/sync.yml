@@ -12,6 +12,7 @@ on:
 
 jobs:
   sync-docs:
+    if: github.repository == 'CSSharp-CN/cssharp-docs-content'
     runs-on: ubuntu-latest
     steps:
       - name: 检查仓库
