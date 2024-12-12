@@ -1,0 +1,48 @@
+name: 自动同步文档至网站仓库
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  sync-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检查仓库
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 设置 Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: 克隆网站仓库
+        run: |
+          git clone https://${{ secrets.DOCS_SYNC }}@github.com/CSSharp-CN/cssharp-docs.git cssharp-docs
+
+      - name: 将文档同步至网站仓库
+        run: |
+          # 清除目标目录中的旧文件
+          rm -rf cssharp-docs/content/docs/*
+          # 将文档仓库的内容拷贝到网站仓库的 docs 目录
+          cp -r * cssharp-docs/content/docs/
+          rm -rf cssharp-docs/content/docs/README.md
+          cd cssharp-docs
+          git add .
+          # 如果没有更改，则不提交
+          if git diff --cached --exit-code; then
+            echo "无更改，取消提交"
+            exit 0
+          fi
+          git commit -m "自动同步文档"
+          git push origin master
+
+      - name: 清理工作目录
+        run: rm -rf cssharp-docs
