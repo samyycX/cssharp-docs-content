@@ -19,17 +19,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 设置 Git
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
       - name: 克隆网站仓库
         run: |
           git clone https://${{ secrets.DOCS_SYNC }}@github.com/CSSharp-CN/cssharp-docs.git cssharp-docs
 
       - name: 将文档同步至网站仓库
         run: |
+          # 设置账户身份
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
           # 清除目标目录中的旧文件
           rm -rf cssharp-docs/content/docs/*
           # 将文档仓库的内容拷贝到网站仓库的 docs 目录
