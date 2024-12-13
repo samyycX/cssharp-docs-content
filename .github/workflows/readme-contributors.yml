@@ -2,7 +2,8 @@ name: Generate a list of contributors
 on:
     push:
       branches:
-        - main
+        - master
+    workflow_dispatch:
 jobs:
     contrib-readme-en-job:
       runs-on: ubuntu-latest
