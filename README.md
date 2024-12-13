@@ -33,3 +33,8 @@ icon: 文档Icon(非必须)，Icon 值源自 https://lucide.dev/icons/ ，首字
 必须为大写，例如core-configuration.mdx -> Core-Configuration.mdx
 
 感谢您对 CounterStrikeSharp 文档的贡献！
+
+## 感谢如下贡献者
+
+<!-- readme: collaborators,contributors -start -->
+<!-- readme: collaborators,contributors -end -->
