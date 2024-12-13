@@ -6,6 +6,7 @@ on:
     workflow_dispatch:
 jobs:
     contrib-readme-en-job:
+      if: ${{ github.repository == 'CSSharp-CN/cssharp-docs-content' }}
       runs-on: ubuntu-latest
       name: A job to automate contrib in readme
       steps:
