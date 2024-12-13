@@ -1,0 +1,2743 @@
+---
+title: 游戏事件
+description: 从 vpk 获取的游戏事件列表
+---
+# 核心游戏事件 [#核心游戏事件]
+
+## server_spawn [#server_spawn]
+
+send once a server starts
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| hostname | string | public host name |
+| address | string | hostame, IP or DNS name |
+| port | short | server port |
+| game | string | game dir |
+| mapname | string | map name |
+| addonname | string | addon name |
+| maxplayers | long | max players |
+| os | string | WIN32, LINUX |
+| dedicated | bool | true if dedicated server |
+| password | bool | true if password protected |
+
+## server_pre_shutdown [#server_pre_shutdown]
+
+server is about to be shut down
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| reason | string | reason why server is about to be shut down |
+
+## server_shutdown [#server_shutdown]
+
+server shut down
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| reason | string | reason why server was shut down |
+
+## server_message [#server_message]
+
+a generic server message
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| text | string | the message text |
+
+## server_cvar [#server_cvar]
+
+a server console var has changed
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| cvarname | string | cvar name, eg "mp_roundtime" |
+| cvarvalue | string | new cvar value |
+
+## player_activate [#player_activate]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | user ID on server |
+
+## player_connect_full [#player_connect_full]
+
+player has sent final message in the connection sequence
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | user ID on server (unique on server) |
+
+## player_full_update [#player_full_update]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | user ID on server |
+| count | short | Number of this full update |
+
+## player_connect [#player_connect]
+
+a new client connected
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| name | string | player name |
+| userid | player_controller | user ID on server (unique on server) |
+| networkid | string | player network (i.e steam) id |
+| xuid | uint64 | steam id |
+| address | string | ip:port |
+| bot | bool |  |
+
+## player_disconnect [#player_disconnect]
+
+a client was disconnected
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | user ID on server |
+| reason | short | see networkdisconnect enum protobuf |
+| name | string | player name |
+| networkid | string | player network (i.e steam) id |
+| xuid | uint64 | steam id |
+| PlayerID | short |  |
+
+## player_info [#player_info]
+
+a player changed his name
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| name | string | player name |
+| userid | player_controller | user ID on server (unique on server) |
+| steamid | uint64 | player network (i.e steam) id |
+| bot | bool | true if player is a AI bot |
+
+## player_spawn [#player_spawn]
+
+player spawned in game
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+
+## player_team [#player_team]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| team | byte | team id |
+| oldteam | byte | old team id |
+| disconnect | bool | team change because player disconnects |
+| silent | bool |  |
+| name | string |  |
+| isbot | bool |  |
+
+## local_player_team [#local_player_team]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## local_player_controller_team [#local_player_controller_team]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## player_changename [#player_changename]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | user ID on server |
+| oldname | string | players old (current) name |
+| newname | string | players new name |
+
+## player_hurt [#player_hurt]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who was hurt |
+| attacker | player_controller_and_pawn | player who attacked |
+| health | byte | remaining health points |
+
+## player_chat [#player_chat]
+
+a public player chat
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| teamonly | bool | true if team only chat |
+| userid | player_controller | chatting player |
+| playerid | short | chatting player ID |
+| text | string | chat text |
+
+## local_player_pawn_changed [#local_player_pawn_changed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## teamplay_broadcast_audio [#teamplay_broadcast_audio]
+
+emits a sound to everyone on a team
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| team | byte | unique team id |
+| sound | string | name of the sound to emit |
+
+## finale_start [#finale_start]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| rushes | short |  |
+
+## player_stats_updated [#player_stats_updated]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| forceupload | bool |  |
+
+## user_data_downloaded [#user_data_downloaded]
+
+fired when achievements/stats are downloaded from Steam or XBox Live
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## ragdoll_dissolved [#ragdoll_dissolved]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entindex | long |  |
+
+## team_info [#team_info]
+
+info about team
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| teamid | byte | unique team id |
+| teamname | string | team name eg "Team Blue" |
+
+## team_score [#team_score]
+
+team score changed
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| teamid | byte | team id |
+| score | short | total team score |
+
+## hltv_cameraman [#hltv_cameraman]
+
+a spectator/player is a cameraman
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | camera man entity index |
+
+## hltv_chase [#hltv_chase]
+
+shot of a single entity
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| target1 | player_controller | primary traget index |
+| target2 | player_controller | secondary traget index or 0 |
+| distance | short | camera distance |
+| theta | short | view angle horizontal |
+| phi | short | view angle vertical |
+| inertia | byte | camera inertia |
+| ineye | byte | diretcor suggests to show ineye |
+
+## hltv_rank_camera [#hltv_rank_camera]
+
+a camera ranking
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| index | byte | fixed camera index |
+| rank | float | ranking, how interesting is this camera view |
+| target | player_controller | best/closest target entity |
+
+## hltv_rank_entity [#hltv_rank_entity]
+
+an entity ranking
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | player slot |
+| rank | float | ranking, how interesting is this entity to view |
+| target | player_controller | best/closest target entity |
+
+## hltv_fixed [#hltv_fixed]
+
+show from fixed view
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| posx | long | camera position in world |
+| posy | long |  |
+| posz | long |  |
+| theta | short | camera angles |
+| phi | short |  |
+| offset | short |  |
+| fov | float |  |
+| target | player_controller | follow this player |
+
+## hltv_message [#hltv_message]
+
+a HLTV message send by moderators
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| text | string |  |
+
+## hltv_status [#hltv_status]
+
+general HLTV status
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| clients | long | number of HLTV spectators |
+| slots | long | number of HLTV slots |
+| proxies | short | number of HLTV proxies |
+| master | string | disptach master IP:port |
+
+## hltv_title [#hltv_title]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| text | string |  |
+
+## hltv_chat [#hltv_chat]
+
+a HLTV chat msg sent by spectators
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| text | string |  |
+| steamID | uint64 | steam id |
+
+## hltv_versioninfo [#hltv_versioninfo]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| version | long |  |
+
+## hltv_replay [#hltv_replay]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| delay | long | number of seconds in killer replay delay |
+| reason | long | reason for replay	(ReplayEventType_t) |
+
+## hltv_replay_status [#hltv_replay_status]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| reason | long | reason for hltv replay status change () |
+
+## demo_start [#demo_start]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| local | 1 |  |
+| dota_combatlog_list | local | CSVCMsgList_GameEvents that are combat log events |
+| dota_hero_chase_list | local | CSVCMsgList_GameEvents |
+| dota_pick_hero_list | local | CSVCMsgList_GameEvents |
+
+## demo_stop [#demo_stop]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## demo_skip [#demo_skip]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| local | 1 |  |
+| playback_tick | long | current playback tick |
+| skipto_tick | long | tick we're going to |
+| user_message_list | local | CSVCMsgList_UserMessages |
+| dota_hero_chase_list | local | CSVCMsgList_GameEvents |
+
+## map_shutdown [#map_shutdown]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## map_transition [#map_transition]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## hostname_changed [#hostname_changed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| hostname | string |  |
+
+## difficulty_changed [#difficulty_changed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| newDifficulty | short |  |
+| oldDifficulty | short |  |
+| strDifficulty | string | new difficulty as string |
+
+## game_message [#game_message]
+
+a message send by game logic to everyone
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| target | byte | 0 = console, 1 = HUD |
+| text | string | the message text |
+
+## game_newmap [#game_newmap]
+
+send when new map is completely loaded
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| mapname | string | map name |
+| transition | bool | true if this is a transition from one map to another |
+
+## round_start [#round_start]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| timelimit | long | round time limit in seconds |
+| fraglimit | long | frag limit in seconds |
+| objective | string | round objective |
+
+## round_end [#round_end]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| winner | byte | winner team/user i |
+| reason | byte | reson why team won |
+| message | string | end round message |
+| time | float |  |
+
+## round_start_pre_entity [#round_start_pre_entity]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## round_start_post_nav [#round_start_post_nav]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## round_freeze_end [#round_freeze_end]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## teamplay_round_start [#teamplay_round_start]
+
+round restart
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| full_reset | bool | is this a full reset of the map |
+
+## player_death [#player_death]
+
+a game event, name may be 32 charaters long
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | user ID who died |
+| attacker | player_controller_and_pawn | user ID who killed |
+
+## player_footstep [#player_footstep]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_pawn |  |
+
+## player_hintmessage [#player_hintmessage]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| hintmessage | string | localizable string of a hint |
+
+## break_breakable [#break_breakable]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entindex | long |  |
+| userid | player_pawn |  |
+| material | byte | BREAK_GLASS, BREAK_WOOD, etc |
+
+## broken_breakable [#broken_breakable]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entindex | long |  |
+| userid | player_pawn |  |
+| material | byte | BREAK_GLASS, BREAK_WOOD, etc |
+
+## break_prop [#break_prop]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entindex | long |  |
+| userid | player_pawn |  |
+| player_held | bool |  |
+| player_thrown | bool |  |
+| player_dropped | bool |  |
+
+## entity_killed [#entity_killed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entindex_killed | long |  |
+| entindex_attacker | long |  |
+| entindex_inflictor | long |  |
+| damagebits | long |  |
+
+## door_close [#door_close]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_pawn | Who closed the door |
+| checkpoint | bool | Is the door a checkpoint door |
+
+## vote_started [#vote_started]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| issue | string |  |
+| param1 | string |  |
+| votedata | string |  |
+| team | byte |  |
+| initiator | long | entity id of the player who initiated the vote |
+| reliable | 1 | this event is reliable |
+
+## vote_failed [#vote_failed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| team | byte |  |
+| reliable | 1 | this event is reliable |
+
+## vote_passed [#vote_passed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| details | string |  |
+| param1 | string |  |
+| team | byte |  |
+| reliable | 1 | this event is reliable |
+
+## vote_changed [#vote_changed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| yesVotes | byte |  |
+| noVotes | byte |  |
+| potentialVotes | byte |  |
+
+## vote_cast_yes [#vote_cast_yes]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| team | byte |  |
+| entityid | long | entity id of the voter |
+
+## vote_cast_no [#vote_cast_no]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| team | byte |  |
+| entityid | long | entity id of the voter |
+
+## achievement_event [#achievement_event]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| achievement_name | string | non-localized name of achievement |
+| cur_val | short | # of steps toward achievement |
+| max_val | short | total # of steps in achievement |
+
+## achievement_earned [#achievement_earned]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| player | player_controller | entindex of the player |
+| achievement | short | achievement ID |
+
+## achievement_write_failed [#achievement_write_failed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## bonus_updated [#bonus_updated]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| numadvanced | short |  |
+| numbronze | short |  |
+| numsilver | short |  |
+| numgold | short |  |
+
+## spec_target_updated [#spec_target_updated]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | spectating player |
+| target | ehandle | ehandle of the target |
+
+## spec_mode_updated [#spec_mode_updated]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | spectating player |
+
+## entity_visible [#entity_visible]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | The player who sees the entity |
+| subject | long | Entindex of the entity they see |
+| classname | string | Classname of the entity they see |
+| entityname | string | name of the entity they see |
+
+## gameinstructor_draw [#gameinstructor_draw]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## gameinstructor_nodraw [#gameinstructor_nodraw]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## flare_ignite_npc [#flare_ignite_npc]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entindex | long | entity ignited |
+
+## helicopter_grenade_punt_miss [#helicopter_grenade_punt_miss]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## physgun_pickup [#physgun_pickup]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| target | ehandle | entity picked up |
+
+## inventory_updated [#inventory_updated]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| itemdef | short |  |
+| itemid | long |  |
+
+## cart_updated [#cart_updated]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## store_pricesheet_updated [#store_pricesheet_updated]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## item_schema_initialized [#item_schema_initialized]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## drop_rate_modified [#drop_rate_modified]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## event_ticket_modified [#event_ticket_modified]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## gc_connected [#gc_connected]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## instructor_start_lesson [#instructor_start_lesson]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | The player who this lesson is intended for |
+| hint_name | string | Name of the lesson to start.  Must match instructor_lesson.txt |
+| hint_target | long | entity id that the hint should display at. Leave empty if controller target |
+| vr_movement_type | byte |  |
+| vr_single_controller | bool |  |
+| vr_controller_type | byte |  |
+
+## instructor_close_lesson [#instructor_close_lesson]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | The player who this lesson is intended for |
+| hint_name | string | Name of the lesson to start.  Must match instructor_lesson.txt |
+
+## instructor_server_hint_create [#instructor_server_hint_create]
+
+create a hint using data supplied entirely by the server/map. Intended for hints to smooth playtests before content is ready to make the hint unneccessary. NOT INTENDED AS A SHIPPABLE CRUTCH
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | user ID of the player that triggered the hint |
+| hint_entindex | long | entity id of the env_instructor_hint that fired the event |
+| hint_name | string | what to name the hint. For referencing it again later (e.g. a kill command for the hint instead of a timeout) |
+| hint_replace_key | string | type name so that messages of the same type will replace each other |
+| hint_target | long | entity id that the hint should display at |
+| hint_activator_userid | player_controller | playerslot of the activator |
+| hint_timeout | short | how long in seconds until the hint automatically times out, 0 = never |
+| hint_icon_onscreen | string | the hint icon to use when the hint is onscreen. e.g. "icon_alert_red" |
+| hint_icon_offscreen | string | the hint icon to use when the hint is offscreen. e.g. "icon_alert" |
+| hint_caption | string | the hint caption. e.g. "#ThisIsDangerous" |
+| hint_activator_caption | string | the hint caption that only the activator sees e.g. "#YouPushedItGood" |
+| hint_color | string | the hint color in "r,g,b" format where each component is 0-255 |
+| hint_icon_offset | float | how far on the z axis to offset the hint from entity origin |
+| hint_range | float | range before the hint is culled |
+| hint_flags | long | hint flags |
+| hint_binding | string | bindings to use when use_binding is the onscreen icon |
+| hint_allow_nodraw_target | bool | if false, the hint will dissappear if the target entity is invisible |
+| hint_nooffscreen | bool | if true, the hint will not show when outside the player view |
+| hint_forcecaption | bool | if true, the hint caption will show even if the hint is occluded |
+| hint_local_player_only | bool | if true, only the local player will see the hint |
+| hint_start_sound | string | Game sound to play |
+| hint_layoutfile | string | Path for Panorama layout file |
+| hint_vr_panel_type | short | Attachment type for the Panorama panel |
+| hint_vr_height_offset | float | Height offset for attached panels |
+| hint_vr_offset_x | float | offset for attached panels |
+| hint_vr_offset_y | float | offset for attached panels |
+| hint_vr_offset_z | float | offset for attached panels |
+
+## instructor_server_hint_stop [#instructor_server_hint_stop]
+
+destroys a server/map created hint
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| hint_name | string | The hint to stop. Will stop ALL hints with this name |
+| hint_entindex | long | entity id of the env_instructor_hint that fired the event |
+
+## set_instructor_group_enabled [#set_instructor_group_enabled]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| group | string |  |
+| enabled | short |  |
+
+## clientside_lesson_closed [#clientside_lesson_closed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| lesson_name | string |  |
+
+## dynamic_shadow_light_changed [#dynamic_shadow_light_changed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+# gameevents [#gameevents]
+
+## gameui_hidden [#gameui_hidden]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## player_team [#player_team]
+
+player change his team
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player |
+| team | byte | team id |
+| oldteam | byte | old team id |
+| disconnect | bool | team change because player disconnects |
+| silent | bool |  |
+| isbot | bool | true if player is a bot |
+
+## player_chat [#player_chat]
+
+a public player chat
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| teamonly | bool | true if team only chat |
+| userid | short | chatting player |
+| text | string | chat text |
+
+## player_score [#player_score]
+
+players scores changed
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | user ID on server |
+| kills | short | # of kills |
+| deaths | short | # of deaths |
+| score | short | total game score |
+
+## player_shoot [#player_shoot]
+
+player shoot his weapon
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | user ID on server |
+| weapon | byte | weapon ID |
+| mode | byte | weapon mode |
+
+## game_init [#game_init]
+
+sent when a new game is started
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## game_newmap [#game_newmap]
+
+send when new map is completely loaded
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| mapname | string | map name |
+
+## game_start [#game_start]
+
+a new game starts
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| roundslimit | long | max round |
+| timelimit | long | time limit |
+| fraglimit | long | frag limit |
+| objective | string | round objective |
+
+## game_end [#game_end]
+
+a game ended
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| winner | byte | winner team/user id |
+
+## round_announce_match_point [#round_announce_match_point]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## round_announce_final [#round_announce_final]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## round_announce_last_round_half [#round_announce_last_round_half]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## round_announce_match_start [#round_announce_match_start]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## round_announce_warmup [#round_announce_warmup]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## warmup_end [#warmup_end]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## round_end [#round_end]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| winner | byte | winner team/user i |
+| reason | byte | reson why team won |
+| message | string | end round message |
+| legacy | byte | server-generated legacy value |
+
+## round_end_upload_stats [#round_end_upload_stats]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## round_officially_ended [#round_officially_ended]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## round_time_warning [#round_time_warning]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## ugc_map_info_received [#ugc_map_info_received]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| published_file_id | uint64 |  |
+
+## ugc_map_unsubscribed [#ugc_map_unsubscribed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| published_file_id | uint64 |  |
+
+## ugc_map_download_error [#ugc_map_download_error]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| published_file_id | uint64 |  |
+| error_code | long |  |
+
+## ugc_file_download_finished [#ugc_file_download_finished]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| hcontent | uint64 | id of this specific content (may be image or map) |
+
+## ugc_file_download_start [#ugc_file_download_start]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| hcontent | uint64 | id of this specific content (may be image or map) |
+| published_file_id | uint64 | id of the associated content package |
+
+## begin_new_match [#begin_new_match]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## dm_bonus_weapon_start [#dm_bonus_weapon_start]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| time | short | The length of time that this bonus lasts |
+| Pos | short | Loadout position of the bonus weapon |
+
+## survival_announce_phase [#survival_announce_phase]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| phase | short | The phase # |
+
+## break_prop [#break_prop]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entindex | long |  |
+| userid | player_pawn |  |
+
+## player_decal [#player_decal]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_pawn |  |
+
+## entity_visible [#entity_visible]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | The player who sees the entity |
+| subject | short | Entindex of the entity they see |
+| classname | string | Classname of the entity they see |
+| entityname | string | name of the entity they see |
+
+## instructor_server_hint_create [#instructor_server_hint_create]
+
+create a hint using data supplied entirely by the server/map. Intended for hints to smooth playtests before content is ready to make the hint unneccessary. NOT INTENDED AS A SHIPPABLE CRUTCH
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | user ID of the player that triggered the hint |
+| hint_name | string | what to name the hint. For referencing it again later (e.g. a kill command for the hint instead of a timeout) |
+| hint_replace_key | string | type name so that messages of the same type will replace each other |
+| hint_target | long | entity id that the hint should display at |
+| hint_activator_userid | player_controller | userid id of the activator |
+| hint_timeout | short | how long in seconds until the hint automatically times out, 0 = never |
+| hint_icon_onscreen | string | the hint icon to use when the hint is onscreen. e.g. "icon_alert_red" |
+| hint_icon_offscreen | string | the hint icon to use when the hint is offscreen. e.g. "icon_alert" |
+| hint_caption | string | the hint caption. e.g. "#ThisIsDangerous" |
+| hint_activator_caption | string | the hint caption that only the activator sees e.g. "#YouPushedItGood" |
+| hint_color | string | the hint color in "r,g,b" format where each component is 0-255 |
+| hint_icon_offset | float | how far on the z axis to offset the hint from entity origin |
+| hint_range | float | range before the hint is culled |
+| hint_flags | long | hint flags |
+| hint_binding | string | bindings to use when use_binding is the onscreen icon |
+| hint_gamepad_binding | string | gamepad bindings to use when use_binding is the onscreen icon |
+| hint_allow_nodraw_target | bool | if false, the hint will dissappear if the target entity is invisible |
+| hint_nooffscreen | bool | if true, the hint will not show when outside the player view |
+| hint_forcecaption | bool | if true, the hint caption will show even if the hint is occluded |
+| hint_local_player_only | bool | if true, only the local player will see the hint |
+
+## instructor_server_hint_stop [#instructor_server_hint_stop]
+
+destroys a server/map created hint
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| hint_name | string | The hint to stop. Will stop ALL hints with this name |
+
+## read_game_titledata [#read_game_titledata]
+
+read user titledata from profile
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| controllerId | short | Controller id of user |
+
+## write_game_titledata [#write_game_titledata]
+
+write user titledata in profile
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| controllerId | short | Controller id of user |
+
+## reset_game_titledata [#reset_game_titledata]
+
+reset user titledata; do not automatically write profile
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| controllerId | short | Controller id of user |
+
+## weaponhud_selection [#weaponhud_selection]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | Player who this event applies to |
+| mode | byte | EWeaponHudSelectionMode (switch / pickup / drop) |
+| entindex | long | Weapon entity index |
+
+## vote_ended [#vote_ended]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## vote_started [#vote_started]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| issue | string |  |
+| param1 | string |  |
+| team | byte |  |
+| initiator | long | entity id of the player who initiated the vote |
+
+## vote_changed [#vote_changed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| vote_option1 | byte |  |
+| vote_option2 | byte |  |
+| vote_option3 | byte |  |
+| vote_option4 | byte |  |
+| vote_option5 | byte |  |
+| potentialVotes | byte |  |
+
+## vote_cast [#vote_cast]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| vote_option | byte | which option the player voted on |
+| team | short |  |
+| userid | player_controller | player who voted |
+
+## vote_options [#vote_options]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| count | byte | Number of options - up to MAX_VOTE_OPTIONS |
+| option1 | string |  |
+| option2 | string |  |
+| option3 | string |  |
+| option4 | string |  |
+| option5 | string |  |
+
+## endmatch_mapvote_selecting_map [#endmatch_mapvote_selecting_map]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| count | byte | Number of "ties" |
+| slot1 | byte |  |
+| slot2 | byte |  |
+| slot3 | byte |  |
+| slot4 | byte |  |
+| slot5 | byte |  |
+| slot6 | byte |  |
+| slot7 | byte |  |
+| slot8 | byte |  |
+| slot9 | byte |  |
+| slot10 | byte |  |
+
+## endmatch_cmm_start_reveal_items [#endmatch_cmm_start_reveal_items]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## inventory_updated [#inventory_updated]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## client_loadout_changed [#client_loadout_changed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## add_player_sonar_icon [#add_player_sonar_icon]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| pos_x | float |  |
+| pos_y | float |  |
+| pos_z | float |  |
+
+## door_open [#door_open]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_pawn | Who closed the door |
+| entindex | long |  |
+
+## door_closed [#door_closed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_pawn | Who closed the door |
+| entindex | long |  |
+
+## door_break [#door_break]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entindex | long |  |
+| dmgstate | long |  |
+
+## add_bullet_hit_marker [#add_bullet_hit_marker]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| bone | short |  |
+| pos_x | short |  |
+| pos_y | short |  |
+| pos_z | short |  |
+| ang_x | short |  |
+| ang_y | short |  |
+| ang_z | short |  |
+| start_x | short |  |
+| start_y | short |  |
+| start_z | short |  |
+| hit | bool |  |
+
+# cstrikeevents [#cstrikeevents]
+
+## player_death [#player_death]
+
+a game event, name may be 32 characters long
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | user who died |
+| attacker | player_controller_and_pawn | player who killed |
+| assister | player_controller_and_pawn | player who assisted in the kill |
+| assistedflash | bool | assister helped with a flash |
+| weapon | string | weapon name killer used |
+| weapon_itemid | string | inventory item id of weapon killer used |
+| weapon_fauxitemid | string | faux item id of weapon killer used |
+| weapon_originalowner_xuid | string |  |
+| headshot | bool | singals a headshot |
+| dominated | short | did killer dominate victim with this kill |
+| revenge | short | did killer get revenge on victim with this kill |
+| wipe | short | is the kill resulting in squad wipe |
+| penetrated | short | number of objects shot penetrated before killing target |
+| noreplay | bool | if replay data is unavailable, this will be present and set to false |
+| noscope | bool | kill happened without a scope, used for death notice icon |
+| thrusmoke | bool | hitscan weapon went through smoke grenade |
+| attackerblind | bool | attacker was blind from flashbang |
+| distance | float | distance to victim in meters |
+| dmg_health | short | damage done to health |
+| dmg_armor | byte | damage done to armor |
+| hitgroup | byte | hitgroup that was damaged |
+| attackerinair | bool | attacker was in midair |
+
+## other_death [#other_death]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| otherid | short | other entity ID who died |
+| othertype | string | other entity type |
+| attacker | short | user ID who killed |
+| weapon | string | weapon name killer used |
+| weapon_itemid | string | inventory item id of weapon killer used |
+| weapon_fauxitemid | string | faux item id of weapon killer used |
+| weapon_originalowner_xuid | string |  |
+| headshot | bool | singals a headshot |
+| penetrated | short | number of objects shot penetrated before killing target |
+| noscope | bool | kill happened without a scope, used for death notice icon |
+| thrusmoke | bool | hitscan weapon went through smoke grenade |
+| attackerblind | bool | attacker was blind from flashbang |
+
+## player_hurt [#player_hurt]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player index who was hurt |
+| attacker | player_controller_and_pawn | player index who attacked |
+| health | byte | remaining health points |
+| armor | byte | remaining armor points |
+| weapon | string | weapon name attacker used, if not the world |
+| dmg_health | short | damage done to health |
+| dmg_armor | byte | damage done to armor |
+| hitgroup | byte | hitgroup that was damaged |
+
+## bullet_damage [#bullet_damage]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| victim | player_controller_and_pawn | player index who was hurt |
+| attacker | player_controller_and_pawn | player index who attacked |
+| distance | float | how far the bullet travelled before it hit the player |
+| damage_dir_x | float | direction vector of the bullet |
+| damage_dir_y | float | direction vector of the bullet |
+| damage_dir_z | float | direction vector of the bullet |
+| num_penetrations | byte | how many surfaces were penetrated |
+| no_scope | bool | was the shooter noscoped? |
+| in_air | bool | was the shooter jumping? |
+
+## item_purchase [#item_purchase]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| team | short |  |
+| loadout | short |  |
+| weapon | string |  |
+
+## bomb_beginplant [#bomb_beginplant]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who is planting the bomb |
+| site | short | bombsite index |
+
+## bomb_abortplant [#bomb_abortplant]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who is planting the bomb |
+| site | short | bombsite index |
+
+## bomb_planted [#bomb_planted]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who planted the bomb |
+| site | short | bombsite index |
+
+## bomb_defused [#bomb_defused]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who defused the bomb |
+| site | short | bombsite index |
+
+## bomb_exploded [#bomb_exploded]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who planted the bomb |
+| site | short | bombsite index |
+
+## bomb_dropped [#bomb_dropped]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who dropped the bomb |
+| entindex | long |  |
+
+## bomb_pickup [#bomb_pickup]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_pawn | player pawn who picked up the bomb |
+
+## defuser_dropped [#defuser_dropped]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entityid | long | defuser's entity ID |
+
+## defuser_pickup [#defuser_pickup]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entityid | long | defuser's entity ID |
+| userid | player_controller_and_pawn | player who picked up the defuser |
+
+## announce_phase_end [#announce_phase_end]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## cs_intermission [#cs_intermission]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## bomb_begindefuse [#bomb_begindefuse]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who is defusing |
+| haskit | bool |  |
+
+## bomb_abortdefuse [#bomb_abortdefuse]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who was defusing |
+
+## hostage_follows [#hostage_follows]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who touched the hostage |
+| hostage | short | hostage entity index |
+
+## hostage_hurt [#hostage_hurt]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who hurt the hostage |
+| hostage | short | hostage entity index |
+
+## hostage_killed [#hostage_killed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who killed the hostage |
+| hostage | short | hostage entity index |
+
+## hostage_rescued [#hostage_rescued]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who rescued the hostage |
+| hostage | short | hostage entity index |
+| site | short | rescue site index |
+
+## hostage_stops_following [#hostage_stops_following]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn | player who rescued the hostage |
+| hostage | short | hostage entity index |
+
+## hostage_rescued_all [#hostage_rescued_all]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## hostage_call_for_help [#hostage_call_for_help]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| hostage | short | hostage entity index |
+
+## vip_escaped [#vip_escaped]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | player who was the VIP |
+
+## vip_killed [#vip_killed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | player who was the VIP |
+| attacker | player_controller | user ID who killed the VIP |
+
+## player_radio [#player_radio]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| slot | short |  |
+
+## bomb_beep [#bomb_beep]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entindex | long | c4 entity |
+
+## weapon_fire [#weapon_fire]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| weapon | string | weapon name used |
+| silenced | bool | is weapon silenced |
+
+## weapon_fire_on_empty [#weapon_fire_on_empty]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| weapon | string | weapon name used |
+
+## grenade_thrown [#grenade_thrown]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| weapon | string | weapon name used |
+
+## weapon_reload [#weapon_reload]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+
+## weapon_zoom [#weapon_zoom]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+
+## silencer_detach [#silencer_detach]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+
+## inspect_weapon [#inspect_weapon]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+
+## weapon_zoom_rifle [#weapon_zoom_rifle]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+
+## player_spawned [#player_spawned]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| inrestart | bool | true if restart is pending |
+
+## item_pickup [#item_pickup]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| item | string | either a weapon such as 'tmp' or 'hegrenade', or an item such as 'nvgs' |
+| silent | bool |  |
+| defindex | long |  |
+
+## item_pickup_slerp [#item_pickup_slerp]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| index | short |  |
+| behavior | short |  |
+
+## item_pickup_failed [#item_pickup_failed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| item | string |  |
+| reason | short |  |
+| limit | short |  |
+
+## item_remove [#item_remove]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| item | string | either a weapon such as 'tmp' or 'hegrenade', or an item such as 'nvgs' |
+| defindex | long |  |
+
+## ammo_pickup [#ammo_pickup]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| item | string | either a weapon such as 'tmp' or 'hegrenade', or an item such as 'nvgs' |
+| index | long | the weapon entindex |
+
+## item_equip [#item_equip]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| item | string | either a weapon such as 'tmp' or 'hegrenade', or an item such as 'nvgs' |
+| defindex | long |  |
+| canzoom | bool |  |
+| hassilencer | bool |  |
+| issilenced | bool |  |
+| hastracers | bool |  |
+| weptype | short |  |
+| ispainted | bool |  |
+
+## enter_buyzone [#enter_buyzone]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| canbuy | bool |  |
+
+## exit_buyzone [#exit_buyzone]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| canbuy | bool |  |
+
+## buytime_ended [#buytime_ended]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## enter_bombzone [#enter_bombzone]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| hasbomb | bool |  |
+| isplanted | bool |  |
+
+## exit_bombzone [#exit_bombzone]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| hasbomb | bool |  |
+| isplanted | bool |  |
+
+## enter_rescue_zone [#enter_rescue_zone]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## exit_rescue_zone [#exit_rescue_zone]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## silencer_off [#silencer_off]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## silencer_on [#silencer_on]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## buymenu_open [#buymenu_open]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## buymenu_close [#buymenu_close]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## round_prestart [#round_prestart]
+
+sent before all other round restart actions
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## round_poststart [#round_poststart]
+
+sent after all other round restart actions
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## round_end [#round_end]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| winner | byte | winner team/user i |
+| reason | byte | reson why team won |
+| message | string | end round message |
+| legacy | byte | server-generated legacy value |
+| player_count | short | total number of players alive at the end of round, used for statistics gathering, computed on the server in the event client is in replay when receiving this message |
+| nomusic | byte | if set, don't play round end music, because action is still on-going |
+
+## grenade_bounce [#grenade_bounce]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+
+## hegrenade_detonate [#hegrenade_detonate]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## flashbang_detonate [#flashbang_detonate]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## smokegrenade_detonate [#smokegrenade_detonate]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## smokegrenade_expired [#smokegrenade_expired]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## molotov_detonate [#molotov_detonate]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## decoy_detonate [#decoy_detonate]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## decoy_started [#decoy_started]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_pawn |  |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## tagrenade_detonate [#tagrenade_detonate]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## inferno_startburn [#inferno_startburn]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## inferno_expire [#inferno_expire]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## inferno_extinguish [#inferno_extinguish]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## decoy_firing [#decoy_firing]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## bullet_impact [#bullet_impact]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+
+## player_footstep [#player_footstep]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+
+## player_jump [#player_jump]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## player_blind [#player_blind]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| attacker | player_controller | user ID who threw the flash |
+| entityid | short | the flashbang going off |
+| blind_duration | float |  |
+
+## player_falldamage [#player_falldamage]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| damage | float |  |
+
+## door_moving [#door_moving]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| entindex | long |  |
+
+## mb_input_lock_success [#mb_input_lock_success]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## mb_input_lock_cancel [#mb_input_lock_cancel]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## nav_blocked [#nav_blocked]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| area | long |  |
+| blocked | bool |  |
+
+## nav_generate [#nav_generate]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## achievement_info_loaded [#achievement_info_loaded]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## spec_mode_updated [#spec_mode_updated]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | entindex of the player |
+
+## hltv_changed_mode [#hltv_changed_mode]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| oldmode | long |  |
+| newmode | long |  |
+| obs_target | long |  |
+
+## cs_game_disconnected [#cs_game_disconnected]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## cs_round_final_beep [#cs_round_final_beep]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## cs_round_start_beep [#cs_round_start_beep]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## cs_win_panel_round [#cs_win_panel_round]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| show_timer_defend | bool |  |
+| show_timer_attack | bool |  |
+| timer_time | short |  |
+| final_event | byte | define in cs_gamerules.h |
+| funfact_token | string |  |
+| funfact_player | player_controller |  |
+| funfact_data1 | long |  |
+| funfact_data2 | long |  |
+| funfact_data3 | long |  |
+
+## cs_win_panel_match [#cs_win_panel_match]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## cs_match_end_restart [#cs_match_end_restart]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## cs_pre_restart [#cs_pre_restart]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## show_deathpanel [#show_deathpanel]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| victim | player_controller_and_pawn | endindex of the one who was killed |
+| killer | ehandle | entindex of the killer entity |
+| killer_controller | player_controller |  |
+| hits_taken | short |  |
+| damage_taken | short |  |
+| hits_given | short |  |
+| damage_given | short |  |
+
+## hide_deathpanel [#hide_deathpanel]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## player_avenged_teammate [#player_avenged_teammate]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| avenger_id | player_controller |  |
+| avenged_player_id | player_controller |  |
+
+## achievement_earned_local [#achievement_earned_local]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| achievement | short | achievement ID |
+| splitscreenplayer | short | splitscreen ID |
+
+## repost_xbox_achievements [#repost_xbox_achievements]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| splitscreenplayer | short | splitscreen ID |
+
+## match_end_conditions [#match_end_conditions]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| frags | long |  |
+| max_rounds | long |  |
+| win_rounds | long |  |
+| time | long |  |
+
+## round_mvp [#round_mvp]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| reason | short |  |
+| value | long |  |
+| musickitmvps | long |  |
+| nomusic | byte |  |
+| musickitid | long |  |
+
+## show_survival_respawn_status [#show_survival_respawn_status]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| loc_token | string |  |
+| duration | long |  |
+| userid | player_controller_and_pawn |  |
+
+## client_disconnect [#client_disconnect]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## gg_killed_enemy [#gg_killed_enemy]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| victimid | player_controller | user ID who died |
+| attackerid | player_controller | user ID who killed |
+| dominated | short | did killer dominate victim with this kill |
+| revenge | short | did killer get revenge on victim with this kill |
+| bonus | bool | did killer kill with a bonus weapon? |
+
+## switch_team [#switch_team]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| numPlayers | short | number of active players on both T and CT |
+| numSpectators | short | number of spectators |
+| avg_rank | short | average rank of human players |
+| numTSlotsFree | short |  |
+| numCTSlotsFree | short |  |
+
+## write_profile_data [#write_profile_data]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## trial_time_expired [#trial_time_expired]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | player whose time has expired |
+
+## update_matchmaking_stats [#update_matchmaking_stats]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## player_reset_vote [#player_reset_vote]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| vote | bool |  |
+
+## enable_restart_voting [#enable_restart_voting]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| enable | bool |  |
+
+## sfuievent [#sfuievent]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| action | string |  |
+| data | string |  |
+| slot | byte |  |
+
+## start_vote [#start_vote]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| type | byte |  |
+| vote_parameter | short |  |
+
+## player_given_c4 [#player_given_c4]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | user ID who received the c4 |
+
+## bot_takeover [#bot_takeover]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| botid | player_controller |  |
+| p | float |  |
+| y | float |  |
+| r | float |  |
+
+## jointeam_failed [#jointeam_failed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| reason | byte | 0 = team_full |
+
+## teamchange_pending [#teamchange_pending]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| toteam | byte |  |
+
+## material_default_complete [#material_default_complete]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## cs_prev_next_spectator [#cs_prev_next_spectator]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| next | bool |  |
+
+## nextlevel_changed [#nextlevel_changed]
+
+a game event, name may be 32 characters long
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| nextlevel | string |  |
+| mapgroup | string |  |
+| skirmishmode | string |  |
+
+## seasoncoin_levelup [#seasoncoin_levelup]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| category | short |  |
+| rank | short |  |
+
+## tournament_reward [#tournament_reward]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| defindex | long |  |
+| totalrewards | long |  |
+| accountid | long |  |
+
+## start_halftime [#start_halftime]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## ammo_refill [#ammo_refill]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| success | bool |  |
+
+## parachute_pickup [#parachute_pickup]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## parachute_deploy [#parachute_deploy]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## dronegun_attack [#dronegun_attack]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## drone_dispatched [#drone_dispatched]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| priority | short |  |
+| drone_dispatched | short |  |
+
+## loot_crate_visible [#loot_crate_visible]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | player entindex |
+| subject | short | crate entindex |
+| type | string | type of crate (metal, wood, or paradrop) |
+
+## loot_crate_opened [#loot_crate_opened]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | player entindex |
+| type | string | type of crate (metal, wood, or paradrop) |
+
+## open_crate_instr [#open_crate_instr]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | player entindex |
+| subject | short | crate entindex |
+| type | string | type of crate (metal, wood, or paradrop) |
+
+## smoke_beacon_paradrop [#smoke_beacon_paradrop]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| paradrop | short |  |
+
+## survival_paradrop_spawn [#survival_paradrop_spawn]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entityid | short |  |
+
+## survival_paradrop_break [#survival_paradrop_break]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entityid | short |  |
+
+## drone_cargo_detached [#drone_cargo_detached]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| cargo | short |  |
+| delivered | bool |  |
+
+## drone_above_roof [#drone_above_roof]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+| cargo | short |  |
+
+## choppers_incoming_warning [#choppers_incoming_warning]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| global | bool |  |
+
+## firstbombs_incoming_warning [#firstbombs_incoming_warning]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| global | bool |  |
+
+## dz_item_interaction [#dz_item_interaction]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller | player entindex |
+| subject | short | crate entindex |
+| type | string | type of crate (metal, wood, or paradrop) |
+
+## survival_teammate_respawn [#survival_teammate_respawn]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## survival_no_respawns_warning [#survival_no_respawns_warning]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## survival_no_respawns_final [#survival_no_respawns_final]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller |  |
+
+## player_ping [#player_ping]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| entityid | short |  |
+| x | float |  |
+| y | float |  |
+| z | float |  |
+| urgent | bool |  |
+
+## player_ping_stop [#player_ping_stop]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| entityid | short |  |
+
+## player_sound [#player_sound]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| radius | int |  |
+| duration | float |  |
+| step | bool |  |
+
+## guardian_wave_restart [#guardian_wave_restart]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## team_intro_start [#team_intro_start]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## team_intro_end [#team_intro_end]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+
+## bullet_flight_resolution [#bullet_flight_resolution]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| userid | player_controller_and_pawn |  |
+| pos_x | short |  |
+| pos_y | short |  |
+| pos_z | short |  |
+| ang_x | short |  |
+| ang_y | short |  |
+| ang_z | short |  |
+| start_x | short |  |
+| start_y | short |  |
+| start_z | short |  |
+
+## game_phase_changed [#game_phase_changed]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| new_phase | short |  |
+
+## clientside_reload_custom_econ [#clientside_reload_custom_econ]
+
+
+
+| 字段 | 数据类型 | 简介 |
+| ----- | ---- | ----------- |
+| steamid | string |  |
+
