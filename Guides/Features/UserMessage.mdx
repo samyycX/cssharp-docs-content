@@ -12,7 +12,7 @@ NetMessage 是 CS2 网络通信使用的一系列数据包，本质通过 Protob
 准确的来说，UserMessage 是 NetMessage 的一种，他通过 `CSVCMsg_UserMessage (72)` NetMessage Protobuf 发送。
 从内容看，UserMessage 主要负责游戏性的网络通信。
 
-<Callout title="警告" type="warn">
+<Callout title="注意">
   在 CounterStrikeSharp 中，NetMessage 和 UserMessage 都使用 `UserMessage` 类表示，这意味着所有 NetMessage 都可以被 CounterStrikeSharp 处理。
 </Callout>
 
@@ -108,7 +108,7 @@ userMessage.AddString(fieldName, value); // 添加 string 类型
   由于技术限制，你目前只能在 CounterStrikeSharp 中操作以上基础类型，不支持嵌套复杂类型。
 </Callout>
 
-### Recipients
+## Recipients
 
 Recipients 是 UserMessage 的接收者列表，代表一个 UserMessage 可以发送给哪些玩家，你可以使用以下示例代码来设置 Recipients：
 ```csharp
