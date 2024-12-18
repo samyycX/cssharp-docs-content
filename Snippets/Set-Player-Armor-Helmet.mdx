@@ -1,0 +1,18 @@
+---
+title: 设置玩家的护甲值和头盔
+description: 设置玩家的护甲值和头盔
+---
+
+### 设置护甲值
+
+```csharp
+player.PlayerPawn.Value.ArmorValue = 50; // 设置为50
+```
+
+### 设置头盔
+
+```csharp
+CCSPlayer_ItemServices services = new CCSPlayer_ItemServices(player.PlayerPawn.Value.ItemServices!.Handle);
+services.HasHelmet = true;
+Utilities.SetStateChanged(player.PlayerPawn.Value, "CBasePlayerPawn", "m_pItemServices");
+```

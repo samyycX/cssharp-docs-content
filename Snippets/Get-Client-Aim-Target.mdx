@@ -1,0 +1,13 @@
+---
+title: "获取玩家正在瞄准的目标"
+description: "获取玩家当前正在瞄准的目标。"
+---
+
+### 代码
+
+```csharp
+CCSPlayerController? target = Utilities.FindAllEntitiesByDesignerName<CCSGameRulesProxy>("cs_gamerules")?
+        .FirstOrDefault()?
+        .GameRules?
+        .GetClientAimTarget(player);
+```
