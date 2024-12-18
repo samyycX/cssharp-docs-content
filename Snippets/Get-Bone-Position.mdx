@@ -1,0 +1,44 @@
+---
+title: "获取玩家骨骼位置"
+description: "从 SkeletonInstance 获取玩家的骨骼位置"
+---
+
+### 代码
+
+```csharp
+public enum BoneNumber 
+{
+    Waist = 0,
+    Neck = 5,
+    Head = 6,
+    ShoulderLeft = 8,
+    ForeLeft = 9,
+    HandLeft = 11,
+    ShoulderRight = 13,
+    ForeRight =14,
+    HandRight = 16,
+    KneeLeft = 23,
+    FeetLeft = 24,
+    KneeRight = 26,
+    FeetRight = 27
+}
+```
+
+```csharp
+unsafe public static Vector GetBonePosition(this CSkeletonInstance skeletonInstance, BoneNumber boneType)
+{
+    var boneMatrixPointer = Unsafe.Read<IntPtr>((void*)(skeletonInstance.ModelState.Handle + 0x80));
+    var boneBaseAddr = boneMatrixPointer + (int)boneType * 32;
+
+    return new Vector(
+        Unsafe.Read<float>((void*)(boneBaseAddr + 0)),
+        Unsafe.Read<float>((void*)(boneBaseAddr + 4)),
+        Unsafe.Read<float>((void*)(boneBaseAddr + 8)));
+}
+```
+
+### 示例调用
+
+```csharp
+player.PlayerPawn.Value.CBodyComponent!.SceneNode!.GetSkeletonInstance().GetBonePosition(BoneNumber.Head);
+```
