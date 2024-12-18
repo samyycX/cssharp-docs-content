@@ -1,19 +1,21 @@
 {
-    "title": "Framework",
-    "description": "The docs framework",
-    "icon": "Building2",
-    "root": true,
-    "pages": [
-      "---指南---",
-      "index",
-      "hello-world-plugin",
-      "Syringe",
-      "Player-Management",
-      "---功能---",
-      "...Features",
-      "---示例插件---",
-      "...Example",
-      "page-conventions",
-      "navigation"
-    ]
-  }
+  "title": "Framework",
+  "description": "The docs framework",
+  "icon": "Building2",
+  "root": true,
+  "pages": [
+    "---指南---",
+    "index",
+    "hello-world-plugin",
+    "Syringe",
+    "Player-Management",
+    "---功能---",
+    "...Features",
+    "---游戏数据---",
+    "...Data",
+    "---示例插件---",
+    "...Example",
+    "page-conventions",
+    "navigation"
+  ]
+}
