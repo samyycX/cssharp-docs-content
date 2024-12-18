@@ -1,0 +1,24 @@
+---
+title: "获取/修改玩家名称"
+description: "获取或修改玩家的用户名"
+---
+
+### 获取玩家名称
+
+```csharp
+string name = player.PlayerName;
+```
+
+其中 player 为 CCSPlayerController 对象。
+
+### 修改玩家名称
+
+```csharp
+player.PlayerName = "新的玩家名称";
+Utilities.SetStateChanged(player, "CBasePlayerController", "m_iszPlayerName"); // 更新
+```
+
+其中 player 为 CCSPlayerController 对象。
+
+
+

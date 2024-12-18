@@ -1,0 +1,14 @@
+---
+title: "不开启作弊启用无限子弹"
+description: "在不开启 sv_cheats 1 的情况下开启无限子弹"
+---
+
+### 代码
+
+```csharp
+ConVar cvar = ConVar.Find("sv_infinite_ammo")!;
+cvar.Flags &= ~ConVarFlags.FCVAR_CHEAT;
+cvar.SetValue(1); // 设置你想要的值
+```
+
+执行此代码后，你可以在服务器控制台直接输入 `sv_infinite_ammo` 来查看或设置值，也可以使用 `cvar.SetValue()` 来设置值。

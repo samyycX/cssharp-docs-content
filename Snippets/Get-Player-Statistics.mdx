@@ -1,0 +1,12 @@
+---
+title: "获取玩家的统计数据 (击杀，死亡，...)"
+description: "获取击杀，死亡，助攻，五杀等信息"
+---
+
+### 代码
+
+```csharp
+CSMatchStats_t matchStats = player.ActionTrackingServices!.MatchStats;
+```
+
+`matchStats` 包含了一系列玩家比赛时的数据，可自行前往API文档查看用法。

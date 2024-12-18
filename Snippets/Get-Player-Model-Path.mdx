@@ -1,0 +1,13 @@
+---
+title: "获取玩家当前使用的模型 path"
+description: "获取玩家当前使用的模型 path"
+---
+
+### 代码
+```csharp
+string path = player.PlayerPawn.Value!.CBodyComponent!.SceneNode!.GetSkeletonInstance().ModelState.ModelName;
+```
+
+<Callout title="注意" type="warn">
+当玩家使用默认模型时，path的值为空
+</Callout>
