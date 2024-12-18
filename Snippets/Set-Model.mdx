@@ -1,0 +1,33 @@
+---
+title: "设置玩家/物品模型"
+description: "设置玩家或者物品的模型。"
+---
+
+### 代码
+
+```csharp
+entity.SetModel(path);
+
+// 特别的，如果是玩家：
+player.PlayerPawn.Value.SetModel(path);
+```
+
+此处的 `entity` 需要是一个继承 `CBaseModelEntity` 的实体对象。
+
+### 注意事项
+
+1. `path` 是模型在 vpk 中的路径，并且必须以 `.vmdl` 结尾。例如：`characters/xxx/player.vmdl`。
+
+2. 在使用大部分模型之前，必须 precache 模型，具体代码如下。
+
+### Precache
+
+```csharp
+public override void Load(bool onLoad) // 在 OnLoad 中执行
+{
+  // xxx
+  RegisterListener<Listeners.OnServerPrecacheResources>((manifest) => {
+    manifest.AddResource(path); // 添加你的模型路径
+  });
+}
+```

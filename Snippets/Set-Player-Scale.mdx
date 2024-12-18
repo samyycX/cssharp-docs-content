@@ -1,0 +1,13 @@
+---
+title: "设置玩家的大小"
+description: "设置玩家或实体的大小"
+---
+
+### 代码
+
+```csharp
+player.PlayerPawn.Value.CBodyComponent!.SceneNode!.Scale = 0.6f; // 缩小为 0.6 倍
+Utilities.SetStateChanged(player.PlayerPawn.Value, "CBaseEntity", "m_CBodyComponent");
+```
+
+此方法对大部分实体也通用。
