@@ -1,0 +1,189 @@
+---
+title: 实体
+description: 关于实体，你需要知道的一切
+---
+
+# 实体概览
+
+## 何为实体
+实体是游戏中的一个对象，它可以是一个物体，一个角色，一个特效等等。实体是游戏中的基本单位，所有的游戏对象都是实体。例如一个足球，一个玩家，或者是 skybox，粒子特效都是实体。
+
+## 创建实体
+
+在 cssharp 中，你可以使用 `Utilities.CreateEntityByName<>(designerName)` 来创建一个实体。例如：
+```csharp
+var entity = Utilities.CreateEntityByName<CPointWorldText>("point_worldtext");
+entity.DispatchSpawn();
+```
+注意这里的 `CPointWorldText` 是实体的类型，`point_worldtext` 是实体的 `designerName`。你可以在本文档中的 [实体列表](https://cssharp-docs.vercel.app/docs/Guides/Data/Entities-List) 中的获取所有实体。
+
+### 何为 DispatchSpawn
+从名字来看，你很容易将 DispatchSpawn 理解为在世界上生成该实体。
+但其实在实体被创建的那一刻起，它就已经在这个世界上生成，DispatchSpawn 是用于负责实体的初始化工作。不同的实体可能会覆写这个方法，以实现其自己的逻辑。
+例如：设置模型，预载资源。
+
+## 从世界中获取实体
+
+### 从实体 index 获取实体
+
+你可以通过 `EntityIndex` 来获取实体。例如：
+```csharp
+var entity = Utilities.GetEntityFromIndex<>(entityIndex);
+```
+这是一个泛型方法，你需要传入实体的类型。
+
+### 从实体的 `designerName` 获取实体
+
+你可以通过实体的 `designerName` 来获取实体。例如：
+```csharp
+var entities = Utilities.FindAllEntitiesByDesignerName<>(designerName);
+```
+这是一个泛型方法，你需要传入实体的类型。需要注意的是，这个方法会返回一个实体列表，包含所有 designerName 匹配的实体。
+
+### 获取所有实体
+
+你可以通过 `Utilities.GetAllEntities()` 来获取所有实体。例如：
+```csharp
+var entities = Utilities.GetAllEntities();
+```
+
+## 检查实体可用性
+
+不管是创建实体还是获取实体，都有可能遇到实体不存在的情况，有些时候访问无效实体的属性可能会引发崩溃。
+为了避免这种情况，你可以使用 `entity.IsValid` 来检查实体是否可用。
+
+## 销毁实体
+
+你可以使用 `entity.Remove()` 来销毁实体。例如：
+```csharp
+entity.Remove();
+```
+
+<Callout title="警告" type="warn">
+  如果你想要使用此方法销毁玩家手中的武器，服务器将会崩溃。
+
+  替代方案是使用 `entity.AcceptInput("Kill");` 进行销毁。
+</Callout>
+
+# 实体 IO
+
+## 何为实体 IO
+实体 IO 是与实体交互的一系列行为，例如你可以使用 `FollowEntity` Input 来使一个实体跟随另一个实体，也可以 Hook `func_button` 实体的 `OnPressed` 来监听按下按键的事件。
+
+## activator 与 caller
+
+在学习如何使用实体 IO 之前，你需要了解 activator 与 caller 的概念。
+
+> 以下是 valve 文档的描述：
+> `activator` 是触发这个 IO 事件链的实体，`caller` 是调用这个事件的实体。
+
+举个例子，`logic_relay` 是一个接收到 Input 后，可以发送多个 Output 事件的实体。当玩家触发这个实体时，Output事件的 `activator` 就是玩家，`caller` 就是 `logic_relay`。
+
+还是看不懂？没关系，通常来说触发事件时，`activator` 指触发事件的实体，`caller` 指被触发的实体。
+
+## 发送 Input 事件
+
+样例代码：
+```csharp
+entity.AcceptInput(inputName, activator, caller, value);
+```
+
+参数详解：
+- `inputName` 是 Input 的名称，例如 `Kill`，`SetParent`。
+- `value` 是一个可选参数，用于传递额外的信息。
+
+其中除 inputName 外，其他都是可选参数，具体输入与否取决于你要调用什么事件。
+
+## 监听 Output 事件
+
+样例代码：
+
+```csharp
+HookEntityOutput("func_button", "OnPressed", 
+  (
+      CEntityIOOutput output,
+      string name,
+      CEntityInstance activator,
+      CEntityInstance caller,
+      CVariant value,
+      float delay
+  ) =>
+  {
+      Console.WriteLine("Button pressed!");
+      return HookResult.Continue;
+  },
+  HookMode.Pre
+);
+```
+
+这个例子监听了所有 `func_button` 的 `OnPressed` 事件，其中 `func_button` 是实体的 `classname`, `OnPressed` 是实体的 Output 事件名。 
+
+<Callout title="注意" type="info">
+  此方法的 `classname` 和 output 事件名支持通配符匹配，例如 `*` 代表所有实体。
+</Callout>
+
+## 获取某个实体的所有 IO 事件
+
+你可以在游戏内通过 `ent_info <classname>` 来查看某个实体的所有 IO 事件。
+
+## 样例：使实体跟随玩家
+
+```csharp
+entity.AcceptInput("FollowEntity", player, entity, "!activator");
+```
+
+## 样例：设置玩家血量
+
+```csharp
+player.PlayerPawn.Value.AcceptInput("SetHealth", null, null, "50");
+```
+
+# 实体属性
+
+##  设置/读取实体属性
+
+读取实体的某个属性：
+```csharp
+var health = playerPawn.Health;
+```
+此例子读取了某个玩家的血量。
+
+设置实体的某个属性：
+```csharp
+playerPawn.Health = 50;
+Utilities.SetStateChanged(playerPawn, "CBaseEntity", "m_iHealth");
+```
+此例子设置了某个玩家的血量为 50。
+
+## 关于 `Utilities.SetStateChanged`
+
+### 作用
+
+在修改大部分属性时，你需要使用此方法实现客户端与服务端的同步，否则修改将不会生效。
+
+### 使用场景
+
+具体来说，当你修改的属性是一个 NetVar 时，必须调用该方法进行更新。
+
+你可以调用 `Schema.IsSchemaFieldNetworked(className, fieldName)` 方法来获取某个字段是否为 NetVar。也可以通过查阅 Schema Dump 注释来获取。
+
+### 使用方法
+
+具体使用方法如下：
+```csharp
+Utilities.SetStateChanged(entity, className, fieldName);
+```
+
+### 如何获取 `className` 和 `fieldName`
+
+最简单的方法：在你使用的代码编辑器中进入该实体类的定义，会看到每个字段属性上面都有 `SchemaMember` 的标注，第一个字符串就是 className，第二个字符串就是 fieldName。
+
+<Callout title="例子" type="info">
+  `[SchemaMember("CBaseEntity", "m_iHealth")]` 对应的属性 `className` 就是 `CBaseEntity`，对应的 `fieldName` 就是 `m_iHealth`。
+</Callout>
+
+
+
+
+
+
